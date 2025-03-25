@@ -114,11 +114,11 @@ public class GalaxyMainInterface extends JMainInterface {
 //    loadFaction(faction);
 
     Global.CURRENTTURNNUMBER.addListener((observable, oldValue, newValue) -> {
-      IJG_Faction faction = loadPlayer("http://localhost:8080/jgalaxy/games", "test1", "player0", newValue.intValue() );
+      IJG_Faction faction = loadPlayer("http://localhost:8080/jgalaxy/games", "GenerateGame", "player0", newValue.intValue() );
       loadFaction(faction);
     });
 
-    Global.CURRENTTURNNUMBER.setValue(1);
+    Global.CURRENTTURNNUMBER.setValue(0);
 
 //    IJG_Faction faction = loadPlayer("http://localhost:8080/jgalaxy/games", "test1", "player0", 5 );
 //    loadFaction(faction);
