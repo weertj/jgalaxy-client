@@ -2,6 +2,7 @@ package org.jgalaxy.gui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import org.javelinfx.engine.JUnitPanelInterface;
@@ -14,6 +15,9 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
 
   @FXML private AnchorPane  mRootPane;
   @FXML private TextField   mPlanetName;
+
+  @FXML private Label   mPopulation;
+  @FXML private Label   mCol;
 
   private IJG_Planet mPlanet;
 
@@ -33,6 +37,8 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
     } else {
       mPlanetName.setText(mPlanet.name());
     }
+    mPopulation.setText(String.valueOf(mPlanet.population()));
+    mCol.setText(String.valueOf(mPlanet.cols()));
     return;
   }
 
