@@ -30,8 +30,7 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
   @FXML private AnchorPane        mRootPane;
   @FXML private Spinner<Integer>  mTurnNumber;
   @FXML private Button            mSendOrders;
-
-  private IJG_GameInfo mGameInfo;
+  @FXML private Button            mNextTurn;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -51,11 +50,23 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
         String result = XML_Utils.documentToString(doc);
         System.out.println(result);
 
-        String url = "http://localhost:8080/jgalaxy/games/test1/0/player0/faction0/orders?alt=xml";
+        String url = "http://localhost:8080/jgalaxy/games/" + Global.CURRENTGAMEINFO.get().name() + "/" + Global.CURRENTTURNNUMBER.get() + "/player0/faction0/orders?alt=xml";
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
           .PUT(HttpRequest.BodyPublishers.ofString(result))
           .build();
           HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString() );
+      } catch (Throwable e) {
+        e.printStackTrace();
+      }
+    });
+
+    mNextTurn.setOnAction(event -> {
+      try {
+        String url = "http://localhost:8080/jgalaxy/games/" + Global.CURRENTGAMEINFO.get().name() + "/" + Global.CURRENTTURNNUMBER.get() + "?nextTurn&alt=xml";
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+          .PUT(HttpRequest.BodyPublishers.ofString(""))
+          .build();
+        HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString() );
       } catch (Throwable e) {
         e.printStackTrace();
       }
@@ -69,14 +80,8 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
     return mRootPane;
   }
 
-  public void setGameInfo( IJG_GameInfo pGameInfo ) {
-    mGameInfo = pGameInfo;
-    refresh();
-    return;
-  }
-
   public void refresh() {
-    mTurnNumber.getValueFactory().setValue(mGameInfo.currentTurnNumber());
+    mTurnNumber.getValueFactory().setValue(Global.CURRENTGAMEINFO.get().currentTurnNumber());
     return;
   }
 

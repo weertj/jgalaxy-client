@@ -69,50 +69,6 @@ public class GalaxyMainInterface extends JMainInterface {
       e.printStackTrace();
     }
 
-//    IJG_GameInfo gameinfo = null;
-//    HttpRequest request = HttpRequest.newBuilder(URI.create("http://localhost:8080/jgalaxy/games/test1?alt=xml"))
-//      .GET()
-//      .build();
-//    Node root = null;
-//    try {
-//      HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString() );
-//      String result = response.body().toString();
-//      root = XML_Utils.rootNodeBy(result);
-//      gameinfo = JG_GameInfo.of( root);
-//    } catch (Throwable e) {
-//      e.printStackTrace();
-//    }
-//
-//    request = HttpRequest.newBuilder(URI.create("http://localhost:8080/jgalaxy/games/test1/5?alt=xml"))
-//      .GET()
-//      .build();
-//    root = null;
-//    IJG_Game game = null;
-//    try {
-//      HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString() );
-//      String result = response.body().toString();
-//      root = XML_Utils.rootNodeBy(result);
-//      game = JG_Game.of( null, root, 2);
-//    } catch (Throwable e) {
-//      e.printStackTrace();
-//    }
-//
-//
-//    request = HttpRequest.newBuilder(URI.create("http://localhost:8080/jgalaxy/games/test1/5/player0/faction0?alt=xml"))
-//      .GET()
-//      .build();
-//    root = null;
-//    try {
-//      HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString() );
-//      String result = response.body().toString();
-//      root = XML_Utils.rootNodeBy(result);
-//    } catch (Throwable e) {
-//      e.printStackTrace();
-//    }
-//    IJG_Faction faction = JG_Faction.of(game,XML_Utils.childElementsByName(root,"faction").get(0));
-//
-//    loadFaction(faction);
-
     Global.CURRENTTURNNUMBER.addListener((observable, oldValue, newValue) -> {
       IJG_Faction faction = loadPlayer("http://localhost:8080/jgalaxy/games", "GenerateGame", "player0", newValue.intValue() );
       loadFaction(faction);
@@ -139,7 +95,7 @@ public class GalaxyMainInterface extends JMainInterface {
       HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString() );
       String result = response.body().toString();
       root = XML_Utils.rootNodeBy(result);
-      gameinfo = JG_GameInfo.of( root);
+      gameinfo = JG_GameInfo.of( XML_Utils.childNodeByPath(root,"game").get());
       Global.CURRENTGAMEINFO.set( gameinfo );
     } catch (Throwable e) {
       e.printStackTrace();
@@ -152,18 +108,23 @@ public class GalaxyMainInterface extends JMainInterface {
       .build();
     root = null;
     IJG_Game game = null;
+    IJG_Game gamechanged = null;
     try {
       HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString() );
       String result = response.body().toString();
       root = XML_Utils.rootNodeBy(result);
       game = JG_Game.of( null, root, 2);
       Global.CURRENTGAME.set( game );
+      gamechanged = JG_Game.of( null, root, 2);
+      Global.CURRENTGAMECHANGED.set( gamechanged );
     } catch (Throwable e) {
       e.printStackTrace();
     }
 
     IJG_Player player = game.getPlayerByID(pPlayerName);
     Global.CURRENTPLAYER.set( player );
+    IJG_Player playerchanged = gamechanged.getPlayerByID(pPlayerName);
+    Global.CURRENTPLAYERCHANGED.set( playerchanged );
 
     url += "/" + player.id() + "/" + player.factions().getFirst().id();
 
@@ -180,13 +141,21 @@ public class GalaxyMainInterface extends JMainInterface {
     }
     IJG_Faction faction = JG_Faction.of(game,XML_Utils.childNodeByPath(root,"faction").orElse(null));
     Global.CURRENTFACTION.set( faction );
-    Global.CURRENTFACTION_CHANGED.set( JG_Faction.of(game,XML_Utils.childNodeByPath(root,"faction").orElse(null)));
-    return faction;
+    IJG_Faction factionchanged = JG_Faction.of(gamechanged,XML_Utils.childNodeByPath(root,"faction").orElse(null));
+    Global.CURRENTFACTION_CHANGED.set( factionchanged );
+    return factionchanged;
   }
 
   private void selectItem( IJavelinUIElement pItem ) {
-    if (pItem instanceof PlanetRenderItem planet) {
-      mPlanetInfoController.setPlanet(planet.element());
+    if (pItem instanceof PlanetRenderItem planetRI) {
+      IJG_Planet planet = planetRI.element();
+      mPlanetInfoController.setPlanet(planet);
+      if (planet.owner()==null) {
+        mPlanetInfoController.setFaction(null);
+      } else {
+        IJG_Faction faction = Global.CURRENTPLAYERCHANGED.get().getFactionByID(planet.owner());
+        mPlanetInfoController.setFaction(faction);
+      }
     }
     return;
   }

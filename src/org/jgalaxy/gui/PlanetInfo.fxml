@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -14,6 +15,14 @@
             <Label fx:id="mPopulation" layoutX="82.0" layoutY="50.0" text="..." />
             <Label layoutX="18.0" layoutY="67.0" text="Colonists" />
             <Label fx:id="mCol" layoutX="82.0" layoutY="67.0" text="..." />
+            <Label layoutX="25.0" layoutY="84.0" text="Capitals" />
+            <Label fx:id="mCap" layoutX="82.0" layoutY="84.0" text="..." />
+            <Label layoutX="21.0" layoutY="101.0" text="Materials" />
+            <Label fx:id="mMat" layoutX="82.0" layoutY="101.0" text="..." />
+            <Label layoutX="27.0" layoutY="118.0" text="Industry" />
+            <Label fx:id="mInd" layoutX="82.0" layoutY="118.0" text="..." />
+            <Label layoutX="22.0" layoutY="142.0" text="Produce" />
+            <ComboBox fx:id="mProduce" layoutX="82.0" layoutY="138.0" prefHeight="26.0" prefWidth="110.0" />
          </children>
       </AnchorPane>
    </children>
