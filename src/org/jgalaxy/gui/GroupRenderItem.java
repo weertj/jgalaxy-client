@@ -31,6 +31,17 @@ public class GroupRenderItem extends JavelinUIElement {
     Rectangle2D outline = getOutline();
     gc.fillRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight() );
 //    gc.fillOval( 10*element().position().x(), 10*element().position().y(), 10, 10 );
+
+    var group = element();
+    if (group.to()!=null) {
+      var toplanet = Global.CURRENTFACTION_CHANGED.get().planets().findPlanetById(group.to());
+      double x = pCanvas.toPixelX( toplanet.position().x(), Global.DISTANCEUNIT );
+      double y = pCanvas.toPixelY( toplanet.position().y(), Global.DISTANCEUNIT );
+      gc.setStroke(Color.WHITE);
+      gc.strokeLine(outline.getX(), outline.getY(),x, y);
+      gc.stroke();
+    }
+
     return;
   }
 

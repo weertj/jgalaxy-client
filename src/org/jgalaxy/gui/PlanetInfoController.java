@@ -1,15 +1,15 @@
 package org.jgalaxy.gui;
 
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import org.javelinfx.engine.JUnitPanelInterface;
 import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.planets.EProduceType;
 import org.jgalaxy.planets.IJG_Planet;
+import org.jgalaxy.units.IJG_Group;
 import org.jgalaxy.units.IJG_UnitDesign;
 
 import java.net.URL;
@@ -27,6 +27,8 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
   @FXML private Label   mInd;
   @FXML private ComboBox<String> mProduce;
 
+  @FXML private ListView<IJG_Group> mGroupsInOrbit;
+
   private IJG_Faction mFaction;
   private IJG_Planet  mPlanet;
 
@@ -34,6 +36,11 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
   public void initialize(URL location, ResourceBundle resources) {
     mProduce.valueProperty().addListener((observable, oldValue, newValue) -> {
       mPlanet.setProduceType(null, newValue );
+    });
+    mGroupsInOrbit.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    mGroupsInOrbit.getSelectionModel().getSelectedItems().addListener( (ListChangeListener)c -> {
+      Global.SELECTEDGROUPS.clear();
+      Global.SELECTEDGROUPS.addAll(mGroupsInOrbit.getSelectionModel().getSelectedItems());
     });
     return;
   }
@@ -56,6 +63,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
     mInd.setText(String.valueOf(mPlanet.industry()));
     mProduce.setValue(mPlanet.produceUnitDesign());
     mProduce.getItems().clear();
+    mGroupsInOrbit.getItems().clear();
     if (mFaction!=null) {
       for( EProduceType produceType : EProduceType.values()) {
         if (produceType!=EProduceType.PR_SHIP) {
@@ -64,6 +72,9 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
       }
       for(IJG_UnitDesign ud : mFaction.unitDesigns()) {
         mProduce.getItems().add(ud.name());
+      }
+      for(IJG_Group group : mFaction.groups().getGroups()) {
+        mGroupsInOrbit.getItems().add(group);
       }
     }
     return;

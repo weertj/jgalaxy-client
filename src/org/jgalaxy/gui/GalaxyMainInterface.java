@@ -113,9 +113,9 @@ public class GalaxyMainInterface extends JMainInterface {
       HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString() );
       String result = response.body().toString();
       root = XML_Utils.rootNodeBy(result);
-      game = JG_Game.of( null, root, 2);
+      game = JG_Game.of( null, root, pTurnNumber);
       Global.CURRENTGAME.set( game );
-      gamechanged = JG_Game.of( null, root, 2);
+      gamechanged = JG_Game.of( null, root, pTurnNumber);
       Global.CURRENTGAMECHANGED.set( gamechanged );
     } catch (Throwable e) {
       e.printStackTrace();
@@ -153,7 +153,8 @@ public class GalaxyMainInterface extends JMainInterface {
       if (planet.owner()==null) {
         mPlanetInfoController.setFaction(null);
       } else {
-        IJG_Faction faction = Global.CURRENTPLAYERCHANGED.get().getFactionByID(planet.owner());
+//        IJG_Faction faction = Global.CURRENTPLAYERCHANGED.get().getFactionByID(planet.owner());
+        IJG_Faction faction = Global.retrieveFactionByName(planet.owner() );
         mPlanetInfoController.setFaction(faction);
       }
     }
@@ -179,15 +180,15 @@ public class GalaxyMainInterface extends JMainInterface {
       }
       return;
     });
-    for(IJG_Planet planet : pFaction.planets().planets()) {
-      playerContext.addRenderItem(2,
-        new PlanetRenderItem(planet.id(),planet,
-          SP_Position.of(planet.position().x(),planet.position().y(), EUDistance.KM)));
-    }
     for( IJG_Group group : pFaction.groups().getGroups()) {
-      playerContext.addRenderItem(3,
+      playerContext.addRenderItem(2,
         new GroupRenderItem(group.id(),group,
           SP_Position.of(group.position().x(),group.position().y(), EUDistance.KM)));
+    }
+    for(IJG_Planet planet : pFaction.planets().planets()) {
+      playerContext.addRenderItem(3,
+        new PlanetRenderItem(planet.id(),planet,
+          SP_Position.of(planet.position().x(),planet.position().y(), EUDistance.KM)));
     }
 
     return;

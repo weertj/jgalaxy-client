@@ -2,10 +2,11 @@
 
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="mRootPane" prefHeight="540.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.PlanetInfoController">
+<AnchorPane fx:id="mRootPane" prefHeight="540.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.PlanetInfoController">
    <children>
       <AnchorPane layoutX="46.0" layoutY="23.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #111111;" stylesheets="@jgalaxy.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -23,6 +24,8 @@
             <Label fx:id="mInd" layoutX="82.0" layoutY="118.0" text="..." />
             <Label layoutX="22.0" layoutY="142.0" text="Produce" />
             <ComboBox fx:id="mProduce" layoutX="82.0" layoutY="138.0" prefHeight="26.0" prefWidth="110.0" />
+            <Label layoutX="14.0" layoutY="191.0" text="Groups in orbit" />
+            <ListView fx:id="mGroupsInOrbit" layoutX="12.0" layoutY="215.0" prefHeight="135.0" prefWidth="197.0" />
          </children>
       </AnchorPane>
    </children>

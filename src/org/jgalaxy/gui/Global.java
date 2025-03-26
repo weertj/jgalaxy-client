@@ -4,12 +4,22 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import org.javelinfx.units.EUDistance;
+import org.javelinfx.units.IU_Unit;
 import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.engine.IJG_Game;
 import org.jgalaxy.engine.IJG_GameInfo;
 import org.jgalaxy.engine.IJG_Player;
+import org.jgalaxy.units.IJG_Group;
+import org.jgalaxy.units.IJG_Unit;
+
+import java.util.Objects;
 
 public class Global {
+
+  static public EUDistance DISTANCEUNIT = EUDistance.KM;
 
   static final public IntegerProperty CURRENTTURNNUMBER = new SimpleIntegerProperty(0);
   static final public ObjectProperty<IJG_GameInfo>  CURRENTGAMEINFO = new SimpleObjectProperty<>(null);
@@ -20,5 +30,16 @@ public class Global {
   static final public ObjectProperty<IJG_Faction>   CURRENTFACTION = new SimpleObjectProperty<>(null);
   static final public ObjectProperty<IJG_Faction>   CURRENTFACTION_CHANGED = new SimpleObjectProperty<>(null);
 
+  static final public ObservableList<IJG_Group> SELECTEDGROUPS = FXCollections.observableArrayList();
+
+  static public IJG_Faction retrieveFactionByName( String pName ) {
+    if (CURRENTFACTION_CHANGED.get()!=null && Objects.equals(CURRENTFACTION_CHANGED.get().name(), pName)) {
+      return CURRENTFACTION_CHANGED.get();
+    }
+    if (CURRENTPLAYERCHANGED.get()!=null) {
+      return CURRENTPLAYERCHANGED.get().getFactionByID(pName);
+    }
+    return null;
+  }
 
 }

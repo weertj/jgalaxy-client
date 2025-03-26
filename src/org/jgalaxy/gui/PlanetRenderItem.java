@@ -9,6 +9,7 @@ import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.window.S_Pointer;
 import org.jgalaxy.planets.IJG_Planet;
+import org.jgalaxy.units.IJG_Group;
 
 import java.awt.geom.Rectangle2D;
 
@@ -41,12 +42,17 @@ public class PlanetRenderItem extends JavelinUIElement {
 
   @Override
   public void pointerPressed(IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
+    if (pPointer==S_Pointer.POINTER.SECONDARY) {
+      System.out.println(" snensnd " + element().name());
+      for(IJG_Group group : Global.SELECTEDGROUPS) {
+        group.setTo(element().id());
+      }
+    }
     return;
   }
 
   @Override
   public void pointerEntered(IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
-    System.out.println(" --- PLANET " + element().id());
     return;
   }
 
