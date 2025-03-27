@@ -3,6 +3,8 @@ package org.jgalaxy.gui;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.IJavelinUIElement;
 import org.javelinfx.engine.JMainInterface;
@@ -30,6 +32,9 @@ public class GalaxyMainInterface extends JMainInterface {
 
   private TurnInfoController    mTurnInfoController;
   private PlanetInfoController  mPlanetInfoController;
+  private ShipDesignsController mShipDesignsController;
+
+  private TabPane mTabControlPane;
 
   @Override
   public String title() {
@@ -51,7 +56,16 @@ public class GalaxyMainInterface extends JMainInterface {
     );
     mainPane().getChildren().add( canvas.canvas() );
 
-    try { // **** PlanetInfo
+    mTabControlPane = new TabPane();
+    mainPane().getChildren().add(mTabControlPane);
+    mTabControlPane.setPrefWidth(200);
+    S_Pane.setAnchors(mTabControlPane, null, 0.0, 100.0, 0.0);
+    Tab planetTab = new Tab("Planet");
+    mTabControlPane.getTabs().add(planetTab);
+    Tab designTab = new Tab("Ship design");
+    mTabControlPane.getTabs().add(designTab);
+
+    try { // **** TurnInfo
       var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/TurnInfo.fxml", null);
       mTurnInfoController = (TurnInfoController)FXMLLoad.controller(contents);
       mainPane().getChildren().add(mTurnInfoController.rootPane());
@@ -63,8 +77,17 @@ public class GalaxyMainInterface extends JMainInterface {
     try { // **** PlanetInfo
       var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/PlanetInfo.fxml", null);
       mPlanetInfoController = (PlanetInfoController)FXMLLoad.controller(contents);
-      mainPane().getChildren().add(mPlanetInfoController.rootPane());
-      S_Pane.setAnchors( mPlanetInfoController.rootPane(), null, 0.0, 80.0, 0.0);
+      planetTab.setContent(mPlanetInfoController.rootPane());
+      S_Pane.setAnchors( mPlanetInfoController.rootPane(), 0.0, 0.0, 0.0, 0.0);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    try { // **** ShipDesigner
+      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/ShipDesigns.fxml", null);
+      mShipDesignsController = (ShipDesignsController)FXMLLoad.controller(contents);
+      designTab.setContent(mShipDesignsController.rootPane());
+      S_Pane.setAnchors( mShipDesignsController.rootPane(), 0.0, 0.0, 0.0, 0.0);
     } catch (Exception e) {
       e.printStackTrace();
     }

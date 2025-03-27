@@ -42,6 +42,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
       Global.SELECTEDGROUPS.clear();
       Global.SELECTEDGROUPS.addAll(mGroupsInOrbit.getSelectionModel().getSelectedItems());
     });
+    mPlanetName.setOnAction( e -> mPlanet.rename(mPlanetName.getText()));
     return;
   }
 
@@ -73,7 +74,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
       for(IJG_UnitDesign ud : mFaction.unitDesigns()) {
         mProduce.getItems().add(ud.name());
       }
-      for(IJG_Group group : mFaction.groups().getGroups()) {
+      for(IJG_Group group : mFaction.groups().groupsByPosition(mPlanet.position()).getGroups()) {
         mGroupsInOrbit.getItems().add(group);
       }
     }
