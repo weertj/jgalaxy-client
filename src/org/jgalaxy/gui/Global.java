@@ -1,9 +1,6 @@
 package org.jgalaxy.gui;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.javelinfx.units.EUDistance;
@@ -21,14 +18,18 @@ public class Global {
 
   static public EUDistance DISTANCEUNIT = EUDistance.KM;
 
-  static final public IntegerProperty CURRENTTURNNUMBER = new SimpleIntegerProperty(0);
-  static final public ObjectProperty<IJG_GameInfo>  CURRENTGAMEINFO = new SimpleObjectProperty<>(null);
-  static final public ObjectProperty<IJG_Game>      CURRENTGAME = new SimpleObjectProperty<>(null);
-  static final public ObjectProperty<IJG_Game>      CURRENTGAMECHANGED = new SimpleObjectProperty<>(null);
-  static final public ObjectProperty<IJG_Player>    CURRENTPLAYER = new SimpleObjectProperty<>(null);
-  static final public ObjectProperty<IJG_Player>    CURRENTPLAYERCHANGED = new SimpleObjectProperty<>(null);
-  static final public ObjectProperty<IJG_Faction>   CURRENTFACTION = new SimpleObjectProperty<>(null);
-  static final public ObjectProperty<IJG_Faction>   CURRENTFACTION_CHANGED = new SimpleObjectProperty<>(null);
+  static final public IntegerProperty CURRENTTURNNUMBER   = new SimpleIntegerProperty(0);
+  static final public StringProperty  CURRENTGAMEID       = new SimpleStringProperty("");
+  static final public StringProperty  CURRENTPLAYERID     = new SimpleStringProperty("");
+  static final public StringProperty  CURRENTSERVER       = new SimpleStringProperty("");
+
+  static final public ObjectProperty<IJG_GameInfo>  CURRENTGAMEINFO         = new SimpleObjectProperty<>(null);
+  static final public ObjectProperty<IJG_Game>      CURRENTGAME             = new SimpleObjectProperty<>(null);
+  static final public ObjectProperty<IJG_Game>      CURRENTGAMECHANGED      = new SimpleObjectProperty<>(null);
+  static final public ObjectProperty<IJG_Player>    CURRENTPLAYER           = new SimpleObjectProperty<>(null);
+  static final public ObjectProperty<IJG_Player>    CURRENTPLAYERCHANGED    = new SimpleObjectProperty<>(null);
+  static final public ObjectProperty<IJG_Faction>   CURRENTFACTION          = new SimpleObjectProperty<>(null);
+  static final public ObjectProperty<IJG_Faction>   CURRENTFACTION_CHANGED  = new SimpleObjectProperty<>(null);
 
   static final public ObservableList<IJG_Group> SELECTEDGROUPS = FXCollections.observableArrayList();
 

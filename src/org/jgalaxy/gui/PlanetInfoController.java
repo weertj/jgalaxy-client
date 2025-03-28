@@ -28,6 +28,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
   @FXML private ComboBox<String> mProduce;
 
   @FXML private ListView<IJG_Group> mGroupsInOrbit;
+  @FXML private ListView<IJG_Group> mOtherGroupsInOrbit;
 
   private IJG_Faction mFaction;
   private IJG_Planet  mPlanet;
@@ -43,6 +44,14 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
       Global.SELECTEDGROUPS.addAll(mGroupsInOrbit.getSelectionModel().getSelectedItems());
     });
     mPlanetName.setOnAction( e -> mPlanet.rename(mPlanetName.getText()));
+
+    mOtherGroupsInOrbit.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+    mOtherGroupsInOrbit.getSelectionModel().getSelectedItems().addListener( (ListChangeListener)c -> {
+      Global.SELECTEDGROUPS.clear();
+      Global.SELECTEDGROUPS.addAll(mOtherGroupsInOrbit.getSelectionModel().getSelectedItems());
+    });
+
+
     return;
   }
 
@@ -51,6 +60,9 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
     return mRootPane;
   }
 
+  /**
+   * refresh
+   */
   public void refresh() {
     if (mPlanet==null) {
       mPlanetName.setText("");
@@ -68,7 +80,9 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
       mInd.setText(String.valueOf(mPlanet.industry()));
       mProduce.setValue(mPlanet.produceUnitDesign());
       mProduce.getItems().clear();
+
       mGroupsInOrbit.getItems().clear();
+      mOtherGroupsInOrbit.getItems().clear();
       if (mFaction != null) {
         for (EProduceType produceType : EProduceType.values()) {
           if (produceType != EProduceType.PR_SHIP) {
@@ -79,7 +93,12 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
           mProduce.getItems().add(ud.name());
         }
         for (IJG_Group group : mFaction.groups().groupsByPosition(mPlanet.position()).getGroups()) {
-          mGroupsInOrbit.getItems().add(group);
+          if (group.faction().equals(mFaction.id())) {
+            mGroupsInOrbit.getItems().add(group);
+          }
+        }
+        for (IJG_Group group : mFaction.groups().groupsByPosition(mPlanet.position()).getGroups()) {
+          mOtherGroupsInOrbit.getItems().add(group);
         }
       }
     }

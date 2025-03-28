@@ -54,6 +54,7 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
       Global.CURRENTTURNNUMBER.setValue(Global.CURRENTTURNNUMBER.get()+1);
     });
 
+    // **** SEND ORDERS
     mSendOrders.setOnAction(event -> {
       IJG_Orders orders = JG_Orders.generateOf(Global.CURRENTTURNNUMBER.get(), Global.CURRENTFACTION.get(), Global.CURRENTFACTION_CHANGED.get());
       Document doc = XML_Utils.newXMLDocument();
@@ -64,7 +65,13 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
         String result = XML_Utils.documentToString(doc);
         System.out.println(result);
 
-        String url = "http://localhost:8080/jgalaxy/games/" + Global.CURRENTGAMEINFO.get().name() + "/" + Global.CURRENTTURNNUMBER.get() + "/player0/faction0/orders?alt=xml";
+        String url =
+              Global.CURRENTSERVER.get() + "/" +
+              Global.CURRENTGAMEINFO.get().name() + "/" +
+              Global.CURRENTTURNNUMBER.get() + "/" +
+              Global.CURRENTPLAYERID.get() + "/" +
+              Global.CURRENTFACTION.get().id() + "/" +
+              "orders?alt=xml";
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
           .PUT(HttpRequest.BodyPublishers.ofString(result))
           .build();
@@ -76,7 +83,7 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
 
     mNextTurn.setOnAction(event -> {
       try {
-        String url = "http://localhost:8080/jgalaxy/games/" + Global.CURRENTGAMEINFO.get().name() + "/" + Global.CURRENTTURNNUMBER.get() + "?nextTurn&alt=xml";
+        String url = Global.CURRENTSERVER.get() + "/" + Global.CURRENTGAMEINFO.get().name() + "/" + Global.CURRENTTURNNUMBER.get() + "?nextTurn&alt=xml";
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
           .PUT(HttpRequest.BodyPublishers.ofString(""))
           .build();

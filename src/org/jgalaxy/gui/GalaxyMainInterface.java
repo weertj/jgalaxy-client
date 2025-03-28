@@ -8,6 +8,8 @@ import javafx.scene.control.TabPane;
 import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.IJavelinUIElement;
 import org.javelinfx.engine.JMainInterface;
+import org.javelinfx.engine.JavelinFX;
+import org.javelinfx.engine.startJavelin;
 import org.javelinfx.example.SimpleCanvas;
 import org.javelinfx.fxml.FXMLLoad;
 import org.javelinfx.player.IJL_PlayerContext;
@@ -45,6 +47,11 @@ public class GalaxyMainInterface extends JMainInterface {
   @Override
   public void init() {
     super.init();
+
+    Global.CURRENTSERVER.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("server", ""));
+    Global.CURRENTGAMEID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("game", ""));
+    Global.CURRENTPLAYERID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("player", ""));
+
     IJavelinCanvas canvas = GalaxyCanvas.of();
     add( canvas );
     canvas.canvas().setLayoutX( 10 );
@@ -103,7 +110,7 @@ public class GalaxyMainInterface extends JMainInterface {
     }
 
     Global.CURRENTTURNNUMBER.addListener((observable, oldValue, newValue) -> {
-      IJG_Faction faction = loadPlayer("http://localhost:8080/jgalaxy/games", "GenerateGame", "player0", newValue.intValue() );
+      IJG_Faction faction = loadPlayer(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get(), Global.CURRENTPLAYERID.get(), newValue.intValue() );
       loadFaction(faction);
     });
 
