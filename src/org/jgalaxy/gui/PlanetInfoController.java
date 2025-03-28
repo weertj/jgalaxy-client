@@ -54,28 +54,33 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
   public void refresh() {
     if (mPlanet==null) {
       mPlanetName.setText("");
+      mPopulation.setText("");
+      mCol.setText("");
+      mCap.setText("");
+      mMat.setText("");
+      mInd.setText("");
     } else {
       mPlanetName.setText(mPlanet.name());
-    }
-    mPopulation.setText(String.valueOf(mPlanet.population()));
-    mCol.setText(String.valueOf(mPlanet.cols()));
-    mCap.setText(String.valueOf(mPlanet.capitals()));
-    mMat.setText(String.valueOf(mPlanet.materials()));
-    mInd.setText(String.valueOf(mPlanet.industry()));
-    mProduce.setValue(mPlanet.produceUnitDesign());
-    mProduce.getItems().clear();
-    mGroupsInOrbit.getItems().clear();
-    if (mFaction!=null) {
-      for( EProduceType produceType : EProduceType.values()) {
-        if (produceType!=EProduceType.PR_SHIP) {
-          mProduce.getItems().add(produceType.order());
+      mPopulation.setText(String.valueOf(mPlanet.population()));
+      mCol.setText(String.valueOf(mPlanet.cols()));
+      mCap.setText(String.valueOf(mPlanet.capitals()));
+      mMat.setText(String.valueOf(mPlanet.materials()));
+      mInd.setText(String.valueOf(mPlanet.industry()));
+      mProduce.setValue(mPlanet.produceUnitDesign());
+      mProduce.getItems().clear();
+      mGroupsInOrbit.getItems().clear();
+      if (mFaction != null) {
+        for (EProduceType produceType : EProduceType.values()) {
+          if (produceType != EProduceType.PR_SHIP) {
+            mProduce.getItems().add(produceType.order());
+          }
         }
-      }
-      for(IJG_UnitDesign ud : mFaction.unitDesigns()) {
-        mProduce.getItems().add(ud.name());
-      }
-      for(IJG_Group group : mFaction.groups().groupsByPosition(mPlanet.position()).getGroups()) {
-        mGroupsInOrbit.getItems().add(group);
+        for (IJG_UnitDesign ud : mFaction.unitDesigns()) {
+          mProduce.getItems().add(ud.name());
+        }
+        for (IJG_Group group : mFaction.groups().groupsByPosition(mPlanet.position()).getGroups()) {
+          mGroupsInOrbit.getItems().add(group);
+        }
       }
     }
     return;

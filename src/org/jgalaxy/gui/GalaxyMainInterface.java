@@ -33,6 +33,7 @@ public class GalaxyMainInterface extends JMainInterface {
   private TurnInfoController    mTurnInfoController;
   private PlanetInfoController  mPlanetInfoController;
   private ShipDesignsController mShipDesignsController;
+  private PlayerInfoController  mPlayerInfoController;
 
   private TabPane mTabControlPane;
 
@@ -64,6 +65,15 @@ public class GalaxyMainInterface extends JMainInterface {
     mTabControlPane.getTabs().add(planetTab);
     Tab designTab = new Tab("Ship design");
     mTabControlPane.getTabs().add(designTab);
+
+    try { // **** Player info
+      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/PlayerInfo.fxml", null);
+      mPlayerInfoController = (PlayerInfoController) FXMLLoad.controller(contents);
+      mainPane().getChildren().add(mPlayerInfoController.rootPane());
+      S_Pane.setAnchors( mPlayerInfoController.rootPane(), 0.0, 0.0, 0.0, null);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     try { // **** TurnInfo
       var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/TurnInfo.fxml", null);
@@ -175,10 +185,14 @@ public class GalaxyMainInterface extends JMainInterface {
       mPlanetInfoController.setPlanet(planet);
       if (planet.owner()==null) {
         mPlanetInfoController.setFaction(null);
+        mTurnInfoController.setFaction(null);
+        mPlayerInfoController.setFaction(null);
       } else {
 //        IJG_Faction faction = Global.CURRENTPLAYERCHANGED.get().getFactionByID(planet.owner());
         IJG_Faction faction = Global.retrieveFactionByName(planet.owner() );
         mPlanetInfoController.setFaction(faction);
+        mTurnInfoController.setFaction(faction);
+        mPlayerInfoController.setFaction(faction);
       }
     }
     return;
@@ -192,6 +206,7 @@ public class GalaxyMainInterface extends JMainInterface {
   private void loadFaction( IJG_Faction pFaction ) {
     IJL_PlayerContext playerContext = JL_PlayerContext.of();
     setPlayerContext(playerContext);
+    mPlanetInfoController.setFaction(pFaction);
     playerContext.selectedItems().selectedItems().addListener((ListChangeListener<IJavelinUIElement>) c -> {
       while(c.next()) {
         for( var item : c.getAddedSubList() ) {

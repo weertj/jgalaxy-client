@@ -1,15 +1,17 @@
 package org.jgalaxy.gui;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import org.javelinfx.engine.JUnitPanelInterface;
+import org.jgalaxy.engine.IJG_Faction;
+import org.jgalaxy.engine.IJG_Game;
 import org.jgalaxy.engine.IJG_GameInfo;
+import org.jgalaxy.engine.IJG_Player;
 import org.jgalaxy.orders.IJG_Orders;
 import org.jgalaxy.orders.JG_Orders;
 import org.jgalaxy.planets.IJG_Planet;
@@ -28,16 +30,28 @@ import java.util.ResourceBundle;
 public class TurnInfoController extends JUnitPanelInterface implements Initializable {
 
   @FXML private AnchorPane        mRootPane;
-  @FXML private Spinner<Integer>  mTurnNumber;
+  @FXML private Label             mTurnNumber;
+  @FXML private Button            mMinTurn;
+  @FXML private Button            mPlusTurn;
   @FXML private Button            mSendOrders;
   @FXML private Button            mNextTurn;
 
+  private final IntegerProperty mTurnNumberProperty = new SimpleIntegerProperty(1);
+
+  private IJG_GameInfo      mGameInfo;
+  private IJG_Player        mPlayer;
+  private IJG_Faction       mFaction;
+
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    mTurnNumber.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,9999,1));
-    mTurnNumber.getValueFactory().setValue(1);
-    mTurnNumber.valueProperty().addListener((observable, oldValue, newValue) -> {
-      Global.CURRENTTURNNUMBER.setValue(newValue);
+    Global.CURRENTTURNNUMBER.addListener((observable, oldValue, newValue) -> {
+      mTurnNumber.setText(newValue.toString());
+    });
+    mMinTurn.setOnAction(e -> {
+      Global.CURRENTTURNNUMBER.setValue(Global.CURRENTTURNNUMBER.get()-1);
+    });
+    mPlusTurn.setOnAction(e -> {
+      Global.CURRENTTURNNUMBER.setValue(Global.CURRENTTURNNUMBER.get()+1);
     });
 
     mSendOrders.setOnAction(event -> {
@@ -75,13 +89,31 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
     return;
   }
 
+  public void setGameInfo(IJG_GameInfo gameInfo) {
+    mGameInfo = gameInfo;
+    refresh();
+    return;
+  }
+
+  public void setPlayer(IJG_Player player) {
+    mPlayer = player;
+    refresh();
+    return;
+  }
+
+  public void setFaction(IJG_Faction faction) {
+    mFaction = faction;
+    refresh();
+    return;
+  }
+
   @Override
   public AnchorPane rootPane() {
     return mRootPane;
   }
 
   public void refresh() {
-    mTurnNumber.getValueFactory().setValue(Global.CURRENTGAMEINFO.get().currentTurnNumber());
+//    Global.CURRENTTURNNUMBER.setValue(Global.CURRENTGAMEINFO.get().currentTurnNumber());
     return;
   }
 
