@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="mRootPane" prefHeight="447.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.ShipDesignsController">
+<AnchorPane fx:id="mRootPane" prefHeight="527.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.ShipDesignsController">
    <children>
       <AnchorPane layoutX="46.0" layoutY="166.0" prefHeight="374.0" prefWidth="222.0" style="-fx-background-color: #222222;" stylesheets="@jgalaxy.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -29,6 +29,8 @@
             </AnchorPane>
             <TextField fx:id="mName" layoutX="59.0" layoutY="199.0" prefHeight="26.0" prefWidth="132.0" />
             <Button fx:id="mBuild" layoutX="59.0" layoutY="421.0" mnemonicParsing="false" text="BUILD" />
+            <TextField fx:id="mNewFleet" layoutX="18.0" layoutY="468.0" prefHeight="26.0" prefWidth="102.0" />
+            <Button fx:id="mCreateFleet" layoutX="125.0" layoutY="469.0" mnemonicParsing="false" text="Create fleet" />
          </children>
       </AnchorPane>
    </children>

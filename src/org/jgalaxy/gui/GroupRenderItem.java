@@ -30,6 +30,7 @@ public class GroupRenderItem extends JavelinUIElement {
     gc.setFill(Color.BLUE);
     Rectangle2D outline = getOutline();
     gc.fillRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight() );
+    gc.fillText( element().name(), outline.getX(), outline.getY() );
 //    gc.fillOval( 10*element().position().x(), 10*element().position().y(), 10, 10 );
 
     var group = element();

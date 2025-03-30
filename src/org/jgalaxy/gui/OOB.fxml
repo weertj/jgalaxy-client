@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mRootPane" prefHeight="200.0" prefWidth="379.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.OOBController">
+   <children>
+      <AnchorPane layoutX="46.0" layoutY="166.0" prefHeight="374.0" prefWidth="222.0" style="-fx-background-color: #222222;" stylesheets="@jgalaxy.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <TreeTableView fx:id="mOOBTree" layoutX="50.0" layoutY="-10.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000000;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <columns>
+                <TreeTableColumn fx:id="mNumberOf" prefWidth="75.0" text="Nr" />
+                <TreeTableColumn fx:id="mFGName" prefWidth="75.0" text="Name" />
+                  <TreeTableColumn fx:id="mShipDesign" prefWidth="75.0" text="Design" />
+                  <TreeTableColumn fx:id="mPosition" prefWidth="75.0" text="Position" />
+                  <TreeTableColumn fx:id="mCargo" prefWidth="75.0" text="Cargo" />
+                  <TreeTableColumn fx:id="mPlanet" prefWidth="75.0" text="Planet" />
+                  <TreeTableColumn fx:id="mLoadCOL" prefWidth="75.0" text="Load COL" />
+                  <TreeTableColumn fx:id="mUnload" prefWidth="75.0" text="Unload" />
+              </columns>
+            </TreeTableView>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

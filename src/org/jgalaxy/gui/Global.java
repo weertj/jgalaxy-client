@@ -33,8 +33,8 @@ public class Global {
 
   static final public ObservableList<IJG_Group> SELECTEDGROUPS = FXCollections.observableArrayList();
 
-  static public IJG_Faction retrieveFactionByName( String pName ) {
-    if (CURRENTFACTION_CHANGED.get()!=null && Objects.equals(CURRENTFACTION_CHANGED.get().name(), pName)) {
+  static public IJG_Faction retrieveFactionByID( String pName ) {
+    if (CURRENTFACTION_CHANGED.get()!=null && Objects.equals(CURRENTFACTION_CHANGED.get().id(), pName)) {
       return CURRENTFACTION_CHANGED.get();
     }
     if (CURRENTPLAYERCHANGED.get()!=null) {

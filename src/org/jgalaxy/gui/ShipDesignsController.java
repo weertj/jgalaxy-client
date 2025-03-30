@@ -29,6 +29,10 @@ public class ShipDesignsController extends JUnitPanelInterface implements Initia
 
   @FXML private Button mBuild;
 
+  @FXML private TextField mNewFleet;
+  @FXML private Button mCreateFleet;
+
+  private IJG_Faction mFaction;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -52,12 +56,23 @@ public class ShipDesignsController extends JUnitPanelInterface implements Initia
       Global.CURRENTFACTION_CHANGED.get().addUnitDesign(design);
       return;
     });
+
+    mCreateFleet.setOnAction(e -> {
+       mFaction.groups().addFleet( mNewFleet.getText(), mNewFleet.getText() );
+    });
+
     return;
   }
 
   @Override
   public AnchorPane rootPane() {
     return mRootPane;
+  }
+
+  public void setFaction( IJG_Faction pFaction ) {
+    mFaction = pFaction;
+    refresh();
+    return;
   }
 
   public void refresh() {
