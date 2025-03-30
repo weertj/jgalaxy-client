@@ -4,7 +4,7 @@
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="mRootPane" prefHeight="200.0" prefWidth="379.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.OOBController">
+<AnchorPane fx:id="mRootPane" prefHeight="200.0" prefWidth="853.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.OOBController">
    <children>
       <AnchorPane layoutX="46.0" layoutY="166.0" prefHeight="374.0" prefWidth="222.0" style="-fx-background-color: #222222;" stylesheets="@jgalaxy.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -18,6 +18,7 @@
                   <TreeTableColumn fx:id="mPlanet" prefWidth="75.0" text="Planet" />
                   <TreeTableColumn fx:id="mLoadCOL" prefWidth="75.0" text="Load COL" />
                   <TreeTableColumn fx:id="mUnload" prefWidth="75.0" text="Unload" />
+                  <TreeTableColumn fx:id="mWarPeace" prefWidth="75.0" text="War/Peace" />
               </columns>
             </TreeTableView>
          </children>

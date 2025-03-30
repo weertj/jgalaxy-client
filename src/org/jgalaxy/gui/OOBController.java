@@ -36,6 +36,7 @@ public class OOBController extends JUnitPanelInterface implements Initializable 
   @FXML private TreeTableColumn<IEntity,String> mPlanet;
   @FXML private TreeTableColumn<IEntity,Node> mLoadCOL;
   @FXML private TreeTableColumn<IEntity,Node> mUnload;
+  @FXML private TreeTableColumn<IEntity,Node> mWarPeace;
 
   private IJG_Faction mFaction;
   private TreeItem mRoot;
@@ -125,6 +126,26 @@ public class OOBController extends JUnitPanelInterface implements Initializable 
           Button button = new Button("unload");
           button.setOnAction(e -> {
             SJG_LoadOrder.unloadOrder(group, planet,9999999);
+            mOOBTree.refresh();
+          });
+          return new ReadOnlyObjectWrapper<>(button);
+        }
+      }
+      return null;
+    });
+    mWarPeace.setCellValueFactory( df -> {
+      if (df.getValue().getValue() instanceof IJG_Faction faction) {
+        if (mFaction.atWarWith().contains(faction.id())) {
+          Button button = new Button("peace");
+          button.setOnAction(e -> {
+            mFaction.removeWarWith(faction.id());
+            mOOBTree.refresh();
+          });
+          return new ReadOnlyObjectWrapper<>(button);
+        } else {
+          Button button = new Button("war");
+          button.setOnAction(e -> {
+            mFaction.addWarWith(faction.id());
             mOOBTree.refresh();
           });
           return new ReadOnlyObjectWrapper<>(button);
