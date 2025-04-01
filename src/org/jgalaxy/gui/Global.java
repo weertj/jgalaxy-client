@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class Global {
 
-  static public EUDistance DISTANCEUNIT = EUDistance.KM;
+  static public EUDistance DISTANCEUNIT = EUDistance.LY;
 
   static final public IntegerProperty CURRENTTURNNUMBER   = new SimpleIntegerProperty(0);
   static final public StringProperty  CURRENTGAMEID       = new SimpleStringProperty("");

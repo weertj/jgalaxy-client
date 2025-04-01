@@ -17,6 +17,9 @@ public class PlayerInfoController extends JUnitPanelInterface implements Initial
   @FXML private AnchorPane  mRootPane;
 
   @FXML private Label mDriveTech;
+  @FXML private Label mWeaponsTech;
+  @FXML private Label mShieldsTech;
+  @FXML private Label mCargoTech;
 
   private IJG_Player mPlayer;
   private IJG_Faction mFaction;
@@ -34,8 +37,14 @@ public class PlayerInfoController extends JUnitPanelInterface implements Initial
   public void refresh() {
     if (mFaction==null) {
       mDriveTech.setText("-");
+      mWeaponsTech.setText("-");
+      mShieldsTech.setText("-");
+      mCargoTech.setText("-");
     } else {
       mDriveTech.setText("" + mFaction.tech().drive());
+      mWeaponsTech.setText("" + mFaction.tech().weapons());
+      mShieldsTech.setText("" + mFaction.tech().shields());
+      mCargoTech.setText("" + mFaction.tech().cargo());
     }
     return;
   }

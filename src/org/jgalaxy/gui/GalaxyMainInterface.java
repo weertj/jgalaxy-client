@@ -11,12 +11,12 @@ import org.javelinfx.fxml.FXMLLoad;
 import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.player.JL_PlayerContext;
 import org.javelinfx.spatial.SP_Position;
-import org.javelinfx.units.EUDistance;
 import org.javelinfx.window.S_Pane;
 import org.jgalaxy.engine.*;
 import org.jgalaxy.planets.IJG_Planet;
 import org.jgalaxy.units.IJG_Fleet;
 import org.jgalaxy.units.IJG_Group;
+import org.jgalaxy.units.IJG_Incoming;
 import org.jgalaxy.utils.XML_Utils;
 import org.w3c.dom.Node;
 
@@ -53,7 +53,7 @@ public class GalaxyMainInterface extends JMainInterface {
     IJavelinCanvas canvas = GalaxyCanvas.of();
     add( canvas );
     canvas.canvas().setLayoutX( 10 );
-    canvas.canvas().setLayoutY( 10 );
+    canvas.canvas().setLayoutY( 30 );
     mainPane().widthProperty().addListener( (_,_,newValue) ->
       canvas.canvas().setWidth( newValue.doubleValue()-220 )
     );
@@ -199,13 +199,13 @@ public class GalaxyMainInterface extends JMainInterface {
     if (pItem instanceof PlanetRenderItem planetRI) {
       IJG_Planet planet = planetRI.element();
       mPlanetInfoController.setPlanet(planet);
-      if (planet.owner()==null) {
+      if (planet.faction()==null) {
         mPlanetInfoController.setFaction(null);
         mTurnInfoController.setFaction(null);
         mPlayerInfoController.setFaction(null);
       } else {
 //        IJG_Faction faction = Global.CURRENTPLAYERCHANGED.get().getFactionByID(planet.owner());
-        IJG_Faction faction = Global.retrieveFactionByID(planet.owner() );
+        IJG_Faction faction = Global.retrieveFactionByID(planet.faction() );
         mPlanetInfoController.setFaction(faction);
         mTurnInfoController.setFaction(faction);
         mPlayerInfoController.setFaction(faction);
@@ -259,6 +259,21 @@ public class GalaxyMainInterface extends JMainInterface {
           new FleetRenderItem(fleet.id(), fleet,
             SP_Position.of(group.position().x(), group.position().y(), Global.DISTANCEUNIT)));
       }
+    }
+
+    // **** Other faction groups
+    for( IJG_Faction otherFaction : pFaction.getOtherFactionsMutable()) {
+      for( IJG_Group othergroup : otherFaction.groups().getGroups()) {
+        playerContext.addRenderItem( 2,
+          new GroupRenderItem(othergroup.id(),othergroup,
+            SP_Position.of(othergroup.position().x(), othergroup.position().y(), Global.DISTANCEUNIT)));
+      }
+    }
+
+    // **** Incoming groups
+    for(IJG_Incoming incoming : pFaction.getIncomingMutable()) {
+      playerContext.addRenderItem( 2,
+        new IncomingGroupRenderItem(null,incoming, SP_Position.of(incoming.current().x(),incoming.current().y(), Global.DISTANCEUNIT)));
     }
 
 
