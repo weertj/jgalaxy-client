@@ -46,6 +46,8 @@ public class GalaxyMainInterface extends JMainInterface {
   public void init() {
     super.init();
 
+    mainPane().getStylesheets().add(getClass().getResource("/org/jgalaxy/gui/jgalaxy.css").toExternalForm());
+
     Global.CURRENTSERVER.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("server", ""));
     Global.CURRENTGAMEID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("game", ""));
     Global.CURRENTPLAYERID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("player", ""));
