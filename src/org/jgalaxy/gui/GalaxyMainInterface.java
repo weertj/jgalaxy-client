@@ -49,6 +49,8 @@ public class GalaxyMainInterface extends JMainInterface {
 
     mainPane().getStylesheets().add(getClass().getResource("/org/jgalaxy/gui/jgalaxy.css").toExternalForm());
 
+    Global.CURRENTUSERNAME.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("username", ""));
+    Global.CURRENTPASSWORD.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("password", ""));
     Global.CURRENTSERVER.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("server", ""));
     Global.CURRENTGAMEID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("game", ""));
     Global.CURRENTPLAYERID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("player", ""));
@@ -144,7 +146,7 @@ public class GalaxyMainInterface extends JMainInterface {
       .build();
     Node root = null;
     try {
-      HttpResponse response = SimpleClient.createClient().send(request, HttpResponse.BodyHandlers.ofString() );
+      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
       String result = response.body().toString();
       root = XML_Utils.rootNodeBy(result);
       gameinfo = JG_GameInfo.of( XML_Utils.childNodeByPath(root,"game").get());
@@ -162,7 +164,7 @@ public class GalaxyMainInterface extends JMainInterface {
     IJG_Game game = null;
     IJG_Game gamechanged = null;
     try {
-      HttpResponse response = SimpleClient.createClient().send(request, HttpResponse.BodyHandlers.ofString() );
+      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
       String result = response.body().toString();
       root = XML_Utils.rootNodeBy(result);
       game = JG_Game.of( null, root, pTurnNumber);
@@ -185,7 +187,7 @@ public class GalaxyMainInterface extends JMainInterface {
       .build();
     root = null;
     try {
-      HttpResponse response = SimpleClient.createClient().send(request, HttpResponse.BodyHandlers.ofString() );
+      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
       String result = response.body().toString();
       root = XML_Utils.rootNodeBy(result);
     } catch (Throwable e) {

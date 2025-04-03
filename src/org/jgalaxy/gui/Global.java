@@ -18,6 +18,9 @@ public class Global {
 
   static public EUDistance DISTANCEUNIT = EUDistance.LY;
 
+  static final public StringProperty CURRENTUSERNAME = new SimpleStringProperty("");
+  static final public StringProperty CURRENTPASSWORD = new SimpleStringProperty("");
+
   static final public IntegerProperty CURRENTTURNNUMBER   = new SimpleIntegerProperty(0);
   static final public StringProperty  CURRENTGAMEID       = new SimpleStringProperty("");
   static final public StringProperty  CURRENTPLAYERID     = new SimpleStringProperty("");

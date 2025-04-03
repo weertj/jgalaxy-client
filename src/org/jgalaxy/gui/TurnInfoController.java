@@ -15,6 +15,7 @@ import org.jgalaxy.engine.IJG_Player;
 import org.jgalaxy.orders.IJG_Orders;
 import org.jgalaxy.orders.JG_Orders;
 import org.jgalaxy.planets.IJG_Planet;
+import org.jgalaxy.server.SimpleClient;
 import org.jgalaxy.utils.XML_Utils;
 import org.json.XML;
 import org.w3c.dom.Document;
@@ -22,7 +23,6 @@ import org.w3c.dom.Node;
 
 import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ResourceBundle;
@@ -76,7 +76,7 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
           .PUT(HttpRequest.BodyPublishers.ofString(result))
           .build();
-          HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString() );
+          HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
       } catch (Throwable e) {
         e.printStackTrace();
       }
@@ -88,7 +88,7 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
           .PUT(HttpRequest.BodyPublishers.ofString(""))
           .build();
-        HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString() );
+        HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
       } catch (Throwable e) {
         e.printStackTrace();
       }
