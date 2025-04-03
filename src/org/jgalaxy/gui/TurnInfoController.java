@@ -67,7 +67,8 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
 
         String url =
               Global.CURRENTSERVER.get() + "/" +
-              Global.CURRENTGAMEINFO.get().name() + "/" +
+//              Global.CURRENTGAMEINFO.get().name() + "/" +
+              Global.CURRENTGAME.get().name() + "/" +
               Global.CURRENTTURNNUMBER.get() + "/" +
               Global.CURRENTPLAYERID.get() + "/" +
               Global.CURRENTFACTION.get().id() + "/" +
@@ -83,7 +84,7 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
 
     mNextTurn.setOnAction(event -> {
       try {
-        String url = Global.CURRENTSERVER.get() + "/" + Global.CURRENTGAMEINFO.get().name() + "/" + Global.CURRENTTURNNUMBER.get() + "?nextTurn&alt=xml";
+        String url = Global.CURRENTSERVER.get() + "/" + Global.CURRENTGAME.get().name() + "/" + Global.CURRENTTURNNUMBER.get() + "?nextTurn&alt=xml";
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
           .PUT(HttpRequest.BodyPublishers.ofString(""))
           .build();

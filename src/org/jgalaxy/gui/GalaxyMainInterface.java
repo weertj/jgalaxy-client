@@ -14,6 +14,7 @@ import org.javelinfx.spatial.SP_Position;
 import org.javelinfx.window.S_Pane;
 import org.jgalaxy.engine.*;
 import org.jgalaxy.planets.IJG_Planet;
+import org.jgalaxy.server.SimpleClient;
 import org.jgalaxy.units.IJG_Fleet;
 import org.jgalaxy.units.IJG_Group;
 import org.jgalaxy.units.IJG_Incoming;
@@ -143,7 +144,7 @@ public class GalaxyMainInterface extends JMainInterface {
       .build();
     Node root = null;
     try {
-      HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString() );
+      HttpResponse response = SimpleClient.createClient().send(request, HttpResponse.BodyHandlers.ofString() );
       String result = response.body().toString();
       root = XML_Utils.rootNodeBy(result);
       gameinfo = JG_GameInfo.of( XML_Utils.childNodeByPath(root,"game").get());
@@ -161,7 +162,7 @@ public class GalaxyMainInterface extends JMainInterface {
     IJG_Game game = null;
     IJG_Game gamechanged = null;
     try {
-      HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString() );
+      HttpResponse response = SimpleClient.createClient().send(request, HttpResponse.BodyHandlers.ofString() );
       String result = response.body().toString();
       root = XML_Utils.rootNodeBy(result);
       game = JG_Game.of( null, root, pTurnNumber);
@@ -184,7 +185,7 @@ public class GalaxyMainInterface extends JMainInterface {
       .build();
     root = null;
     try {
-      HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString() );
+      HttpResponse response = SimpleClient.createClient().send(request, HttpResponse.BodyHandlers.ofString() );
       String result = response.body().toString();
       root = XML_Utils.rootNodeBy(result);
     } catch (Throwable e) {
