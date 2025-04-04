@@ -50,7 +50,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
       Global.SELECTEDGROUPS.clear();
       Global.SELECTEDGROUPS.addAll(mGroupsInOrbit.getSelectionModel().getSelectedItems());
     });
-    mPlanetName.setOnAction( e -> mPlanet.rename(mPlanetName.getText()));
+    mPlanetName.setOnAction( e -> mPlanet.setName(mPlanetName.getText()));
 
     mOtherGroupsInOrbit.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     mOtherGroupsInOrbit.getSelectionModel().getSelectedItems().addListener( (ListChangeListener)c -> {
