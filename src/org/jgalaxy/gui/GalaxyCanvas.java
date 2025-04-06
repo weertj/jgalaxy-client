@@ -2,7 +2,6 @@ package org.jgalaxy.gui;
 
 import org.javelinfx.canvas.JavelinCanvas;
 import org.javelinfx.spatial.SP_Position;
-import org.javelinfx.units.EUDistance;
 
 public class GalaxyCanvas extends JavelinCanvas {
 

@@ -36,7 +36,7 @@ public class PlanetRenderItem extends JavelinUIElement {
   }
 
   @Override
-  public void pointerPressed(IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
+  public void pointerPressed( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
     if (pPointer==S_Pointer.POINTER.SECONDARY) {
       for(IJG_Group group : Global.SELECTEDGROUPS) {
         if (group instanceof IJG_Fleet fleet) {
@@ -55,12 +55,12 @@ public class PlanetRenderItem extends JavelinUIElement {
   }
 
   @Override
-  public void pointerEntered(IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
+  public void pointerEntered( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
     return;
   }
 
   @Override
-  public void pointerLeft(IJL_PlayerContext pContext, ISP_Position pPosition) {
+  public void pointerLeft( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, ISP_Position pPosition) {
     return;
   }
 }

@@ -12,6 +12,7 @@ import org.jgalaxy.engine.IJG_Player;
 import org.jgalaxy.units.IJG_Group;
 import org.jgalaxy.units.IJG_Unit;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public class Global {

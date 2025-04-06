@@ -48,18 +48,18 @@ public class FleetRenderItem extends JavelinUIElement {
   }
 
   @Override
-  public void pointerPressed(IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
+  public void pointerPressed( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
     return;
   }
 
   @Override
-  public void pointerEntered(IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
+  public void pointerEntered( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
     System.out.println(" --- FLEET " + element().id());
     return;
   }
 
   @Override
-  public void pointerLeft(IJL_PlayerContext pContext, ISP_Position pPosition) {
+  public void pointerLeft( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, ISP_Position pPosition) {
     return;
   }
 }

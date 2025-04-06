@@ -39,11 +39,27 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
 
   private IJG_Faction mFaction;
   private IJG_Planet  mPlanet;
+  private boolean     mInRefresh = false;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     mProduce.valueProperty().addListener((observable, oldValue, newValue) -> {
-      mPlanet.setProduceType(null, newValue );
+      if (mInRefresh) return;
+      if (Objects.equals(newValue,EProduceType.PR_CAP.order())) {
+        mPlanet.setProduceType(EProduceType.PR_CAP, null);
+      } else if (Objects.equals(newValue,EProduceType.PR_MAT.order())) {
+        mPlanet.setProduceType(EProduceType.PR_MAT, null);
+      } else if (Objects.equals(newValue,EProduceType.PR_DRIVE.order())) {
+        mPlanet.setProduceType(EProduceType.PR_DRIVE, null);
+      } else if (Objects.equals(newValue,EProduceType.PR_WEAPONS.order())) {
+        mPlanet.setProduceType(EProduceType.PR_WEAPONS, null);
+      } else if (Objects.equals(newValue,EProduceType.PR_SHIELDS.order())) {
+        mPlanet.setProduceType(EProduceType.PR_SHIELDS, null);
+      } else if (Objects.equals(newValue,EProduceType.PR_CARGO.order())) {
+        mPlanet.setProduceType(EProduceType.PR_CARGO, null);
+      } else {
+        mPlanet.setProduceType(EProduceType.PR_SHIP,newValue);
+      }
     });
     mGroupsInOrbit.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     mGroupsInOrbit.getSelectionModel().getSelectedItems().addListener( (ListChangeListener)c -> {
@@ -74,54 +90,66 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
    * refresh
    */
   public void refresh() {
-    if (mPlanet==null) {
-      mPlanetName.setText("");
-      mPopulation.setText("");
-      mCol.setText("");
-      mCap.setText("");
-      mMat.setText("");
-      mInd.setText("");
-    } else {
-      mPlanetName.setText(mPlanet.name());
-      mPopulation.setText(String.valueOf(mPlanet.population()));
-      mCol.setText(String.valueOf(mPlanet.cols()));
-      mCap.setText(String.valueOf(mPlanet.capitals()));
-      mMat.setText(String.valueOf(mPlanet.materials()));
-      mInd.setText(String.valueOf(mPlanet.industry()));
-      mProduce.setValue(mPlanet.produceUnitDesign());
-      mProduce.getItems().clear();
+    try {
+      mInRefresh = true;
+      if (mPlanet == null) {
+        mPlanetName.setText("");
+        mPopulation.setText("");
+        mCol.setText("");
+        mCap.setText("");
+        mMat.setText("");
+        mInd.setText("");
+      } else {
+        mPlanetName.setText(mPlanet.name());
+        mPopulation.setText(String.valueOf(mPlanet.population()));
+        mCol.setText(String.valueOf(mPlanet.cols()));
+        mCap.setText(String.valueOf(mPlanet.capitals()));
+        mMat.setText(String.valueOf(mPlanet.materials()));
+        mInd.setText(String.valueOf(mPlanet.industry()));
+        mProduce.getItems().clear();
 
-      mGroupsInOrbit.getItems().clear();
-      mOtherGroupsInOrbit.getItems().clear();
-      mFleetNames.getItems().clear();
-      if (mFaction != null) {
-        for (EProduceType produceType : EProduceType.values()) {
-          if (produceType != EProduceType.PR_SHIP) {
-            mProduce.getItems().add(produceType.order());
+        mGroupsInOrbit.getItems().clear();
+        mOtherGroupsInOrbit.getItems().clear();
+        mFleetNames.getItems().clear();
+        if (mFaction != null) {
+          for (EProduceType produceType : EProduceType.values()) {
+            if (produceType != EProduceType.PR_SHIP) {
+              mProduce.getItems().add(produceType.order());
+            }
           }
-        }
-        for (IJG_UnitDesign ud : mFaction.unitDesigns()) {
-          mProduce.getItems().add(ud.name());
-        }
-        // **** Add fleets
-        for (IJG_Fleet fleet : mFaction.groups().fleets()) {
-          if (Objects.equals(fleet.position(),mPlanet.position())) {
-            mGroupsInOrbit.getItems().add(fleet);
+          for (IJG_UnitDesign ud : mFaction.unitDesigns()) {
+            mProduce.getItems().add(ud.name());
           }
-        }
-        // **** Add single groups
-        for (IJG_Group group : mFaction.groups().groupsByPosition(mPlanet.position()).getGroups()) {
-          if (group.getFleet()==null) {
-            mGroupsInOrbit.getItems().add(group);
+          // **** Add fleets
+          for (IJG_Fleet fleet : mFaction.groups().fleets()) {
+            if (Objects.equals(fleet.position(), mPlanet.position())) {
+              mGroupsInOrbit.getItems().add(fleet);
+            }
           }
-        }
-        for(IJG_Faction other : mFaction.getOtherFactionsMutable()) {
-          for (IJG_Group group : other.groups().groupsByPosition(mPlanet.position()).getGroups()) {
-            mOtherGroupsInOrbit.getItems().add(group);
+          // **** Add single groups
+          for (IJG_Group group : mFaction.groups().groupsByPosition(mPlanet.position()).getGroups()) {
+            if (group.getFleet() == null) {
+              mGroupsInOrbit.getItems().add(group);
+            }
           }
+          for (IJG_Faction other : mFaction.getOtherFactionsMutable()) {
+            for (IJG_Group group : other.groups().groupsByPosition(mPlanet.position()).getGroups()) {
+              mOtherGroupsInOrbit.getItems().add(group);
+            }
+          }
+          mFaction.groups().fleets().forEach(g -> mFleetNames.getItems().add(g.name()));
         }
-        mFaction.groups().fleets().forEach( g -> mFleetNames.getItems().add(g.name()));
+        if (mPlanet.produceUnitDesign() == null) {
+          if (mPlanet.produceType() == null) {
+          } else {
+            mProduce.setValue(mPlanet.produceType().order());
+          }
+        } else {
+          mProduce.setValue(mPlanet.produceUnitDesign());
+        }
       }
+    } finally {
+      mInRefresh = false;
     }
     return;
   }

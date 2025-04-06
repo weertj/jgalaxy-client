@@ -13,6 +13,7 @@ import org.javelinfx.player.JL_PlayerContext;
 import org.javelinfx.spatial.SP_Position;
 import org.javelinfx.window.S_Pane;
 import org.jgalaxy.engine.*;
+import org.jgalaxy.map.IMAP_Map;
 import org.jgalaxy.planets.IJG_Planet;
 import org.jgalaxy.server.SimpleClient;
 import org.jgalaxy.units.IJG_Fleet;
@@ -34,6 +35,7 @@ public class GalaxyMainInterface extends JMainInterface {
   private PlanetInfoController  mPlanetInfoController;
   private ShipDesignsController mShipDesignsController;
   private PlayerInfoController  mPlayerInfoController;
+  private StatusBarController   mStatusBarController;
   private OOBController         mOOBController;
 
   private TabPane mTabControlPane;
@@ -81,7 +83,16 @@ public class GalaxyMainInterface extends JMainInterface {
       var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/OOB.fxml", null);
       mOOBController = (OOBController)FXMLLoad.controller(contents);
       mainPane().getChildren().add(mOOBController.rootPane());
-      S_Pane.setAnchors( mOOBController.rootPane(), 0.0, 0.0, null, 0.0);
+      S_Pane.setAnchors( mOOBController.rootPane(), 0.0, 0.0, null, 32.0);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    try { // **** Statusbar
+      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/StatusBar.fxml", null);
+      mStatusBarController = (StatusBarController)FXMLLoad.controller(contents);
+      mainPane().getChildren().add(mStatusBarController.rootPane());
+      S_Pane.setAnchors( mStatusBarController.rootPane(), 0.0, 0.0, null, 0.0);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -243,6 +254,15 @@ public class GalaxyMainInterface extends JMainInterface {
       }
       return;
     });
+
+    IMAP_Map map = Global.CURRENTGAME.get().galaxy().map();
+    MapRenderItem mri = new MapRenderItem("map", map, SP_Position.of(map.xStart(), map.yStart(), Global.DISTANCEUNIT));
+    mri.mouseOverMapPositionProperty().addListener((observable, oldValue, newValue) -> {
+      mStatusBarController.setMouseMovePosition(newValue);
+      return;
+    });
+
+    playerContext.addRenderItem(1, mri );
 
     for(IJG_Planet planet : pFaction.planets().planets()) {
       playerContext.addRenderItem(2,

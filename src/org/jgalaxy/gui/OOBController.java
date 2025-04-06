@@ -12,6 +12,7 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import org.javelinfx.engine.JUnitPanelInterface;
+import org.javelinfx.system.JavelinSystem;
 import org.jgalaxy.IEntity;
 import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.orders.SJG_LoadOrder;
@@ -78,12 +79,12 @@ public class OOBController extends JUnitPanelInterface implements Initializable 
     mPosition.setCellValueFactory( df -> {
       if (df.getValue().getValue() instanceof IJG_Fleet fleet) {
         if (fleet.containsGroups()) {
-          return new ReadOnlyStringWrapper(String.format(Locale.US, "(%.2f,%.2f)", fleet.position().x(), fleet.position().y()));
+          return new ReadOnlyStringWrapper(String.format(JavelinSystem.getLocale(), "(%.2f,%.2f)", fleet.position().x(), fleet.position().y()));
         } else {
           return new ReadOnlyStringWrapper( "-" );
         }
       } else if (df.getValue().getValue() instanceof IJG_Group group) {
-        return new ReadOnlyStringWrapper(String.format(Locale.US,"(%.2f,%.2f)",group.position().x(),group.position().y()));
+        return new ReadOnlyStringWrapper(String.format(JavelinSystem.getLocale(),"(%.2f,%.2f)",group.position().x(),group.position().y()));
       }
       return new ReadOnlyStringWrapper("");
     });

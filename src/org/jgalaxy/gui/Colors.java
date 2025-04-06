@@ -2,11 +2,15 @@ package org.jgalaxy.gui;
 
 import javafx.scene.paint.Color;
 import org.jgalaxy.IFactionOwner;
+import org.jgalaxy.planets.IJG_Planet;
 
 public class Colors {
 
-  static public Color colorForMyFaction(IFactionOwner pOwner ) {
+  static public Color colorForMyFaction(IFactionOwner pOwner) {
     if (pOwner.faction()==null) {
+      if (pOwner instanceof IJG_Planet planet) {
+        return UNKNOWN_DARK;
+      }
       return UNKNOWN_MEDIUM;
     }
     String factionid = Global.CURRENTFACTION_CHANGED.get().id();
@@ -24,6 +28,9 @@ public class Colors {
 
 //  String factionid = Global.CURRENTFACTION_CHANGED.get().id();
 
+  static final public Color MAPBG           = Color.web( "#222222" );
+  static final public Color MAPLINE         = Color.web( "#999999" );
+
 
   // **** MIL-STD-2525D
   static final public Color HOSTILE_DARK    = Color.web( "#C80000" );
@@ -35,7 +42,7 @@ public class Colors {
   static final public Color NEUTRAL_DARK    = Color.web( "#00A000" );
   static final public Color NEUTRAL_MEDIUM  = Color.web( "#00E200" );
   static final public Color NEUTRAL_LIGHT   = Color.web( "#AAFFAA" );
-  static final public Color UNKNOWN_DARK    = Color.web( "#FFDC00" );
+  static final public Color UNKNOWN_DARK    = Color.web( "#AAAA00" );
   static final public Color UNKNOWN_MEDIUM  = Color.web( "#FFFF00" );
   static final public Color UNKNOWN_LIGHT   = Color.web( "#FFFF80" );
   static final public Color CIVILIAN_DARK   = Color.web( "#500050" );
