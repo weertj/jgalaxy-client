@@ -111,33 +111,34 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
         mGroupsInOrbit.getItems().clear();
         mOtherGroupsInOrbit.getItems().clear();
         mFleetNames.getItems().clear();
-        if (mFaction != null) {
+        IJG_Faction ownfaction = Global.CURRENTFACTION_CHANGED.get();
+        if (ownfaction != null) {
           for (EProduceType produceType : EProduceType.values()) {
             if (produceType != EProduceType.PR_SHIP) {
               mProduce.getItems().add(produceType.order());
             }
           }
-          for (IJG_UnitDesign ud : mFaction.unitDesigns()) {
+          for (IJG_UnitDesign ud : ownfaction.unitDesigns()) {
             mProduce.getItems().add(ud.name());
           }
           // **** Add fleets
-          for (IJG_Fleet fleet : mFaction.groups().fleets()) {
+          for (IJG_Fleet fleet : ownfaction.groups().fleets()) {
             if (Objects.equals(fleet.position(), mPlanet.position())) {
               mGroupsInOrbit.getItems().add(fleet);
             }
           }
           // **** Add single groups
-          for (IJG_Group group : mFaction.groups().groupsByPosition(mPlanet.position()).getGroups()) {
+          for (IJG_Group group : ownfaction.groups().groupsByPosition(mPlanet.position()).getGroups()) {
             if (group.getFleet() == null) {
               mGroupsInOrbit.getItems().add(group);
             }
           }
-          for (IJG_Faction other : mFaction.getOtherFactionsMutable()) {
+          for (IJG_Faction other : ownfaction.getOtherFactionsMutable()) {
             for (IJG_Group group : other.groups().groupsByPosition(mPlanet.position()).getGroups()) {
               mOtherGroupsInOrbit.getItems().add(group);
             }
           }
-          mFaction.groups().fleets().forEach(g -> mFleetNames.getItems().add(g.name()));
+          ownfaction.groups().fleets().forEach(g -> mFleetNames.getItems().add(g.name()));
         }
         if (mPlanet.produceUnitDesign() == null) {
           if (mPlanet.produceType() == null) {
