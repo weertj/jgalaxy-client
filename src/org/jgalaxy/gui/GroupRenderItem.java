@@ -23,6 +23,11 @@ public class GroupRenderItem extends JavelinUIElement {
     return (IJG_Group)super.element();
   }
 
+//  @Override
+//  public ZOOMTYPE zoomType() {
+//    return ZOOMTYPE.WITHLIMITS;
+//  }
+
   @Override
   public void render(IJavelinCanvas pCanvas, IJL_PlayerContext pContext) {
     super.render(pCanvas, pContext);
@@ -35,6 +40,8 @@ public class GroupRenderItem extends JavelinUIElement {
       gc.strokeRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
     } else {
       gc.fillRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
+      gc.setStroke(Color.BLACK);
+      gc.strokeRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
     }
     gc.fillText( element().name(), outline.getX(), outline.getY() );
 

@@ -28,7 +28,7 @@ public class Colors {
 
 //  String factionid = Global.CURRENTFACTION_CHANGED.get().id();
 
-  static final public Color MAPBG           = Color.web( "#222222" );
+  static final public Color MAPBG           = Color.web( "#444444" );
   static final public Color MAPLINE         = Color.web( "#999999" );
 
 
