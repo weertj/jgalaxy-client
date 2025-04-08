@@ -12,25 +12,27 @@
       <AnchorPane layoutX="46.0" layoutY="166.0" prefHeight="374.0" prefWidth="222.0" style="-fx-background-color: #222222;" stylesheets="@jgalaxy.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="181.0" text="SHIP DESIGNER" textAlignment="CENTER" underline="true" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="8.0" />
-            <ListView layoutX="18.0" layoutY="44.0" prefHeight="137.0" prefWidth="187.0" style="-fx-background-color: #000000;" />
+            <ListView fx:id="mShipDesigns" layoutX="18.0" layoutY="44.0" prefHeight="137.0" prefWidth="187.0" style="-fx-background-color: #000000;" />
             <AnchorPane layoutX="11.0" layoutY="224.0" prefHeight="200.0" prefWidth="200.0">
                <children>
+                  <Label layoutX="33.0" layoutY="24.0" text="DRIVE" />
+                  <Label layoutX="13.0" layoutY="53.0" text="WEAPONS" />
+                  <Label layoutX="1.0" layoutY="83.0" prefHeight="17.0" prefWidth="88.0" text="NR. WEAPONS" />
+                  <Label layoutX="20.0" layoutY="113.0" text="SHIELDS" />
+                  <Label layoutX="25.0" layoutY="142.0" text="CARGO" />
                   <Spinner fx:id="mDrive" editable="true" layoutX="88.0" layoutY="18.0" prefHeight="26.0" prefWidth="88.0" />
-                  <Label layoutX="32.0" layoutY="31.0" text="DRIVE" />
-                  <Label layoutX="13.0" layoutY="57.0" text="WEAPONS" />
-                  <Label layoutX="5.0" layoutY="83.0" prefHeight="17.0" prefWidth="88.0" text="NR. WEAPONS" />
-                  <Label layoutX="19.0" layoutY="114.0" text="SHIELDS" />
-                  <Label layoutX="23.0" layoutY="149.0" text="CARGO" />
-                  <Spinner fx:id="mShields" editable="true" layoutX="88.0" layoutY="109.0" prefHeight="26.0" prefWidth="88.0" />
-                  <Spinner fx:id="mCargo" editable="true" layoutX="88.0" layoutY="144.0" prefHeight="26.0" prefWidth="88.0" />
+                  <Spinner fx:id="mWeapons" editable="true" layoutX="88.0" layoutY="48.0" prefHeight="26.0" prefWidth="88.0" />
                   <Spinner fx:id="mNrWeapons" editable="true" layoutX="88.0" layoutY="78.0" prefHeight="26.0" prefWidth="88.0" />
-                  <Spinner fx:id="mWeapons" editable="true" layoutX="88.0" layoutY="44.0" prefHeight="26.0" prefWidth="88.0" />
+                  <Spinner fx:id="mShields" editable="true" layoutX="88.0" layoutY="108.0" prefHeight="26.0" prefWidth="88.0" />
+                  <Spinner fx:id="mCargo" editable="true" layoutX="88.0" layoutY="138.0" prefHeight="26.0" prefWidth="88.0" />
+                  <Label layoutX="18.0" layoutY="178.0" text="speed" />
+                  <Label fx:id="mSpeed" layoutX="60.0" layoutY="178.0" text="..." />
                </children>
             </AnchorPane>
             <TextField fx:id="mName" layoutX="59.0" layoutY="199.0" prefHeight="26.0" prefWidth="132.0" />
-            <Button fx:id="mBuild" layoutX="59.0" layoutY="421.0" mnemonicParsing="false" text="BUILD" />
-            <TextField fx:id="mNewFleet" layoutX="18.0" layoutY="468.0" prefHeight="26.0" prefWidth="102.0" />
-            <Button fx:id="mCreateFleet" layoutX="125.0" layoutY="469.0" mnemonicParsing="false" text="Create fleet" />
+            <Button fx:id="mBuild" layoutX="59.0" layoutY="430.0" mnemonicParsing="false" text="BUILD" />
+            <TextField fx:id="mNewFleet" layoutX="18.0" layoutY="475.0" prefHeight="26.0" prefWidth="102.0" />
+            <Button fx:id="mCreateFleet" layoutX="125.0" layoutY="476.0" mnemonicParsing="false" text="Create fleet" />
          </children>
       </AnchorPane>
    </children>

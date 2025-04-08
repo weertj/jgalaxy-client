@@ -14,6 +14,7 @@ import org.jgalaxy.planets.IJG_Planet;
 import org.jgalaxy.units.IJG_Fleet;
 import org.jgalaxy.units.IJG_Group;
 import org.jgalaxy.units.IJG_UnitDesign;
+import org.jgalaxy.utils.GEN_Math;
 
 import java.net.URL;
 import java.util.Objects;
@@ -30,6 +31,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
   @FXML private Label   mMat;
   @FXML private Label   mInd;
   @FXML private ComboBox<String> mProduce;
+  @FXML private Label   mProduceProgress;
 
   @FXML private ListView<IJG_Group> mGroupsInOrbit;
   @FXML private ListView<IJG_Group> mOtherGroupsInOrbit;
@@ -145,8 +147,11 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
           } else {
             mProduce.setValue(mPlanet.produceType().order());
           }
+          mProduceProgress.setText("");
         } else {
-          mProduce.setValue(mPlanet.produceUnitDesign());
+          IJG_UnitDesign design = mFaction.getUnitDesignById(mPlanet.produceUnitDesign());
+          mProduce.setValue(design.name());
+          mProduceProgress.setText(""+GEN_Math.round02(mPlanet.inProgress()/(design.mass()/Global.INDPERSHIP) )+"%");
         }
       }
     } finally {

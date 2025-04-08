@@ -24,6 +24,7 @@
             <Label layoutX="27.0" layoutY="118.0" text="Industry" />
             <Label fx:id="mInd" layoutX="82.0" layoutY="118.0" text="..." />
             <Label layoutX="22.0" layoutY="142.0" text="Produce" />
+            <Label fx:id="mProduceProgress" layoutX="34.0" layoutY="164.0" text="..." />
             <ComboBox fx:id="mProduce" layoutX="82.0" layoutY="138.0" prefHeight="26.0" prefWidth="110.0" />
             <Label layoutX="19.0" layoutY="185.0" text="Own groups in orbit" />
             <ListView fx:id="mGroupsInOrbit" layoutX="14.0" layoutY="202.0" prefHeight="135.0" prefWidth="197.0" />
