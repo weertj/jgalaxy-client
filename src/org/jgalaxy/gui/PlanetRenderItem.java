@@ -7,6 +7,7 @@ import org.javelinfx.canvas.JavelinUIElement;
 import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.window.S_Pointer;
+import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.planets.IJG_Planet;
 import org.jgalaxy.units.IJG_Fleet;
 import org.jgalaxy.units.IJG_Group;
@@ -50,7 +51,15 @@ public class PlanetRenderItem extends JavelinUIElement {
         if (group instanceof IJG_Fleet fleet) {
           fleet.groups().stream().forEach( g -> sendGroupTo(g, element()));
         } else {
-          sendGroupTo(group, element());
+          int nr = -1;
+          if (nr>0) {
+            IJG_Faction faction = Global.CURRENTFACTION_CHANGED.get();
+            var breakgroup = group.breakOffGroup(Global.CURRENTGAMECHANGED.get(), faction, 1);
+            faction.groups().addGroup(breakgroup);
+            sendGroupTo(breakgroup, element());
+          } else {
+            sendGroupTo(group, element());
+          }
         }
       }
     }

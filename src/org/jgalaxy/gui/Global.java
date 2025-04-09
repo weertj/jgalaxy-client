@@ -19,6 +19,8 @@ public class Global {
 
   static public EUDistance DISTANCEUNIT = EUDistance.LY;
 
+  static public double INDPERSHIP = 10.0;
+
   static final public StringProperty CURRENTUSERNAME = new SimpleStringProperty("");
   static final public StringProperty CURRENTPASSWORD = new SimpleStringProperty("");
 
