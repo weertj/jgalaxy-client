@@ -2,8 +2,10 @@ package org.jgalaxy.gui;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
 import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.JavelinUIElement;
+import org.javelinfx.colors.SColors;
 import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.window.S_Pointer;
@@ -34,12 +36,19 @@ public class PlanetRenderItem extends JavelinUIElement {
   public void render(IJavelinCanvas pCanvas, IJL_PlayerContext pContext) {
     super.render(pCanvas, pContext);
     GraphicsContext gc = pCanvas.context();
-    gc.setFill(Colors.colorForMyFaction(element()));
     Rectangle2D outline = getOutline();
+//    gc.setFill(Color.BLACK);
+//    double grow = 0.4;
+//    gc.fillArc(outline.getX()-outline.getWidth() * grow/2, outline.getY()-outline.getHeight() * grow/2, outline.getWidth() * (1.0+grow), outline.getHeight() * (1.0+grow), 0, 270, ArcType.ROUND);
+//    gc.setFill(Colors.CIVILIAN_MEDIUM);
+//    grow = 0.3;
+//    gc.fillArc(outline.getX()-outline.getWidth() * grow/2, outline.getY()-outline.getHeight() * grow/2, outline.getWidth() * (1.0+grow), outline.getHeight() * (1.0+grow), 0, 270, ArcType.ROUND);
+    gc.setFill(Colors.colorForMyFaction(element()));
     gc.fillOval(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight() );
     gc.setStroke(Color.BLACK);
     gc.strokeOval(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight() );
     gc.fillText( element().name(), outline.getX(), outline.getY() );
+
 //    gc.fillOval( 10*element().position().x(), 10*element().position().y(), 10, 10 );
     return;
   }

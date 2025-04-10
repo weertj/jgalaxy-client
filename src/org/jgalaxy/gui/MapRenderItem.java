@@ -3,8 +3,10 @@ package org.jgalaxy.gui;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.JavelinUIElement;
+import org.javelinfx.image.SImages;
 import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.spatial.SP_Position;
@@ -43,10 +45,16 @@ public class MapRenderItem extends JavelinUIElement {
   public void render(IJavelinCanvas pCanvas, IJL_PlayerContext pContext) {
     super.render(pCanvas, pContext);
     GraphicsContext gc = pCanvas.context();
-    gc.setFill(Colors.MAPBG);
-    gc.setStroke(Colors.MAPLINE);
+
     Rectangle2D outline = getOutline();
-    gc.fillRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
+    if (pCanvas.getPixelZoom()<2) {
+      Image im = SImages.getImage("data/gfx/mapelements/bg.jpg");
+      gc.drawImage(im, outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
+    } else {
+      gc.setFill(Colors.MAPBG);
+      gc.fillRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
+    }
+    gc.setStroke(Colors.MAPLINE);
     gc.strokeRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
     return;
   }
