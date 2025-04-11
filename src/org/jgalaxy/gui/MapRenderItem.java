@@ -47,13 +47,13 @@ public class MapRenderItem extends JavelinUIElement {
     GraphicsContext gc = pCanvas.context();
 
     Rectangle2D outline = getOutline();
-    if (pCanvas.getPixelZoom()<2) {
-      Image im = SImages.getImage("data/gfx/mapelements/bg.jpg");
-      gc.drawImage(im, outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
-    } else {
-      gc.setFill(Colors.MAPBG);
-      gc.fillRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
-    }
+//    if (pCanvas.getPixelZoom()<2) {
+//      Image im = SImages.getImage("data/gfx/mapelements/bg.jpg");
+//      gc.drawImage(im, outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
+//    } else {
+//      gc.setFill(Colors.MAPBG);
+//      gc.fillRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
+//    }
     gc.setStroke(Colors.MAPLINE);
     gc.strokeRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
     return;

@@ -12,6 +12,7 @@ import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.player.JL_PlayerContext;
 import org.javelinfx.spatial.SP_Position;
 import org.javelinfx.window.S_Pane;
+import org.jgalaxy.IEntity;
 import org.jgalaxy.engine.*;
 import org.jgalaxy.map.IMAP_Map;
 import org.jgalaxy.planets.IJG_Planet;
@@ -212,6 +213,9 @@ public class GalaxyMainInterface extends JMainInterface {
   }
 
   private void selectItem( IJavelinUIElement pItem ) {
+    if (pItem.element() instanceof IEntity entity) {
+      Global.LASTSELECTEDENTITY.setValue(entity);
+    }
     if (pItem instanceof PlanetRenderItem planetRI) {
       IJG_Planet planet = planetRI.element();
       mPlanetInfoController.setPlanet(planet);
@@ -256,12 +260,16 @@ public class GalaxyMainInterface extends JMainInterface {
     });
 
     IMAP_Map map = Global.CURRENTGAME.get().galaxy().map();
+
+    BackgroundItem bgi = new BackgroundItem("map", map, SP_Position.of(map.xStart(), map.yStart(), Global.DISTANCEUNIT));
+    playerContext.addRenderItem(0, bgi );
+
+
     MapRenderItem mri = new MapRenderItem("map", map, SP_Position.of(map.xStart(), map.yStart(), Global.DISTANCEUNIT));
     mri.mouseOverMapPositionProperty().addListener((observable, oldValue, newValue) -> {
       mStatusBarController.setMouseMovePosition(newValue);
       return;
     });
-
     playerContext.addRenderItem(1, mri );
 
     for(IJG_Planet planet : pFaction.planets().planets()) {

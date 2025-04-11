@@ -6,6 +6,7 @@ import javafx.scene.shape.ArcType;
 import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.JavelinUIElement;
 import org.javelinfx.colors.SColors;
+import org.javelinfx.colors.SUX_Colors;
 import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.window.S_Pointer;
@@ -43,11 +44,23 @@ public class PlanetRenderItem extends JavelinUIElement {
 //    gc.setFill(Colors.CIVILIAN_MEDIUM);
 //    grow = 0.3;
 //    gc.fillArc(outline.getX()-outline.getWidth() * grow/2, outline.getY()-outline.getHeight() * grow/2, outline.getWidth() * (1.0+grow), outline.getHeight() * (1.0+grow), 0, 270, ArcType.ROUND);
+
+    if (element()==Global.LASTSELECTEDENTITY.get()) {
+      gc.setFill(SUX_Colors.SELECTION);
+      gc.fillOval(outline.getX()-4, outline.getY()-4, outline.getWidth()+8, outline.getHeight()+8);
+    }
+
     gc.setFill(Colors.colorForMyFaction(element()));
-    gc.fillOval(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight() );
-    gc.setStroke(Color.BLACK);
-    gc.strokeOval(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight() );
-    gc.fillText( element().name(), outline.getX(), outline.getY() );
+    if (element().faction()==null) {
+      gc.strokeOval(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
+    } else {
+      gc.fillOval(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
+      gc.setStroke(Color.BLACK);
+      gc.strokeOval(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight() );
+    }
+    if (pCanvas.getPixelZoom()>0.1) {
+      gc.fillText(element().name(), outline.getX(), outline.getY());
+    }
 
 //    gc.fillOval( 10*element().position().x(), 10*element().position().y(), 10, 10 );
     return;

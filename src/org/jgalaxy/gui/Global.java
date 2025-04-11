@@ -5,10 +5,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.javelinfx.units.EUDistance;
 import org.javelinfx.units.IU_Unit;
+import org.jgalaxy.IEntity;
 import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.engine.IJG_Game;
 import org.jgalaxy.engine.IJG_GameInfo;
 import org.jgalaxy.engine.IJG_Player;
+import org.jgalaxy.planets.IJG_Planet;
 import org.jgalaxy.units.IJG_Group;
 import org.jgalaxy.units.IJG_Unit;
 
@@ -38,6 +40,9 @@ public class Global {
   static final public ObjectProperty<IJG_Faction>   CURRENTFACTION_CHANGED  = new SimpleObjectProperty<>(null);
 
   static final public ObservableList<IJG_Group> SELECTEDGROUPS = FXCollections.observableArrayList();
+
+  static final public ObjectProperty<IEntity> LASTSELECTEDENTITY = new SimpleObjectProperty<>(null);
+
 
   static public IJG_Faction retrieveFactionByID( String pName ) {
     if (CURRENTFACTION_CHANGED.get()!=null && Objects.equals(CURRENTFACTION_CHANGED.get().id(), pName)) {
