@@ -3,10 +3,8 @@ package org.jgalaxy.gui;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.JavelinUIElement;
-import org.javelinfx.image.SImages;
 import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.spatial.SP_Position;
@@ -20,6 +18,8 @@ public class MapRenderItem extends JavelinUIElement {
 
   private final IMAP_Map mMap;
   private final ObjectProperty<ISP_Position> mMouseOverMapPosition = new SimpleObjectProperty<>(null);
+  private final ObjectProperty<ISP_Position> mMiddleCanvasPosition = new SimpleObjectProperty<>(null);
+  private final ObjectProperty<ISP_Position> mMiddleMoveToCanvasPosition = new SimpleObjectProperty<>(null);
 
   public MapRenderItem(String id, Object element, ISP_Position position) {
     super(id, element, position);
@@ -29,6 +29,14 @@ public class MapRenderItem extends JavelinUIElement {
 
   public ObjectProperty<ISP_Position> mouseOverMapPositionProperty() {
     return mMouseOverMapPosition;
+  }
+
+  public ObjectProperty<ISP_Position> middleCanvasPositionProperty() {
+    return mMiddleCanvasPosition;
+  }
+
+  public ObjectProperty<ISP_Position> middleMoveToCanvasPositionProperty() {
+    return mMiddleMoveToCanvasPosition;
   }
 
   @Override
@@ -56,6 +64,24 @@ public class MapRenderItem extends JavelinUIElement {
 //    }
     gc.setStroke(Colors.MAPLINE);
     gc.strokeRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
+
+    if (mMiddleMoveToCanvasPosition.get()!=null) {
+      var mmcp = mMiddleMoveToCanvasPosition.get();
+      var curcen = pCanvas.center().get();
+      double offx = (mmcp.x()-curcen.x())/10.0;
+      curcen = curcen.x(curcen.x() + offx );
+      curcen = curcen.y(curcen.y() + (mmcp.y()-curcen.y())/10.0 );
+      pCanvas.center().set(curcen);
+      if (Math.abs(offx)<0.001) {
+        mMiddleMoveToCanvasPosition.set(null);
+      }
+    }
+
+    double w = pCanvas.canvas().getWidth();
+    double h = pCanvas.canvas().getHeight();
+    double x = pCanvas.fromPixelX(w/2,Global.DISTANCEUNIT );
+    double y = pCanvas.fromPixelY(h/2,Global.DISTANCEUNIT );
+    middleCanvasPositionProperty().set(SP_Position.of(x,y,Global.DISTANCEUNIT ));
     return;
   }
 

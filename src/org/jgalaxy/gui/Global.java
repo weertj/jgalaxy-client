@@ -41,16 +41,29 @@ public class Global {
 
   static final public ObservableList<IJG_Group> SELECTEDGROUPS = FXCollections.observableArrayList();
 
+  static final public ObservableList<IEntity> SELECTEDENTITIES = FXCollections.observableArrayList();
+
   static final public ObjectProperty<IEntity> LASTSELECTEDENTITY = new SimpleObjectProperty<>(null);
+
+  static public void clearSelections() {
+    SELECTEDENTITIES.clear();
+    LASTSELECTEDENTITY.set(null);
+    return;
+  }
 
   static public IEntity getLastSelectedEntity() {
     return LASTSELECTEDENTITY.get();
+  }
+
+  static public ObservableList<IEntity> getSelectedEntities() {
+    return SELECTEDENTITIES;
   }
 
   static public void removeSelectedIdentity( IEntity pEntity ) {
     if (pEntity!=null && IJG_Group.TYPE.equals(pEntity.entityType())) {
       SELECTEDGROUPS.remove((IJG_Group) pEntity );
     }
+    SELECTEDENTITIES.remove(pEntity);
     if (LASTSELECTEDENTITY.get()!=pEntity) {
       LASTSELECTEDENTITY.set(null);
     }
@@ -64,6 +77,7 @@ public class Global {
     if (pEntity!=null && IJG_Group.TYPE.equals(pEntity.entityType())) {
       SELECTEDGROUPS.add( (IJG_Group) pEntity );
     }
+    SELECTEDENTITIES.add( pEntity);
     LASTSELECTEDENTITY.set( pEntity );
     return;
   }

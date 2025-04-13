@@ -89,16 +89,19 @@ public class ShipDesignsController extends JUnitPanelInterface implements Initia
   }
 
   private void refresh() {
-    IJG_UnitDesign design = getUnitDesign();
-    String speed = "" + GEN_Math.round02(design.speed(mFaction.tech(),0.0));
-    if (design.cargo()>0.0) {
-      speed += "(" + GEN_Math.round02(design.speed(mFaction.tech(), design.canCarry(mFaction.tech()))) +")";
+    if (mFaction==null) {
+
+    } else {
+      IJG_UnitDesign design = getUnitDesign();
+      String speed = "" + GEN_Math.round02(design.speed(mFaction.tech(), 0.0));
+      if (design.cargo() > 0.0) {
+        speed += "(" + GEN_Math.round02(design.speed(mFaction.tech(), design.canCarry(mFaction.tech()))) + ")";
+      }
+      mSpeed.setText(speed);
+
+      mShipDesigns.getItems().clear();
+      mShipDesigns.getItems().addAll(mFaction.unitDesigns());
     }
-    mSpeed.setText(speed);
-
-    mShipDesigns.getItems().clear();
-    mShipDesigns.getItems().addAll(mFaction.unitDesigns());
-
     return;
   }
 

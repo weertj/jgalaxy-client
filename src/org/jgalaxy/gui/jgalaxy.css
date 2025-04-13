@@ -518,6 +518,10 @@ is being used to size a border should also be in pixels.
     -fx-background-color: #00000033; -fx-text-fill: #000000;
 }
 
+.tree-cell:selected {
+    -fx-background-color: #00000033;
+}
+
 /* ====   MNEMONIC THINGS   ================================================= */
 
 .mnemonic-underline {
@@ -3415,7 +3419,6 @@ is being used to size a border should also be in pixels.
     -fx-font-weight: bold;
 }
 
-/* Value labels next to name, population, etc. */
 .label-value {
     -fx-font-size: 13px;
     -fx-text-fill: #bbbbbb;
@@ -3432,3 +3435,7 @@ is being used to size a border should also be in pixels.
     -fx-text-fill: #aaaaaa;
 }
 
+.smalllabel-value {
+    -fx-font-size: 10px;
+    -fx-text-fill: #999999;
+}

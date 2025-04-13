@@ -7,8 +7,11 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import org.javelinfx.buttons.SButtons;
 import org.javelinfx.engine.JUnitPanelInterface;
+import org.javelinfx.fxml.FXMLLoad;
 import org.javelinfx.image.SImages;
+import org.javelinfx.window.S_Pane;
 import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.orders.SJG_LoadOrder;
 import org.jgalaxy.planets.EProduceType;
@@ -33,6 +36,8 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
   @FXML private AnchorPane mFleetPane;
   @FXML private ComboBox<IJG_Fleet> mFleets;
 
+  @FXML private AnchorPane mShipDesignPane;
+
   @FXML private AnchorPane mCargoPane;
   @FXML private ImageView  mCargoHeaderImage;
   @FXML private Label      mCargoAmountLoaded;
@@ -43,13 +48,25 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
   @FXML private TextField  mNumberOfColsToBeLoaded;
   @FXML private Button     mLoadColsButton;
 
+  @FXML private Button     mUnloadButton;
+
   private IJG_Faction mFaction;
   private IJG_Group   mGroup;
   private IJG_Planet  mHoverPlanet;
   private boolean     mInRefresh = false;
 
+  private ShipDesignInfoController mShipDesignInfoController;
+
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+
+    try { // **** ShipDesignInfo
+      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/ShipDesignInfo.fxml", null);
+      mShipDesignInfoController = (ShipDesignInfoController)FXMLLoad.controller(contents);
+      mShipDesignPane.getChildren().add(mShipDesignInfoController.rootPane());
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
 
     // **** Fleet
     mFleets.getSelectionModel().selectedItemProperty().addListener((_, oldValue, newValue) -> {
@@ -69,10 +86,14 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
       }
     });
 
-    mLoadColsButton.setOnAction( _ -> {
+    SButtons.initButton(mLoadColsButton,  _ -> {
       var design = mFaction.getUnitDesignById(mGroup.unitDesign());
       SJG_LoadOrder.loadOrder(mGroup, design, "COL", mHoverPlanet, Double.parseDouble(mNumberOfColsToBeLoaded.getText()));
       refresh();
+    });
+
+    SButtons.initButton(mUnloadButton,  _ -> {
+      SJG_LoadOrder.unloadOrder( Global.CURRENTGAMECHANGED.get(), mGroup, mHoverPlanet, 999999.0 );
     });
 
     return;
@@ -88,7 +109,7 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
    */
   public void refresh() {
 
-    if (mGroup==null) {
+    if (mGroup==null || mFaction==null) {
       mRootPane.setVisible(false);
       return;
     }
@@ -145,6 +166,7 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
 
   public void setGroup(IJG_Group pGroup) {
     mGroup = pGroup;
+    mShipDesignInfoController.setGroup(pGroup);
     mHoverPlanet = mFaction.planets().findPlanetByPosition(mGroup.position());
     refresh();
     return;
@@ -152,6 +174,7 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
 
   public void setFaction(IJG_Faction pFaction) {
     mFaction = pFaction;
+    mShipDesignInfoController.setFaction(pFaction);
     refresh();
     return;
   }

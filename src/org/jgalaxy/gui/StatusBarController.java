@@ -17,9 +17,15 @@ public class StatusBarController extends JUnitPanelInterface implements Initiali
 
   @FXML private AnchorPane  mRootPane;
   @FXML private Label       mMousePosition;
+  @FXML private Label       mCenterPosition;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    return;
+  }
+
+  public void setCenterPosition(ISP_Position pPosition) {
+    mCenterPosition.setText( String.format( JavelinSystem.getLocale(),  "(%.2f,%.2f)", pPosition.x(), pPosition.y() ));
     return;
   }
 

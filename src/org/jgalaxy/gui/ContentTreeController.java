@@ -14,28 +14,30 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import org.javelinfx.colors.SColors;
 import org.javelinfx.engine.JUnitPanelInterface;
+import org.javelinfx.events.EH_Select;
+import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.system.FX_Platform;
 import org.javelinfx.system.JavelinSystem;
 import org.javelinfx.tree.ITreeEntity;
 import org.javelinfx.tree.STreeView;
 import org.jgalaxy.IEntity;
+import org.jgalaxy.battle.*;
 import org.jgalaxy.engine.IJG_Faction;
+import org.jgalaxy.engine.IJG_Game;
 import org.jgalaxy.orders.SJG_LoadOrder;
 import org.jgalaxy.planets.IJG_Planet;
 import org.jgalaxy.units.IJG_Fleet;
 import org.jgalaxy.units.IJG_Group;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ContentTreeController extends JUnitPanelInterface implements Initializable {
 
   @FXML private AnchorPane  mRootPane;
   @FXML private TreeView<IEntity>  mContentTreeView;
 
+  private IJL_PlayerContext mPlayerContext;
   private IJG_Faction mFaction;
   private TreeItem mRoot;
   private TreeItem mRootPlanets = new TreeItem<>(new IEntity() {
@@ -45,7 +47,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
   });
   private TreeItem mRootOwnPlanets = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
-    @Override public String name() { return mFaction.name(); }
+    @Override public String name() { return Global.CURRENTFACTION_CHANGED.get().name(); }
   });
   private TreeItem mRootUnknownPlanets = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
@@ -61,7 +63,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
   });
   private TreeItem mRootOwnGroups = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
-    @Override public String name() { return mFaction.name(); }
+    @Override public String name() { return Global.CURRENTFACTION_CHANGED.get().name(); }
   });
   private TreeItem mRootFleets = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
@@ -69,9 +71,24 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
   });
   private TreeItem mRootOwnFleets = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
-    @Override public String name() { return mFaction.name(); }
+    @Override public String name() { return Global.CURRENTFACTION_CHANGED.get().name(); }
   });
-  private Map<String,TreeItem> mFactionNodes = new HashMap<>(16);
+
+  private TreeItem mRootBattles = new TreeItem<>(new IEntity() {
+    @Override public String id() { return ""; }
+    @Override public String name() { return "Battles"; }
+  });
+  private TreeItem mRootOwnBattles = new TreeItem<>(new IEntity() {
+    @Override public String id() { return ""; }
+    @Override public String name() { return Global.CURRENTFACTION_CHANGED.get().name(); }
+  });
+
+  private TreeItem mRootFactions = new TreeItem<>(new IEntity() {
+    @Override public String id() { return ""; }
+    @Override public String name() { return "Factions"; }
+  });
+
+//  private Map<String,TreeItem> mFactionNodes = new HashMap<>(16);
 
   private boolean mInRefresh;
 
@@ -81,10 +98,12 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
   public void initialize(URL location, ResourceBundle resources) {
     mRoot = new TreeItem<>();
     mContentTreeView.setRoot(mRoot);
-    mContentTreeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    mContentTreeView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     mRoot.getChildren().add(mRootPlanets);
     mRoot.getChildren().add(mRootGroups);
     mRoot.getChildren().add(mRootFleets);
+    mRoot.getChildren().add(mRootBattles);
+    mRoot.getChildren().add(mRootFactions);
 
     mContentTreeView.setCellFactory(param -> new TreeCell() {
       @Override
@@ -141,14 +160,17 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
       mInRefresh = true;
       try {
         while (c.next()) {
-          for (var add : c.getAddedSubList()) {
-            if (add!=null) {
-              Global.addSelectedIdentity(add.getValue(), false);
-            }
-          }
           for (var rem : c.getRemoved()) {
             if (rem!=null) {
               Global.removeSelectedIdentity(rem.getValue());
+            }
+          }
+          if (c.wasAdded()) {
+            Global.clearSelections();
+            for (var add : c.getAddedSubList()) {
+              if (add != null) {
+                Global.addSelectedIdentity(add.getValue(), false);
+              }
             }
           }
         }
@@ -181,6 +203,13 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
     mRootFleets.getChildren().clear();
     mRootOwnFleets.getChildren().clear();
     mRootFleets.getChildren().add(mRootOwnFleets);
+
+    mRootBattles.getChildren().clear();
+    mRootOwnBattles.getChildren().clear();
+    mRootBattles.getChildren().add(mRootOwnBattles);
+
+    mRootFactions.getChildren().clear();
+
     if (mFaction!=null) {
 
       for(IJG_Planet planet : mFaction.planets().planetsOwnedBy(mFaction)) {
@@ -213,6 +242,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
 //        }
 //      }
 
+      // **** Fleets
       for(IJG_Fleet fleet : mFaction.groups().fleets()){
         TreeItem ti = new TreeItem<>(fleet);
         mRootOwnFleets.getChildren().add(ti);
@@ -221,9 +251,42 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
         }
       }
 
+      // **** Battles
+      IJG_Game game = Global.CURRENTGAMECHANGED.get();
+
+      for( IJG_Planet planet : mFaction.planets().planets() ) {
+        ISB_BattleReport report = SB_BattleReport.of(mFaction, planet.position() );
+        if (report.isInvolved(mFaction)) {
+          mRootOwnBattles.getChildren().add(new TreeItem<>(report));
+        }
+      }
+
+      // **** Factions
+      for( IJG_Faction faction : mFaction.getOtherFactionsMutable() ) {
+        mRootFactions.getChildren().add(new TreeItem<>(faction));
+      }
+
+//      List<ISB_BattleField> battles = new ArrayList<>(8);
+//      for(IJG_Group group : mFaction.groups().getGroups()) {
+//        var gfaction = game.getFactionById(group.faction());
+//        for(IB_Shot shot : group.shotsMutable()) {
+//          if (shot.type()==IB_Shot.TYPE.SHIP_SHIP) {
+//            ISB_BattleField battleField = SB_BattleField.of(game);
+//            battleField.addEntry(gfaction,group);
+//            battles.add(battleField);
+//          }
+//        }
+//      }
+//      mRootBattles.getChildren().addAll(battles);
+
 
     }
     mContentTreeView.refresh();
+    return;
+  }
+
+  public void setPlayerContext( IJL_PlayerContext pPlayerContext ) {
+    mPlayerContext = pPlayerContext;
     return;
   }
 

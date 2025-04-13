@@ -4,6 +4,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.paint.Color;
 import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.IJavelinUIElement;
 import org.javelinfx.engine.JMainInterface;
@@ -42,9 +45,10 @@ public class GalaxyMainInterface extends JMainInterface {
   private PlayerInfoController  mPlayerInfoController;
   private StatusBarController   mStatusBarController;
   private ContentTreeController mContentTreeController;
-//  private OOBController         mOOBController;
 
   private TabPane mTabControlPane;
+
+  private MapRenderItem mMapRenderItem;
 
   private final ChangeListener<Number> mFactionChanged = (observable, oldValue, newValue) -> {
     refresh();
@@ -74,12 +78,13 @@ public class GalaxyMainInterface extends JMainInterface {
     IJavelinCanvas canvas = GalaxyCanvas.of();
     add( canvas );
     canvas.canvas().setLayoutX( 200 );
-    canvas.canvas().setLayoutY( 30 );
+    canvas.canvas().setLayoutY( 40 );
     mainPane().widthProperty().addListener( (_,_,newValue) ->
-      canvas.canvas().setWidth( newValue.doubleValue()-220 )
+      canvas.canvas().setWidth( mainPane().getWidth()-420 )
     );
-    mainPane().heightProperty().addListener( (_,_,newValue) ->
-      canvas.canvas().setHeight( newValue.doubleValue()-32 )
+    mainPane().heightProperty().addListener( (_,_,newValue) -> {
+        canvas.canvas().setHeight(mainPane().getHeight() - 80);
+      }
     );
     mainPane().getChildren().add( canvas.canvas() );
 
@@ -186,6 +191,20 @@ public class GalaxyMainInterface extends JMainInterface {
       e.printStackTrace();
     }
 
+    Global.getSelectedEntities().addListener((ListChangeListener<IEntity>) c -> {
+      while(c.next()) {
+        for (IEntity entity : c.getAddedSubList()) {
+          if (entity instanceof IJG_Planet planet) {
+            selectPlanet(planet);
+          } else if (entity instanceof IJG_Group group) {
+            selectGroup(group);
+          } else if (entity instanceof IJG_Fleet fleet) {
+            selectFleet(fleet);
+          }
+        }
+      }
+    });
+
     Global.CURRENTTURNNUMBER.addListener((observable, oldValue, newValue) -> {
       IJG_Faction faction = loadPlayer(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get(), Global.CURRENTPLAYERID.get(), newValue.intValue() );
       loadFaction(faction);
@@ -291,10 +310,35 @@ public class GalaxyMainInterface extends JMainInterface {
 
   private void setUIFaction(IJG_Faction pFaction) {
     mPlanetInfoController.setFaction(pFaction);
+    mShipDesignsController.setFaction(pFaction);
     mPlayerInfoController.setFaction(pFaction);
     mFactionInfoController.setFaction(pFaction);
     mFleetInfoController.setFaction(pFaction);
     mGroupInfoController.setFaction(pFaction);
+//    mContentTreeController.setFaction(pFaction);
+    return;
+  }
+
+
+  private void selectPlanet( IJG_Planet pPlanet ) {
+    mPlanetInfoController.setPlanet(pPlanet);
+    if (pPlanet.faction()==null) {
+      setUIFaction(null);
+    } else {
+      IJG_Faction faction = Global.retrieveFactionByID(pPlanet.faction() );
+      setUIFaction(faction);
+    }
+    mMapRenderItem.middleMoveToCanvasPositionProperty().set(SP_Position.of(pPlanet.position().x(),pPlanet.position().y(),Global.DISTANCEUNIT));
+    return;
+  }
+
+  private void selectGroup( IJG_Group pGroup ) {
+    mGroupInfoController.setGroup(pGroup);
+    return;
+  }
+
+  private void selectFleet( IJG_Fleet pFleet ) {
+    mFleetInfoController.setFleet(pFleet);
     return;
   }
 
@@ -306,20 +350,23 @@ public class GalaxyMainInterface extends JMainInterface {
     setUIFaction(Global.CURRENTFACTION_CHANGED.get());
 
     if (pItem instanceof PlanetRenderItem planetRI) {
-      IJG_Planet planet = planetRI.element();
-      mPlanetInfoController.setPlanet(planet);
-      if (planet.faction()==null) {
-        setUIFaction(null);
-      } else {
-        IJG_Faction faction = Global.retrieveFactionByID(planet.faction() );
-        setUIFaction(faction);
-      }
+      selectPlanet(planetRI.element());
+//      IJG_Planet planet = planetRI.element();
+//      mPlanetInfoController.setPlanet(planet);
+//      if (planet.faction()==null) {
+//        setUIFaction(null);
+//      } else {
+//        IJG_Faction faction = Global.retrieveFactionByID(planet.faction() );
+//        setUIFaction(faction);
+//      }
     } else if (pItem instanceof GroupRenderItem groupRI) {
-      IJG_Group group = groupRI.element();
-      mGroupInfoController.setGroup(group);
+      selectGroup(groupRI.element());
+//      IJG_Group group = groupRI.element();
+//      mGroupInfoController.setGroup(group);
     } else if (pItem instanceof FleetRenderItem fleetRI) {
-      IJG_Fleet fleet = fleetRI.element();
-      mFleetInfoController.setFleet(fleet);
+      selectFleet(fleetRI.element());
+//      IJG_Fleet fleet = fleetRI.element();
+//      mFleetInfoController.setFleet(fleet);
     }
     return;
   }
@@ -332,15 +379,20 @@ public class GalaxyMainInterface extends JMainInterface {
   private void loadFaction( IJG_Faction pFaction ) {
     IJL_PlayerContext playerContext = JL_PlayerContext.of();
     setPlayerContext(playerContext);
-    mPlanetInfoController.setFaction(pFaction);
+//   setUIFaction(pFaction);
+//    mPlanetInfoController.setFaction(pFaction);
     mTurnInfoController.setFaction(pFaction);
     mPlayerInfoController.setFaction(pFaction);
     mShipDesignsController.setFaction(pFaction);
+    mContentTreeController.setPlayerContext( playerContext );
     mContentTreeController.setFaction(pFaction);
     playerContext.selectedItems().selectedItems().addListener((ListChangeListener<IJavelinUIElement>) c -> {
       while(c.next()) {
-        for( var item : c.getAddedSubList() ) {
-          selectItem( item );
+//        Global.clearSelections();
+        if (c.wasAdded()) {
+          for (var item : c.getAddedSubList()) {
+            selectItem(item);
+          }
         }
         for( var item : c.getRemoved() ) {
           deselectItem( item );
@@ -355,12 +407,16 @@ public class GalaxyMainInterface extends JMainInterface {
     playerContext.addRenderItem(0, bgi );
 
 
-    MapRenderItem mri = new MapRenderItem("map", map, SP_Position.of(map.xStart(), map.yStart(), Global.DISTANCEUNIT));
-    mri.mouseOverMapPositionProperty().addListener((observable, oldValue, newValue) -> {
+    mMapRenderItem = new MapRenderItem("map", map, SP_Position.of(map.xStart(), map.yStart(), Global.DISTANCEUNIT));
+    mMapRenderItem.mouseOverMapPositionProperty().addListener((_, _, newValue) -> {
       mStatusBarController.setMouseMovePosition(newValue);
       return;
     });
-    playerContext.addRenderItem(1, mri );
+    mMapRenderItem.middleCanvasPositionProperty().addListener((_, _, newValue) -> {
+      mStatusBarController.setCenterPosition(newValue);
+      return;
+    });
+    playerContext.addRenderItem(1, mMapRenderItem );
 
     for(IJG_Planet planet : pFaction.planets().planets()) {
       playerContext.addRenderItem(2,

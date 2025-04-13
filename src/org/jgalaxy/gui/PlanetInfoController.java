@@ -153,8 +153,12 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
           if (mFaction!=null) {
             IJG_UnitDesign design = mFaction.getUnitDesignById(mPlanet.produceUnitDesign());
             if (design==null) {
-              mProduce.setValue(null);
-              mProduceProgress.setText("-%");
+              if (mPlanet.produceType()==null) {
+                mProduce.setValue(null);
+                mProduceProgress.setText("-%");
+              } else {
+                mProduce.setValue(mPlanet.produceType().order());
+              }
             } else {
               mProduce.setValue(design.name());
               mProduceProgress.setText("" + GEN_Math.round02(mPlanet.inProgress() / (design.mass() / Global.INDPERSHIP)) + "%");
