@@ -50,6 +50,7 @@ public class PlanetRenderItem extends JavelinUIElement {
       gc.fillOval(outline.getX()-4, outline.getY()-4, outline.getWidth()+8, outline.getHeight()+8);
     }
 
+    gc.setStroke(Colors.colorForMyFaction(element()));
     gc.setFill(Colors.colorForMyFaction(element()));
     if (element().faction()==null) {
       gc.strokeOval(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());

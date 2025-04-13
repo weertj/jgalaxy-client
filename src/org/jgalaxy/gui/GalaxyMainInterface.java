@@ -47,6 +47,8 @@ public class GalaxyMainInterface extends JMainInterface {
   private ContentTreeController mContentTreeController;
 
   private TabPane mTabControlPane;
+  private Tab mGroupTab;
+  private Tab mPlanetTab;
 
   private MapRenderItem mMapRenderItem;
 
@@ -95,15 +97,15 @@ public class GalaxyMainInterface extends JMainInterface {
     Tab factionTab = new Tab("Faction");
     factionTab.setClosable(false);
     mTabControlPane.getTabs().add(factionTab);
-    Tab planetTab = new Tab("Planet");
-    planetTab.setClosable(false);
-    mTabControlPane.getTabs().add(planetTab);
+    mPlanetTab = new Tab("Planet");
+    mPlanetTab.setClosable(false);
+    mTabControlPane.getTabs().add(mPlanetTab);
     Tab fleetTab = new Tab("Fleet");
     fleetTab.setClosable(false);
     mTabControlPane.getTabs().add(fleetTab);
-    Tab groupTab = new Tab("Group");
-    groupTab.setClosable(false);
-    mTabControlPane.getTabs().add(groupTab);
+    mGroupTab = new Tab("Group");
+    mGroupTab.setClosable(false);
+    mTabControlPane.getTabs().add(mGroupTab);
     Tab designTab = new Tab("Ship design");
     designTab.setClosable(false);
     mTabControlPane.getTabs().add(designTab);
@@ -158,7 +160,7 @@ public class GalaxyMainInterface extends JMainInterface {
     try { // **** PlanetInfo
       var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/PlanetInfo.fxml", null);
       mPlanetInfoController = (PlanetInfoController)FXMLLoad.controller(contents);
-      planetTab.setContent(mPlanetInfoController.rootPane());
+      mPlanetTab.setContent(mPlanetInfoController.rootPane());
       S_Pane.setAnchors( mPlanetInfoController.rootPane(), 0.0, 0.0, 0.0, 0.0);
     } catch (Exception e) {
       e.printStackTrace();
@@ -176,7 +178,7 @@ public class GalaxyMainInterface extends JMainInterface {
     try { // **** GroupInfo
       var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/GroupInfo.fxml", null);
       mGroupInfoController = (GroupInfoController)FXMLLoad.controller(contents);
-      groupTab.setContent(mGroupInfoController.rootPane());
+      mGroupTab.setContent(mGroupInfoController.rootPane());
       S_Pane.setAnchors( mGroupInfoController.rootPane(), 0.0, 0.0, 0.0, 0.0);
     } catch (Exception e) {
       e.printStackTrace();
@@ -329,11 +331,13 @@ public class GalaxyMainInterface extends JMainInterface {
       setUIFaction(faction);
     }
     mMapRenderItem.middleMoveToCanvasPositionProperty().set(SP_Position.of(pPlanet.position().x(),pPlanet.position().y(),Global.DISTANCEUNIT));
+    mTabControlPane.getSelectionModel().select(mPlanetTab);
     return;
   }
 
   private void selectGroup( IJG_Group pGroup ) {
     mGroupInfoController.setGroup(pGroup);
+    mTabControlPane.getSelectionModel().select(mGroupTab);
     return;
   }
 

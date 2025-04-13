@@ -129,6 +129,9 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
               circle.setLayoutY(6);
               circle.setFill(Colors.colorForMyFaction(planet));
               pane.getChildren().addAll(circle, t);
+            } else if (ent instanceof IJG_Group group) {
+              Label t = new Label(group.name() + " " + group.getNumberOf() + "x " + group.unitDesign());
+              pane.getChildren().addAll( t);
             } else {
               pane.getChildren().add(new Label(ent.name()));
             }
