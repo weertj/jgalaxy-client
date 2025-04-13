@@ -4,10 +4,8 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import org.javelinfx.engine.JUnitPanelInterface;
-import org.jgalaxy.IEntity;
 import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.planets.EProduceType;
 import org.jgalaxy.planets.IJG_Planet;
@@ -68,7 +66,10 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
       Global.SELECTEDGROUPS.clear();
       Global.SELECTEDGROUPS.addAll(mGroupsInOrbit.getSelectionModel().getSelectedItems());
     });
-    mPlanetName.setOnAction( e -> mPlanet.setName(mPlanetName.getText()));
+    mPlanetName.setOnAction( e -> {
+      mPlanet.setName(mPlanetName.getText());
+      mFaction.newChange();
+    });
 
     mOtherGroupsInOrbit.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     mOtherGroupsInOrbit.getSelectionModel().getSelectedItems().addListener( (ListChangeListener)c -> {

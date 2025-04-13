@@ -43,6 +43,30 @@ public class Global {
 
   static final public ObjectProperty<IEntity> LASTSELECTEDENTITY = new SimpleObjectProperty<>(null);
 
+  static public IEntity getLastSelectedEntity() {
+    return LASTSELECTEDENTITY.get();
+  }
+
+  static public void removeSelectedIdentity( IEntity pEntity ) {
+    if (pEntity!=null && IJG_Group.TYPE.equals(pEntity.entityType())) {
+      SELECTEDGROUPS.remove((IJG_Group) pEntity );
+    }
+    if (LASTSELECTEDENTITY.get()!=pEntity) {
+      LASTSELECTEDENTITY.set(null);
+    }
+    return;
+  }
+
+  static public void addSelectedIdentity( IEntity pEntity, boolean pClear ) {
+    if (pClear) {
+      SELECTEDGROUPS.clear();
+    }
+    if (pEntity!=null && IJG_Group.TYPE.equals(pEntity.entityType())) {
+      SELECTEDGROUPS.add( (IJG_Group) pEntity );
+    }
+    LASTSELECTEDENTITY.set( pEntity );
+    return;
+  }
 
   static public IJG_Faction retrieveFactionByID( String pName ) {
     if (CURRENTFACTION_CHANGED.get()!=null && Objects.equals(CURRENTFACTION_CHANGED.get().id(), pName)) {

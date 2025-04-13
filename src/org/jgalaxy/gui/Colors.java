@@ -32,6 +32,10 @@ public class Colors {
   static final public Color MAPBG           = Color.web( "#333333" );
   static final public Color MAPLINE         = Color.web( "#999999" );
 
+  static final public Color POPULATION      = SColors.KASHMIR;
+  static final public Color COLS            = SColors.WHITE_GRAPE;
+  static final public Color CARGO           = SColors.VAPOR_BLUE;
+
   // **** MIL-STD-2525D
   static final public Color HOSTILE_DARK    = Color.rgb( 200,0,0 );
   static final public Color HOSTILE_MEDIUM  = Color.rgb( 255,48,49 );

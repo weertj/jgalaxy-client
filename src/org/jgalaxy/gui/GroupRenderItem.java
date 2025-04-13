@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.JavelinUIElement;
+import org.javelinfx.colors.SUX_Colors;
 import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.window.S_Pointer;
@@ -39,8 +40,18 @@ public class GroupRenderItem extends JavelinUIElement {
     if (element().getNumberOf()<=0) {
       gc.strokeRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
     } else {
+
+      if (element()==Global.getLastSelectedEntity()) {
+        gc.setFill(SUX_Colors.SELECTION);
+        gc.fillRect(outline.getX()-4, outline.getY()-4, outline.getWidth()+8, outline.getHeight()+8);
+      }
+
       gc.fillRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
-      gc.setStroke(Color.BLACK);
+      if ("COL".equals(element().loadType())) {
+        gc.setStroke(Colors.COLS);
+      } else {
+        gc.setStroke(Color.BLACK);
+      }
       gc.strokeRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
     }
     gc.fillText( element().name(), outline.getX(), outline.getY() );
@@ -71,7 +82,7 @@ public class GroupRenderItem extends JavelinUIElement {
 
   @Override
   public void pointerEntered( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
-    System.out.println(" --- GROUP " + element().id());
+//    System.out.println(" --- GROUP " + element().id());
     return;
   }
 

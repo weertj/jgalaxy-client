@@ -2246,7 +2246,7 @@ is being used to size a border should also be in pixels.
 .list-cell,
 .tree-cell {
     -fx-background: #202020;
-    -fx-background-color: #202020;
+    -fx-background-color: #303030;  /* tree view background */
     -fx-text-fill: #EAEAE8;
 }
 .list-cell:selected {
@@ -3407,3 +3407,28 @@ is being used to size a border should also be in pixels.
 .alert.warning.dialog-pane {
     -fx-graphic: url("dialog-warning.png");
 }
+
+
+.label-main {
+    -fx-font-size: 13px;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+/* Value labels next to name, population, etc. */
+.label-value {
+    -fx-font-size: 13px;
+    -fx-text-fill: #bbbbbb;
+}
+
+.label-value-value {
+    -fx-font-size: 13px;
+    -fx-text-fill: #ffcc66;
+}
+
+.subheader {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #aaaaaa;
+}
+

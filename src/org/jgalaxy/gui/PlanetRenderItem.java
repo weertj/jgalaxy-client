@@ -45,7 +45,7 @@ public class PlanetRenderItem extends JavelinUIElement {
 //    grow = 0.3;
 //    gc.fillArc(outline.getX()-outline.getWidth() * grow/2, outline.getY()-outline.getHeight() * grow/2, outline.getWidth() * (1.0+grow), outline.getHeight() * (1.0+grow), 0, 270, ArcType.ROUND);
 
-    if (element()==Global.LASTSELECTEDENTITY.get()) {
+    if (element()==Global.getLastSelectedEntity()) {
       gc.setFill(SUX_Colors.SELECTION);
       gc.fillOval(outline.getX()-4, outline.getY()-4, outline.getWidth()+8, outline.getHeight()+8);
     }

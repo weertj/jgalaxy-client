@@ -9,7 +9,7 @@
 
 <AnchorPane fx:id="mRootPane" prefHeight="527.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.ShipDesignsController">
    <children>
-      <AnchorPane layoutX="46.0" layoutY="166.0" prefHeight="374.0" prefWidth="222.0" style="-fx-background-color: #222222;" stylesheets="@jgalaxy.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="46.0" layoutY="166.0" prefHeight="374.0" prefWidth="222.0" style="-fx-background-color: #222222;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="181.0" text="SHIP DESIGNER" textAlignment="CENTER" underline="true" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="8.0" />
             <ListView fx:id="mShipDesigns" layoutX="18.0" layoutY="44.0" prefHeight="137.0" prefWidth="187.0" style="-fx-background-color: #000000;" />

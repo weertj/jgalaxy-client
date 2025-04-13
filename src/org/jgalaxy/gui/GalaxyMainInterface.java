@@ -1,5 +1,6 @@
 package org.jgalaxy.gui;
 
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -33,17 +34,27 @@ public class GalaxyMainInterface extends JMainInterface {
 //  private IJavelinCanvas mCanvas = new SimpleCanvas();
 
   private TurnInfoController    mTurnInfoController;
+  private FactionInfoController mFactionInfoController;
   private PlanetInfoController  mPlanetInfoController;
+  private GroupInfoController   mGroupInfoController;
+  private FleetInfoController   mFleetInfoController;
   private ShipDesignsController mShipDesignsController;
   private PlayerInfoController  mPlayerInfoController;
   private StatusBarController   mStatusBarController;
-  private OOBController         mOOBController;
+  private ContentTreeController mContentTreeController;
+//  private OOBController         mOOBController;
 
   private TabPane mTabControlPane;
 
+  private final ChangeListener<Number> mFactionChanged = (observable, oldValue, newValue) -> {
+    refresh();
+    return;
+  };
+
+
   @Override
   public String title() {
-    return "Galaxy";
+    return "Galaxy reloaded";
   }
 
   @Override
@@ -58,15 +69,17 @@ public class GalaxyMainInterface extends JMainInterface {
     Global.CURRENTGAMEID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("game", ""));
     Global.CURRENTPLAYERID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("player", ""));
 
+    loadGameInfo(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get());
+
     IJavelinCanvas canvas = GalaxyCanvas.of();
     add( canvas );
-    canvas.canvas().setLayoutX( 10 );
+    canvas.canvas().setLayoutX( 200 );
     canvas.canvas().setLayoutY( 30 );
     mainPane().widthProperty().addListener( (_,_,newValue) ->
       canvas.canvas().setWidth( newValue.doubleValue()-220 )
     );
     mainPane().heightProperty().addListener( (_,_,newValue) ->
-      canvas.canvas().setHeight( newValue.doubleValue()-220 )
+      canvas.canvas().setHeight( newValue.doubleValue()-32 )
     );
     mainPane().getChildren().add( canvas.canvas() );
 
@@ -74,17 +87,28 @@ public class GalaxyMainInterface extends JMainInterface {
     mainPane().getChildren().add(mTabControlPane);
     mTabControlPane.setPrefWidth(200);
     S_Pane.setAnchors(mTabControlPane, null, 0.0, 100.0, 0.0);
+    Tab factionTab = new Tab("Faction");
+    factionTab.setClosable(false);
+    mTabControlPane.getTabs().add(factionTab);
     Tab planetTab = new Tab("Planet");
+    planetTab.setClosable(false);
     mTabControlPane.getTabs().add(planetTab);
+    Tab fleetTab = new Tab("Fleet");
+    fleetTab.setClosable(false);
+    mTabControlPane.getTabs().add(fleetTab);
+    Tab groupTab = new Tab("Group");
+    groupTab.setClosable(false);
+    mTabControlPane.getTabs().add(groupTab);
     Tab designTab = new Tab("Ship design");
+    designTab.setClosable(false);
     mTabControlPane.getTabs().add(designTab);
 
 
-    try { // **** OOB
-      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/OOB.fxml", null);
-      mOOBController = (OOBController)FXMLLoad.controller(contents);
-      mainPane().getChildren().add(mOOBController.rootPane());
-      S_Pane.setAnchors( mOOBController.rootPane(), 0.0, 0.0, null, 32.0);
+    try { // **** Content Tree
+      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/ContentTree.fxml", null);
+      mContentTreeController = (ContentTreeController)FXMLLoad.controller(contents);
+      mainPane().getChildren().add(mContentTreeController.rootPane());
+      S_Pane.setAnchors( mContentTreeController.rootPane(), 0.0, null, 32.0, 32.0);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -98,12 +122,21 @@ public class GalaxyMainInterface extends JMainInterface {
       e.printStackTrace();
     }
 
-
     try { // **** Player info
       var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/PlayerInfo.fxml", null);
       mPlayerInfoController = (PlayerInfoController) FXMLLoad.controller(contents);
       mainPane().getChildren().add(mPlayerInfoController.rootPane());
       S_Pane.setAnchors( mPlayerInfoController.rootPane(), 0.0, 0.0, 0.0, null);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    try { // **** Faction info
+      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/FactionInfo.fxml", null);
+      mFactionInfoController = (FactionInfoController)FXMLLoad.controller(contents);
+      factionTab.setContent(mFactionInfoController.rootPane());
+      mainPane().getChildren().add(mFactionInfoController.rootPane());
+      S_Pane.setAnchors( mFactionInfoController.rootPane(), 0.0, 0.0, 0.0, null);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -126,6 +159,24 @@ public class GalaxyMainInterface extends JMainInterface {
       e.printStackTrace();
     }
 
+    try { // **** FleetInfo
+      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/FleetInfo.fxml", null);
+      mFleetInfoController = (FleetInfoController)FXMLLoad.controller(contents);
+      fleetTab.setContent(mFleetInfoController.rootPane());
+      S_Pane.setAnchors( mFleetInfoController.rootPane(), 0.0, 0.0, 0.0, 0.0);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    try { // **** GroupInfo
+      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/GroupInfo.fxml", null);
+      mGroupInfoController = (GroupInfoController)FXMLLoad.controller(contents);
+      groupTab.setContent(mGroupInfoController.rootPane());
+      S_Pane.setAnchors( mGroupInfoController.rootPane(), 0.0, 0.0, 0.0, 0.0);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     try { // **** ShipDesigner
       var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/ShipDesigns.fxml", null);
       mShipDesignsController = (ShipDesignsController)FXMLLoad.controller(contents);
@@ -140,23 +191,19 @@ public class GalaxyMainInterface extends JMainInterface {
       loadFaction(faction);
     });
 
-    Global.CURRENTTURNNUMBER.setValue(0);
-
-//    IJG_Faction faction = loadPlayer("http://localhost:8080/jgalaxy/games", "test1", "player0", 5 );
-//    loadFaction(faction);
-
+    Global.CURRENTTURNNUMBER.setValue(Global.CURRENTGAMEINFO.get().currentTurnNumber());
 
     return;
   }
 
-  private IJG_Faction loadPlayer( String pURL, String pGameName, String pPlayerName, int pTurnNumber ) {
+  private IJG_GameInfo loadGameInfo(String pURL, String pGameName) {
     IJG_GameInfo gameinfo = null;
     String url = pURL;
     url += "/" + pGameName;
     HttpRequest request = HttpRequest.newBuilder(URI.create(url+ "?alt=xml"))
       .GET()
       .build();
-    Node root = null;
+    Node root;
     try {
       HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
       String result = response.body().toString();
@@ -166,13 +213,33 @@ public class GalaxyMainInterface extends JMainInterface {
     } catch (Throwable e) {
       e.printStackTrace();
     }
+    return gameinfo;
+  }
+
+  private IJG_Faction loadPlayer( String pURL, String pGameName, String pPlayerName, int pTurnNumber ) {
+//    IJG_GameInfo gameinfo = null;
+    String url = pURL;
+    url += "/" + pGameName;
+//    HttpRequest request = HttpRequest.newBuilder(URI.create(url+ "?alt=xml"))
+//      .GET()
+//      .build();
+//    Node root = null;
+//    try {
+//      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
+//      String result = response.body().toString();
+//      root = XML_Utils.rootNodeBy(result);
+//      gameinfo = JG_GameInfo.of( XML_Utils.childNodeByPath(root,"game").get());
+//      Global.CURRENTGAMEINFO.set( gameinfo );
+//    } catch (Throwable e) {
+//      e.printStackTrace();
+//    }
 
     url += "/" + pTurnNumber;
 
-    request = HttpRequest.newBuilder(URI.create(url + "?alt=xml"))
+    HttpRequest request = HttpRequest.newBuilder(URI.create(url + "?alt=xml"))
       .GET()
       .build();
-    root = null;
+    Node root = null;
     IJG_Game game = null;
     IJG_Game gamechanged = null;
     try {
@@ -206,30 +273,53 @@ public class GalaxyMainInterface extends JMainInterface {
       e.printStackTrace();
     }
     IJG_Faction faction = JG_Faction.of(game,XML_Utils.childNodeByPath(root,"faction").orElse(null));
+    if (Global.CURRENTFACTION.get() != null) {
+      Global.CURRENTFACTION.get().close();
+    }
     Global.CURRENTFACTION.set( faction );
     IJG_Faction factionchanged = JG_Faction.of(gamechanged,XML_Utils.childNodeByPath(root,"faction").orElse(null));
+    if (Global.CURRENTFACTION_CHANGED.get() != null) {
+      Global.CURRENTFACTION_CHANGED.get().changeCounterProperty().removeListener(mFactionChanged);
+      Global.CURRENTFACTION_CHANGED.get().close();
+    }
     Global.CURRENTFACTION_CHANGED.set( factionchanged );
+
+    factionchanged.changeCounterProperty().addListener(mFactionChanged);
+
     return factionchanged;
+  }
+
+  private void setUIFaction(IJG_Faction pFaction) {
+    mPlanetInfoController.setFaction(pFaction);
+    mPlayerInfoController.setFaction(pFaction);
+    mFactionInfoController.setFaction(pFaction);
+    mFleetInfoController.setFaction(pFaction);
+    mGroupInfoController.setFaction(pFaction);
+    return;
   }
 
   private void selectItem( IJavelinUIElement pItem ) {
     if (pItem.element() instanceof IEntity entity) {
-      Global.LASTSELECTEDENTITY.setValue(entity);
+      Global.addSelectedIdentity(entity,true);
     }
+
+    setUIFaction(Global.CURRENTFACTION_CHANGED.get());
+
     if (pItem instanceof PlanetRenderItem planetRI) {
       IJG_Planet planet = planetRI.element();
       mPlanetInfoController.setPlanet(planet);
       if (planet.faction()==null) {
-        mPlanetInfoController.setFaction(null);
-        mTurnInfoController.setFaction(null);
-        mPlayerInfoController.setFaction(null);
+        setUIFaction(null);
       } else {
-//        IJG_Faction faction = Global.CURRENTPLAYERCHANGED.get().getFactionByID(planet.owner());
         IJG_Faction faction = Global.retrieveFactionByID(planet.faction() );
-        mPlanetInfoController.setFaction(faction);
-        mTurnInfoController.setFaction(faction);
-        mPlayerInfoController.setFaction(faction);
+        setUIFaction(faction);
       }
+    } else if (pItem instanceof GroupRenderItem groupRI) {
+      IJG_Group group = groupRI.element();
+      mGroupInfoController.setGroup(group);
+    } else if (pItem instanceof FleetRenderItem fleetRI) {
+      IJG_Fleet fleet = fleetRI.element();
+      mFleetInfoController.setFleet(fleet);
     }
     return;
   }
@@ -246,7 +336,7 @@ public class GalaxyMainInterface extends JMainInterface {
     mTurnInfoController.setFaction(pFaction);
     mPlayerInfoController.setFaction(pFaction);
     mShipDesignsController.setFaction(pFaction);
-    mOOBController.setFaction(pFaction);
+    mContentTreeController.setFaction(pFaction);
     playerContext.selectedItems().selectedItems().addListener((ListChangeListener<IJavelinUIElement>) c -> {
       while(c.next()) {
         for( var item : c.getAddedSubList() ) {
@@ -309,7 +399,11 @@ public class GalaxyMainInterface extends JMainInterface {
         new IncomingGroupRenderItem(null,incoming, SP_Position.of(incoming.current().x(),incoming.current().y(), Global.DISTANCEUNIT)));
     }
 
+    return;
+  }
 
+  private void refresh() {
+    mContentTreeController.refresh();
     return;
   }
 
