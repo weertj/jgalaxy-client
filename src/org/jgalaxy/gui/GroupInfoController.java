@@ -2,7 +2,9 @@ package org.jgalaxy.gui;
 
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -60,14 +62,6 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
   @Override
   public void initialize(URL location, ResourceBundle resources) {
 
-    try { // **** ShipDesignInfo
-      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/ShipDesignInfo.fxml", null);
-      mShipDesignInfoController = (ShipDesignInfoController)FXMLLoad.controller(contents);
-      mShipDesignPane.getChildren().add(mShipDesignInfoController.rootPane());
-    } catch (Throwable e) {
-      e.printStackTrace();
-    }
-
     // **** Fleet
     mFleets.getSelectionModel().selectedItemProperty().addListener((_, oldValue, newValue) -> {
       if (newValue==null) {
@@ -124,6 +118,18 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
 
     try {
       mInRefresh = true;
+
+      try { // **** ShipDesignInfo
+        var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/ShipDesignInfo.fxml", null);
+        mShipDesignInfoController = (ShipDesignInfoController)FXMLLoad.controller(contents);
+        mShipDesignPane.getChildren().clear();
+        mShipDesignPane.getChildren().add(mShipDesignInfoController.rootPane());
+        S_Pane.setAnchors(mShipDesignInfoController.rootPane(),0.0,0.0,0.0,0.0);
+      } catch (Throwable e) {
+        e.printStackTrace();
+      }
+      mShipDesignInfoController.setGroup(mGroup);
+
       Effects.setText(mGroupName,mGroup.name());
       Effects.setText(mConfiguration, "" + mGroup.getNumberOf() + "x " + mGroup.unitDesign());
 
@@ -173,7 +179,6 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
 
   public void setGroup(IJG_Group pGroup) {
     mGroup = pGroup;
-    mShipDesignInfoController.setGroup(pGroup);
     mHoverPlanet = mFaction.planets().findPlanetByPosition(mGroup.position());
     refresh();
     return;
@@ -181,7 +186,6 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
 
   public void setFaction(IJG_Faction pFaction) {
     mFaction = pFaction;
-    mShipDesignInfoController.setFaction(pFaction);
     refresh();
     return;
   }
