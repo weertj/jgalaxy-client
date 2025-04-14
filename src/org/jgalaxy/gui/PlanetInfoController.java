@@ -23,6 +23,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
   @FXML private AnchorPane  mRootPane;
   @FXML private TextField   mPlanetName;
 
+  @FXML private Label   mSize;
   @FXML private Label   mPopulation;
   @FXML private Label   mCol;
   @FXML private Label   mCap;
@@ -63,8 +64,8 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
     });
     mGroupsInOrbit.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     mGroupsInOrbit.getSelectionModel().getSelectedItems().addListener( (ListChangeListener)c -> {
-      Global.SELECTEDGROUPS.clear();
-      Global.SELECTEDGROUPS.addAll(mGroupsInOrbit.getSelectionModel().getSelectedItems());
+      Global.getSelectedGroups().clear();
+      Global.getSelectedGroups().addAll(mGroupsInOrbit.getSelectionModel().getSelectedItems());
     });
     mPlanetName.setOnAction( e -> {
       mPlanet.setName(mPlanetName.getText());
@@ -73,12 +74,12 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
 
     mOtherGroupsInOrbit.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     mOtherGroupsInOrbit.getSelectionModel().getSelectedItems().addListener( (ListChangeListener)c -> {
-      Global.SELECTEDGROUPS.clear();
-      Global.SELECTEDGROUPS.addAll(mOtherGroupsInOrbit.getSelectionModel().getSelectedItems());
+      Global.getSelectedGroups().clear();
+      Global.getSelectedGroups().addAll(mOtherGroupsInOrbit.getSelectionModel().getSelectedItems());
     });
 
     mAddToFleet.setOnAction(event -> {
-      Global.SELECTEDGROUPS.stream().forEach( g -> g.setFleet(mFleetNames.getSelectionModel().getSelectedItem()) );
+      Global.getSelectedGroups().stream().forEach( g -> g.setFleet(mFleetNames.getSelectionModel().getSelectedItem()) );
     });
 
     return;
@@ -97,6 +98,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
       mInRefresh = true;
       if (mPlanet == null) {
         mPlanetName.setText("");
+        mSize.setText("");
         mPopulation.setText("");
         mCol.setText("");
         mCap.setText("");
@@ -104,6 +106,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
         mInd.setText("");
       } else {
         mPlanetName.setText(mPlanet.name());
+        mSize.setText(""+mPlanet.size());
         mPopulation.setText(String.valueOf(mPlanet.population()));
         mCol.setText(String.valueOf(mPlanet.cols()));
         mCap.setText(String.valueOf(mPlanet.capitals()));

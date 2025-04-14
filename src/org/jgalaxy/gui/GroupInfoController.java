@@ -70,8 +70,12 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
 
     // **** Fleet
     mFleets.getSelectionModel().selectedItemProperty().addListener((_, oldValue, newValue) -> {
-      mGroup.setFleet(newValue.id());
-      mFaction.newChange();
+      if (newValue==null) {
+
+      } else {
+        mGroup.setFleet(newValue.id());
+        mFaction.newChange();
+      }
     });
 
     Image im = SImages.getImage("data/icons/cols.png");
@@ -90,10 +94,13 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
       var design = mFaction.getUnitDesignById(mGroup.unitDesign());
       SJG_LoadOrder.loadOrder(mGroup, design, "COL", mHoverPlanet, Double.parseDouble(mNumberOfColsToBeLoaded.getText()));
       refresh();
+      return;
     });
 
     SButtons.initButton(mUnloadButton,  _ -> {
       SJG_LoadOrder.unloadOrder( Global.CURRENTGAMECHANGED.get(), mGroup, mHoverPlanet, 999999.0 );
+      refresh();
+      return;
     });
 
     return;

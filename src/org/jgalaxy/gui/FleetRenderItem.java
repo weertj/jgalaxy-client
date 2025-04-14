@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.JavelinUIElement;
+import org.javelinfx.colors.SUX_Colors;
 import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.window.S_Pointer;
@@ -27,8 +28,14 @@ public class FleetRenderItem extends JavelinUIElement {
   public void render(IJavelinCanvas pCanvas, IJL_PlayerContext pContext) {
     super.render(pCanvas, pContext);
     GraphicsContext gc = pCanvas.context();
-    gc.setFill(Color.CYAN);
     Rectangle2D outline = getOutline();
+
+    if (element()==Global.getLastSelectedEntity()) {
+      gc.setFill(SUX_Colors.SELECTION);
+      gc.fillRect(outline.getX()-4, outline.getY()-4, outline.getWidth()+8, outline.getHeight()+8);
+    }
+
+    gc.setFill(Color.CYAN);
     gc.fillRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight() );
     gc.fillText( element().name(), outline.getX(), outline.getY() );
 //    gc.fillOval( 10*element().position().x(), 10*element().position().y(), 10, 10 );
@@ -54,7 +61,6 @@ public class FleetRenderItem extends JavelinUIElement {
 
   @Override
   public void pointerEntered( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
-    System.out.println(" --- FLEET " + element().id());
     return;
   }
 

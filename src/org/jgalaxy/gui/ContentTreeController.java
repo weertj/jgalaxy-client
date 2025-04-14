@@ -24,10 +24,12 @@ import org.jgalaxy.IEntity;
 import org.jgalaxy.battle.*;
 import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.engine.IJG_Game;
+import org.jgalaxy.engine.IJG_Player;
 import org.jgalaxy.orders.SJG_LoadOrder;
 import org.jgalaxy.planets.IJG_Planet;
 import org.jgalaxy.units.IJG_Fleet;
 import org.jgalaxy.units.IJG_Group;
+import org.jgalaxy.utils.GEN_Math;
 
 import java.net.URL;
 import java.util.*;
@@ -53,6 +55,10 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
     @Override public String id() { return ""; }
     @Override public String name() { return "Unknown"; }
   });
+  private TreeItem mRootUninhabitedPlanets = new TreeItem<>(new IEntity() {
+    @Override public String id() { return ""; }
+    @Override public String name() { return "Uninhabited"; }
+  });
   private TreeItem mRootUnknownInhabitedPlanets = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
     @Override public String name() { return "Inhabited"; }
@@ -64,6 +70,10 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
   private TreeItem mRootOwnGroups = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
     @Override public String name() { return Global.CURRENTFACTION_CHANGED.get().name(); }
+  });
+  private TreeItem mRootOwnCargoGroups = new TreeItem<>(new IEntity() {
+    @Override public String id() { return ""; }
+    @Override public String name() { return "Cargo ships"; }
   });
   private TreeItem mRootFleets = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
@@ -87,6 +97,10 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
     @Override public String id() { return ""; }
     @Override public String name() { return "Factions"; }
   });
+  private TreeItem mRootFactionsTop = new TreeItem<>(new IEntity() {
+    @Override public String id() { return ""; }
+    @Override public String name() { return "Top factions"; }
+  });
 
 //  private Map<String,TreeItem> mFactionNodes = new HashMap<>(16);
 
@@ -104,6 +118,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
     mRoot.getChildren().add(mRootFleets);
     mRoot.getChildren().add(mRootBattles);
     mRoot.getChildren().add(mRootFactions);
+    mRoot.setExpanded(true);
 
     mContentTreeView.setCellFactory(param -> new TreeCell() {
       @Override
@@ -131,6 +146,9 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
               pane.getChildren().addAll(circle, t);
             } else if (ent instanceof IJG_Group group) {
               Label t = new Label(group.name() + " " + group.getNumberOf() + "x " + group.unitDesign());
+              pane.getChildren().addAll( t);
+            } else if (ent instanceof IJG_Faction faction) {
+              Label t = new Label(faction.name() + " (" + GEN_Math.round02(faction.getReconTotalPop()) + ")");
               pane.getChildren().addAll( t);
             } else {
               pane.getChildren().add(new Label(ent.name()));
@@ -196,13 +214,17 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
     mRootPlanets.getChildren().clear();
     mRootOwnPlanets.getChildren().clear();
     mRootUnknownPlanets.getChildren().clear();
+    mRootUninhabitedPlanets.getChildren().clear();
     mRootUnknownInhabitedPlanets.getChildren().clear();
     mRootPlanets.getChildren().add(mRootOwnPlanets);
-    mRootPlanets.getChildren().add(mRootUnknownPlanets);
+    mRootPlanets.getChildren().add(mRootUninhabitedPlanets);
     mRootPlanets.getChildren().add(mRootUnknownInhabitedPlanets);
+    mRootPlanets.getChildren().add(mRootUnknownPlanets);
     mRootGroups.getChildren().clear();
     mRootOwnGroups.getChildren().clear();
     mRootGroups.getChildren().add(mRootOwnGroups);
+    mRootOwnCargoGroups.getChildren().clear();
+    mRootOwnGroups.getChildren().add(mRootOwnCargoGroups);
     mRootFleets.getChildren().clear();
     mRootOwnFleets.getChildren().clear();
     mRootFleets.getChildren().add(mRootOwnFleets);
@@ -212,6 +234,8 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
     mRootBattles.getChildren().add(mRootOwnBattles);
 
     mRootFactions.getChildren().clear();
+    mRootFactionsTop.getChildren().clear();
+    mRootFactions.getChildren().add(mRootFactionsTop);
 
     if (mFaction!=null) {
 
@@ -220,7 +244,11 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
       }
       for(IJG_Planet planet : mFaction.planets().planets()) {
         if (planet.faction()==null) {
-          mRootUnknownPlanets.getChildren().add(new TreeItem<>(planet));
+          if (planet.size() >= 0) {
+            mRootUninhabitedPlanets.getChildren().add(new TreeItem<>(planet));
+          } else {
+            mRootUnknownPlanets.getChildren().add(new TreeItem<>(planet));
+          }
         } else if (Objects.equals(planet.faction(),"")) {
           mRootUnknownInhabitedPlanets.getChildren().add(new TreeItem<>(planet));
         }
@@ -236,6 +264,13 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
       for(IJG_Group group : mFaction.groups().getGroups()){
         if (group.getFleet()==null) {
           mRootOwnGroups.getChildren().add(new TreeItem<>(group));
+        }
+      }
+      for(IJG_Group group : mFaction.groups().getGroups()){
+        if (group.getFleet()==null) {
+          if (mFaction.getUnitDesignById(group.unitDesign()).cargo()>0) {
+            mRootOwnCargoGroups.getChildren().add(new TreeItem<>(group));
+          }
         }
       }
 //      for( IJG_Faction faction : mFaction.getOtherFactionsMutable()) {
@@ -268,6 +303,13 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
       for( IJG_Faction faction : mFaction.getOtherFactionsMutable() ) {
         mRootFactions.getChildren().add(new TreeItem<>(faction));
       }
+      // **** TopFactions
+      var topfactions = Global.CURRENTGAME.get().topFactions();
+      for(IJG_Faction faction : topfactions) {
+        mRootFactionsTop.getChildren().add(new TreeItem<>(faction));
+      }
+
+
 
 //      List<ISB_BattleField> battles = new ArrayList<>(8);
 //      for(IJG_Group group : mFaction.groups().getGroups()) {

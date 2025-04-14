@@ -21,11 +21,14 @@ public class PlayerInfoController extends JUnitPanelInterface implements Initial
   @FXML private Label mShieldsTech;
   @FXML private Label mCargoTech;
 
+  @FXML private TextField mRightMouseSendNumber;
+
   private IJG_Player mPlayer;
   private IJG_Faction mFaction;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    Global.CURRENTSENDNUMBER.bindBidirectional(mRightMouseSendNumber.textProperty());
     return;
   }
 

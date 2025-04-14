@@ -62,13 +62,13 @@ public class GroupRenderItem extends JavelinUIElement {
       double x = pCanvas.toPixelX( toplanet.position().x(), Global.DISTANCEUNIT );
       double y = pCanvas.toPixelY( toplanet.position().y(), Global.DISTANCEUNIT );
       gc.setStroke(Colors.FRIEND_LIGHT);
-      gc.strokeLine(outline.getX(), outline.getY(),x, y);
+      gc.strokeLine(outline.getX() + outline.getWidth()/2, outline.getY() + outline.getHeight()/2,x, y);
       gc.stroke();
     } else if (group.toPosition()!=null) {
       double x = pCanvas.toPixelX( group.toPosition().x(), Global.DISTANCEUNIT );
       double y = pCanvas.toPixelY( group.toPosition().y(), Global.DISTANCEUNIT );
       gc.setStroke(Colors.FRIEND_LIGHT);
-      gc.strokeLine(outline.getX(), outline.getY(),x, y);
+      gc.strokeLine(outline.getX() + outline.getWidth()/2, outline.getY() + outline.getHeight()/2,x, y);
       gc.stroke();
     }
 

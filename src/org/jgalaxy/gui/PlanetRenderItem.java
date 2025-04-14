@@ -2,10 +2,8 @@ package org.jgalaxy.gui;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
 import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.JavelinUIElement;
-import org.javelinfx.colors.SColors;
 import org.javelinfx.colors.SUX_Colors;
 import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.spatial.ISP_Position;
@@ -70,16 +68,21 @@ public class PlanetRenderItem extends JavelinUIElement {
   @Override
   public void pointerPressed( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
     if (pPointer==S_Pointer.POINTER.SECONDARY) {
-      for(IJG_Group group : Global.SELECTEDGROUPS) {
+      for(IJG_Group group : Global.getSelectedGroups()) {
         if (group instanceof IJG_Fleet fleet) {
           fleet.groups().stream().forEach( g -> sendGroupTo(g, element()));
         } else {
-          int nr = -1;
-          if (nr>0) {
+          Integer nr = -1;
+          try {
+            nr = Integer.parseInt(Global.CURRENTSENDNUMBER.get());
+          } catch (NumberFormatException e) {
+          }
+          if (nr>0 && nr.intValue()<group.getNumberOf()) {
             IJG_Faction faction = Global.CURRENTFACTION_CHANGED.get();
-            var breakgroup = group.breakOffGroup(Global.CURRENTGAMECHANGED.get(), faction, 1);
+            IJG_Group breakgroup = group.breakOffGroup(Global.CURRENTGAMECHANGED.get(), faction, group.id(), nr);
             faction.groups().addGroup(breakgroup);
             sendGroupTo(breakgroup, element());
+            faction.newChange();
           } else {
             sendGroupTo(group, element());
           }

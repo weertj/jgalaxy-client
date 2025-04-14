@@ -10,6 +10,9 @@ public class Colors {
   static public Color colorForMyFaction(IFactionOwner pOwner) {
     if (pOwner.faction()==null) {
       if (pOwner instanceof IJG_Planet planet) {
+        if (planet.size()>=0) {
+          return NEUTRAL_DARK;
+        }
         return UNKNOWN_DARK;
       }
       return UNKNOWN_MEDIUM;

@@ -47,6 +47,7 @@ public class GalaxyMainInterface extends JMainInterface {
   private ContentTreeController mContentTreeController;
 
   private TabPane mTabControlPane;
+  private Tab mFleetTab;
   private Tab mGroupTab;
   private Tab mPlanetTab;
 
@@ -93,16 +94,16 @@ public class GalaxyMainInterface extends JMainInterface {
     mTabControlPane = new TabPane();
     mainPane().getChildren().add(mTabControlPane);
     mTabControlPane.setPrefWidth(200);
-    S_Pane.setAnchors(mTabControlPane, null, 0.0, 100.0, 0.0);
+    S_Pane.setAnchors(mTabControlPane, null, 0.0, 132.0, 0.0);
     Tab factionTab = new Tab("Faction");
     factionTab.setClosable(false);
     mTabControlPane.getTabs().add(factionTab);
     mPlanetTab = new Tab("Planet");
     mPlanetTab.setClosable(false);
     mTabControlPane.getTabs().add(mPlanetTab);
-    Tab fleetTab = new Tab("Fleet");
-    fleetTab.setClosable(false);
-    mTabControlPane.getTabs().add(fleetTab);
+    mFleetTab = new Tab("Fleet");
+    mFleetTab.setClosable(false);
+    mTabControlPane.getTabs().add(mFleetTab);
     mGroupTab = new Tab("Group");
     mGroupTab.setClosable(false);
     mTabControlPane.getTabs().add(mGroupTab);
@@ -152,7 +153,7 @@ public class GalaxyMainInterface extends JMainInterface {
       var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/TurnInfo.fxml", null);
       mTurnInfoController = (TurnInfoController)FXMLLoad.controller(contents);
       mainPane().getChildren().add(mTurnInfoController.rootPane());
-      S_Pane.setAnchors( mTurnInfoController.rootPane(), null, 0.0, 0.0, null);
+      S_Pane.setAnchors( mTurnInfoController.rootPane(), null, 0.0, 32.0, null);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -169,7 +170,7 @@ public class GalaxyMainInterface extends JMainInterface {
     try { // **** FleetInfo
       var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/FleetInfo.fxml", null);
       mFleetInfoController = (FleetInfoController)FXMLLoad.controller(contents);
-      fleetTab.setContent(mFleetInfoController.rootPane());
+      mFleetTab.setContent(mFleetInfoController.rootPane());
       S_Pane.setAnchors( mFleetInfoController.rootPane(), 0.0, 0.0, 0.0, 0.0);
     } catch (Exception e) {
       e.printStackTrace();
@@ -198,10 +199,10 @@ public class GalaxyMainInterface extends JMainInterface {
         for (IEntity entity : c.getAddedSubList()) {
           if (entity instanceof IJG_Planet planet) {
             selectPlanet(planet);
-          } else if (entity instanceof IJG_Group group) {
-            selectGroup(group);
           } else if (entity instanceof IJG_Fleet fleet) {
             selectFleet(fleet);
+          } else if (entity instanceof IJG_Group group) {
+            selectGroup(group);
           }
         }
       }
@@ -336,13 +337,18 @@ public class GalaxyMainInterface extends JMainInterface {
   }
 
   private void selectGroup( IJG_Group pGroup ) {
+    mGroupInfoController.setFaction(Global.CURRENTFACTION_CHANGED.get().resolveFactionById(pGroup.faction()));
     mGroupInfoController.setGroup(pGroup);
+    mMapRenderItem.middleMoveToCanvasPositionProperty().set(SP_Position.of(pGroup.position().x(),pGroup.position().y(),Global.DISTANCEUNIT));
     mTabControlPane.getSelectionModel().select(mGroupTab);
     return;
   }
 
   private void selectFleet( IJG_Fleet pFleet ) {
+    mFleetInfoController.setFaction(Global.CURRENTFACTION_CHANGED.get().resolveFactionById(pFleet.faction()));
     mFleetInfoController.setFleet(pFleet);
+    mMapRenderItem.middleMoveToCanvasPositionProperty().set(SP_Position.of(pFleet.position().x(),pFleet.position().y(),Global.DISTANCEUNIT));
+    mTabControlPane.getSelectionModel().select(mFleetTab);
     return;
   }
 
@@ -405,7 +411,75 @@ public class GalaxyMainInterface extends JMainInterface {
       return;
     });
 
-    IMAP_Map map = Global.CURRENTGAME.get().galaxy().map();
+    addRenderItems( pFaction );
+
+//    IMAP_Map map = Global.CURRENTGAME.get().galaxy().map();
+//
+//    BackgroundItem bgi = new BackgroundItem("map", map, SP_Position.of(map.xStart(), map.yStart(), Global.DISTANCEUNIT));
+//    playerContext.addRenderItem(0, bgi );
+//
+//
+//    mMapRenderItem = new MapRenderItem("map", map, SP_Position.of(map.xStart(), map.yStart(), Global.DISTANCEUNIT));
+//    mMapRenderItem.mouseOverMapPositionProperty().addListener((_, _, newValue) -> {
+//      mStatusBarController.setMouseMovePosition(newValue);
+//      return;
+//    });
+//    mMapRenderItem.middleCanvasPositionProperty().addListener((_, _, newValue) -> {
+//      mStatusBarController.setCenterPosition(newValue);
+//      return;
+//    });
+//    playerContext.addRenderItem(1, mMapRenderItem );
+//
+//    for(IJG_Planet planet : pFaction.planets().planets()) {
+//      playerContext.addRenderItem(2,
+//        new PlanetRenderItem(planet.id(),planet,
+//          SP_Position.of(planet.position().x(),planet.position().y(), Global.DISTANCEUNIT)));
+//    }
+//
+//    for( IJG_Group group : pFaction.groups().getGroups()) {
+//      if (group.getFleet()==null) {
+//        playerContext.addRenderItem(3,
+//          new GroupRenderItem(group.id(), group,
+//            SP_Position.of(group.position().x(), group.position().y(), Global.DISTANCEUNIT)));
+//      }
+//    }
+//    for(IJG_Fleet fleet : pFaction.groups().fleets()) {
+//      if (!fleet.groups().isEmpty()) {
+//        var group = fleet.groups().getFirst();
+//        playerContext.addRenderItem(3,
+//          new FleetRenderItem(fleet.id(), fleet,
+//            SP_Position.of(group.position().x(), group.position().y(), Global.DISTANCEUNIT)));
+//      }
+//    }
+//
+//    // **** Other faction groups
+//    for( IJG_Faction otherFaction : pFaction.getOtherFactionsMutable()) {
+//      for( IJG_Group othergroup : otherFaction.groups().getGroups()) {
+//        playerContext.addRenderItem( 2,
+//          new GroupRenderItem(othergroup.id(),othergroup,
+//            SP_Position.of(othergroup.position().x(), othergroup.position().y(), Global.DISTANCEUNIT)));
+//      }
+//    }
+//
+//    // **** Incoming groups
+//    for(IJG_Incoming incoming : pFaction.getIncomingMutable()) {
+//      playerContext.addRenderItem( 2,
+//        new IncomingGroupRenderItem(null,incoming, SP_Position.of(incoming.current().x(),incoming.current().y(), Global.DISTANCEUNIT)));
+//    }
+
+    return;
+  }
+
+  /**
+   * addRenderItems
+   * @param pFaction
+   */
+  private void addRenderItems( IJG_Faction pFaction ) {
+
+    IJL_PlayerContext playerContext = getPlayerContext();
+    playerContext.clearRenderItems();
+
+    IMAP_Map map = Global.CURRENTGAMECHANGED.get().galaxy().map();
 
     BackgroundItem bgi = new BackgroundItem("map", map, SP_Position.of(map.xStart(), map.yStart(), Global.DISTANCEUNIT));
     playerContext.addRenderItem(0, bgi );
@@ -458,12 +532,12 @@ public class GalaxyMainInterface extends JMainInterface {
       playerContext.addRenderItem( 2,
         new IncomingGroupRenderItem(null,incoming, SP_Position.of(incoming.current().x(),incoming.current().y(), Global.DISTANCEUNIT)));
     }
-
     return;
   }
 
   private void refresh() {
     mContentTreeController.refresh();
+    addRenderItems( Global.CURRENTFACTION_CHANGED.get() );
     return;
   }
 
