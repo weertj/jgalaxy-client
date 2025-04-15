@@ -72,7 +72,7 @@ is being used to size a border should also be in pixels.
      *                                                                         *
      **************************************************************************/
 
-    -fx-font-family: "Barlow Regular";
+    -fx-font-family: "Barlow Bold";
 
     /* A light grey that is the base color for objects.  Instead of using
      * -fx-base directly, the sections in this file will typically use -fx-color.
@@ -3425,8 +3425,17 @@ is being used to size a border should also be in pixels.
 }
 
 .label-value-value {
-    -fx-font-size: 13px;
+    -fx-font-size: 11px;
     -fx-text-fill: #ffcc66;
+    -fx-background-color: #ffffff10;
+    -fx-font-family: "Cousine Regular";
+}
+
+.label-value-value-fixed {
+    -fx-font-size: 11px;
+    -fx-text-fill: #cccccc;
+    -fx-background-color: #ffffff10;
+    -fx-font-family: "Cousine Regular";
 }
 
 .subheader {
