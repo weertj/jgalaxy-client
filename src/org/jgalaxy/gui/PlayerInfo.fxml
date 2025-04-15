@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mRootPane" prefHeight="32.0" prefWidth="725.0" stylesheets="@jgalaxy.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.PlayerInfoController">
+<AnchorPane fx:id="mRootPane" prefHeight="32.0" prefWidth="725.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.PlayerInfoController">
    <children>
       <AnchorPane layoutX="46.0" layoutY="23.0" style="-fx-background-color: #111111;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -34,7 +34,7 @@
             </Label>
             <Label fx:id="mCargoTech" layoutX="302.0" layoutY="10.0" text="..." />
             <Button fx:id="mShipDesignerButton" layoutX="394.0" layoutY="1.0" mnemonicParsing="false" text="SHIP DESIGNER" AnchorPane.topAnchor="3.0" />
-            <TextField fx:id="mRightMouseSendNumber" layoutX="528.0" layoutY="4.0" prefWidth="64.0" stylesheets="@jgalaxy.css" AnchorPane.topAnchor="4.0" />
+            <TextField fx:id="mRightMouseSendNumber" layoutX="528.0" layoutY="4.0" prefWidth="64.0" AnchorPane.topAnchor="4.0" />
             <Button fx:id="mUserButton" layoutX="659.0" layoutY="6.0" mnemonicParsing="false" prefWidth="100.0" text="{user}" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="3.0" />
          </children>
       </AnchorPane>

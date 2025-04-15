@@ -35,8 +35,16 @@ public class FleetRenderItem extends JavelinUIElement {
       gc.fillRect(outline.getX()-4, outline.getY()-4, outline.getWidth()+8, outline.getHeight()+8);
     }
 
-    gc.setFill(Color.CYAN);
-    gc.fillRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight() );
+    Color mainCol = Colors.colorForMyFaction(element());
+    gc.setFill(mainCol);
+    gc.setStroke(mainCol);
+
+//    gc.setFill(Color.CYAN);
+    if (element().totalNumberOfShips()>0) {
+      gc.fillRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
+    } else {
+      gc.strokeRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
+    }
     gc.fillText( element().name(), outline.getX(), outline.getY() );
 //    gc.fillOval( 10*element().position().x(), 10*element().position().y(), 10, 10 );
 

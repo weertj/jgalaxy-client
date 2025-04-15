@@ -537,9 +537,21 @@ public class GalaxyMainInterface extends JMainInterface {
     // **** Other faction groups
     for( IJG_Faction otherFaction : pFaction.getOtherFactionsMutable()) {
       for( IJG_Group othergroup : otherFaction.groups().getGroups()) {
-        playerContext.addRenderItem( 2,
-          new GroupRenderItem(othergroup.id(),othergroup,
-            SP_Position.of(othergroup.position().x(), othergroup.position().y(), Global.DISTANCEUNIT)));
+        if (othergroup.getFleet()==null) {
+          playerContext.addRenderItem(2,
+            new GroupRenderItem(othergroup.id(), othergroup,
+              SP_Position.of(othergroup.position().x(), othergroup.position().y(), Global.DISTANCEUNIT)));
+        }
+      }
+    }
+    for( IJG_Faction otherFaction : pFaction.getOtherFactionsMutable()) {
+      for( IJG_Fleet otherfleet : otherFaction.groups().fleets()) {
+        if (!otherfleet.groups().isEmpty()) {
+          var group = otherfleet.groups().getFirst();
+          playerContext.addRenderItem(3,
+            new FleetRenderItem(otherfleet.id(), otherfleet,
+              SP_Position.of(group.position().x(), group.position().y(), Global.DISTANCEUNIT)));
+        }
       }
     }
 

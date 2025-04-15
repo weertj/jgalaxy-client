@@ -254,13 +254,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
         }
       }
 
-//      for(IJG_Fleet fleet : mFaction.groups().fleets()) {
-//        var fleetitem = new TreeItem(fleet);
-//        mRootOwnPlanets.getChildren().add(fleetitem);
-//        for(IJG_Group group : fleet.groups()) {
-//          fleetitem.getChildren().add(new TreeItem(group));
-//        }
-//      }
+      // **** Own groups
       for(IJG_Group group : mFaction.groups().getGroups()){
         if (group.getFleet()==null) {
           mRootOwnGroups.getChildren().add(new TreeItem<>(group));
@@ -273,12 +267,13 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
           }
         }
       }
-//      for( IJG_Faction faction : mFaction.getOtherFactionsMutable()) {
-//        TreeItem ti = mFactionNodes.get(faction.id());
-//        for( var group : faction.groups().getGroups() ) {
-//          ti.getChildren().add(new TreeItem<>(group));
-//        }
-//      }
+      for( IJG_Faction otherfaction : mFaction.getOtherFactionsMutable()) {
+        TreeItem ofti = new TreeItem(otherfaction);
+        for( var group : otherfaction.groups().getGroups() ) {
+          ofti.getChildren().add(new TreeItem<>(group));
+        }
+        mRootGroups.getChildren().add(ofti);
+      }
 
       // **** Fleets
       for(IJG_Fleet fleet : mFaction.groups().fleets()){

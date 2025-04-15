@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 import org.javelinfx.colors.SColors;
 import org.jgalaxy.IFactionOwner;
 import org.jgalaxy.planets.IJG_Planet;
+import org.jgalaxy.units.IJG_Fleet;
 
 public class Colors {
 
@@ -18,13 +19,27 @@ public class Colors {
       return UNKNOWN_MEDIUM;
     }
     String factionid = Global.CURRENTFACTION_CHANGED.get().id();
+
+    // **** Fleet?
+    if (pOwner instanceof IJG_Fleet fleet) {
+      if (factionid.equals( pOwner.faction())) {
+        return FRIEND_FLEET;
+      } else {
+        if (Global.CURRENTFACTION_CHANGED.get().atWarWith().contains(pOwner.faction())) {
+          return HOSTILE_FLEET;
+        } else {
+          return NEUTRAL_FLEET;
+        }
+      }
+    }
+
     if (factionid.equals( pOwner.faction())) {
-      return FRIEND_MEDIUM;
+      return FRIEND_GROUP;
     } else {
       if (Global.CURRENTFACTION_CHANGED.get().atWarWith().contains(pOwner.faction())) {
-        return Colors.HOSTILE_MEDIUM;
+        return Colors.HOSTILE_GROUP;
       } else {
-        return Colors.NEUTRAL_MEDIUM;
+        return Colors.NEUTRAL_GROUP;
       }
     }
   }
@@ -45,31 +60,24 @@ public class Colors {
   static final public Color HOSTILE_LIGHT   = Color.rgb( 255,128,128 );
   static final public Color FRIEND_DARK     = Color.rgb( 0,107,140);
   static final public Color FRIEND_MEDIUM   = Color.rgb( 0,168,220);
-  static final public Color FRIEND_LIGHT    = Color.rgb( 128,224,255);
+  static final public Color FRIEND_LIGHT    = Color.rgb( 0,224,255);
   static final public Color NEUTRAL_DARK    = Color.rgb( 0,160,0);
   static final public Color NEUTRAL_MEDIUM  = Color.rgb( 0,226,0);
-  static final public Color NEUTRAL_LIGHT   = Color.rgb( 170,255,170);
+  static final public Color NEUTRAL_LIGHT   = Color.rgb( 40,255,40);
   static final public Color UNKNOWN_DARK    = Color.rgb( 225,220,0);
   static final public Color UNKNOWN_MEDIUM  = Color.rgb( 255,255,0);
   static final public Color UNKNOWN_LIGHT   = Color.rgb( 255,255,128);
   static final public Color CIVILIAN_DARK   = Color.web( "#500050" );
   static final public Color CIVILIAN_MEDIUM = Color.web( "#800080" );
   static final public Color CIVILIAN_LIGHT  = Color.web( "#FF80FF" );
-//  static final public Color HOSTILE_DARK    = Color.web( "#C80000" );
-//  static final public Color HOSTILE_MEDIUM  = SColors.POPPY_RED;
-//  static final public Color HOSTILE_LIGHT   = Color.web( "#EE8080" );
-//  static final public Color FRIEND_DARK     = SColors.LIMPET_SHELL.darker().darker();
-//  static final public Color FRIEND_MEDIUM   = SColors.LIMPET_SHELL.darker();
-//  static final public Color FRIEND_LIGHT    = SColors.LIMPET_SHELL;
-//  static final public Color NEUTRAL_DARK    = Color.web( "#00A000" );
-//  static final public Color NEUTRAL_MEDIUM  = Color.web( "#006B54" );
-//  static final public Color NEUTRAL_LIGHT   = Color.web( "#AAFFAA" );
-//  static final public Color UNKNOWN_DARK    = SColors.MISTED_MARIGOLD;
-//  static final public Color UNKNOWN_MEDIUM  = SColors.MISTED_MARIGOLD.brighter();
-//  static final public Color UNKNOWN_LIGHT   = SColors.MISTED_MARIGOLD.brighter().brighter();
-//  static final public Color CIVILIAN_DARK   = Color.web( "#500050" );
-//  static final public Color CIVILIAN_MEDIUM = Color.web( "#800080" );
-//  static final public Color CIVILIAN_LIGHT  = Color.web( "#FFFF80" );
+
+  static       public Color FRIEND_GROUP  = FRIEND_MEDIUM;
+  static       public Color FRIEND_FLEET  = FRIEND_LIGHT;
+  static       public Color NEUTRAL_GROUP = NEUTRAL_MEDIUM;
+  static       public Color NEUTRAL_FLEET = NEUTRAL_LIGHT;
+  static       public Color HOSTILE_GROUP = HOSTILE_MEDIUM;
+  static       public Color HOSTILE_FLEET = HOSTILE_LIGHT;
+
 
   private Colors() {
   }
