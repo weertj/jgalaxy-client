@@ -47,11 +47,14 @@ public class GalaxyMainInterface extends JMainInterface {
   private ContentTreeController mContentTreeController;
 
   private TabPane mTabControlPane;
+  private Tab mFactionTab;
   private Tab mFleetTab;
   private Tab mGroupTab;
   private Tab mPlanetTab;
 
   private MapRenderItem mMapRenderItem;
+
+  private boolean mFirstRun = true;
 
   private final ChangeListener<Number> mFactionChanged = (observable, oldValue, newValue) -> {
     refresh();
@@ -61,14 +64,14 @@ public class GalaxyMainInterface extends JMainInterface {
 
   @Override
   public String title() {
-    return "Galaxy reloaded";
+    return "Galaxy Reloaded";
   }
 
   @Override
   public void init() {
     super.init();
 
-    mainPane().getStylesheets().add(getClass().getResource("/org/jgalaxy/gui/jgalaxy.css").toExternalForm());
+//    mainPane().getStylesheets().add(getClass().getResource("/org/jgalaxy/gui/jgalaxy.css").toExternalForm());
 
     Global.CURRENTUSERNAME.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("username", ""));
     Global.CURRENTPASSWORD.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("password", ""));
@@ -95,9 +98,9 @@ public class GalaxyMainInterface extends JMainInterface {
     mainPane().getChildren().add(mTabControlPane);
     mTabControlPane.setPrefWidth(200);
     S_Pane.setAnchors(mTabControlPane, null, 0.0, 132.0, 0.0);
-    Tab factionTab = new Tab("Faction");
-    factionTab.setClosable(false);
-    mTabControlPane.getTabs().add(factionTab);
+    mFactionTab = new Tab("Faction");
+    mFactionTab.setClosable(false);
+    mTabControlPane.getTabs().add(mFactionTab);
     mPlanetTab = new Tab("Planet");
     mPlanetTab.setClosable(false);
     mTabControlPane.getTabs().add(mPlanetTab);
@@ -142,7 +145,7 @@ public class GalaxyMainInterface extends JMainInterface {
     try { // **** Faction info
       var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/FactionInfo.fxml", null);
       mFactionInfoController = (FactionInfoController)FXMLLoad.controller(contents);
-      factionTab.setContent(mFactionInfoController.rootPane());
+      mFactionTab.setContent(mFactionInfoController.rootPane());
       mainPane().getChildren().add(mFactionInfoController.rootPane());
       S_Pane.setAnchors( mFactionInfoController.rootPane(), 0.0, 0.0, 0.0, null);
     } catch (Exception e) {
@@ -203,6 +206,8 @@ public class GalaxyMainInterface extends JMainInterface {
             selectFleet(fleet);
           } else if (entity instanceof IJG_Group group) {
             selectGroup(group);
+          } else if (entity instanceof IJG_Faction faction) {
+            selectFaction(faction);
           }
         }
       }
@@ -352,6 +357,12 @@ public class GalaxyMainInterface extends JMainInterface {
     return;
   }
 
+  private void selectFaction( IJG_Faction pFaction ) {
+    mFactionInfoController.setFaction(pFaction);
+    mTabControlPane.getSelectionModel().select(mFactionTab);
+    return;
+  }
+
   private void selectItem( IJavelinUIElement pItem ) {
     if (pItem.element() instanceof IEntity entity) {
       Global.addSelectedIdentity(entity,true);
@@ -393,6 +404,7 @@ public class GalaxyMainInterface extends JMainInterface {
 //    mPlanetInfoController.setFaction(pFaction);
     mTurnInfoController.setFaction(pFaction);
     mPlayerInfoController.setFaction(pFaction);
+    mFactionInfoController.setFaction(pFaction);
     mShipDesignsController.setFaction(pFaction);
     mContentTreeController.setPlayerContext( playerContext );
     mContentTreeController.setFaction(pFaction);
@@ -485,7 +497,11 @@ public class GalaxyMainInterface extends JMainInterface {
     playerContext.addRenderItem(0, bgi );
 
 
-    mMapRenderItem = new MapRenderItem("map", map, SP_Position.of(map.xStart(), map.yStart(), Global.DISTANCEUNIT));
+    mMapRenderItem = new MapRenderItem("map",
+      map,
+      SP_Position.of(map.xStart(), map.yStart(), Global.DISTANCEUNIT),
+      mFirstRun);
+    mFirstRun = false;
     mMapRenderItem.mouseOverMapPositionProperty().addListener((_, _, newValue) -> {
       mStatusBarController.setMouseMovePosition(newValue);
       return;

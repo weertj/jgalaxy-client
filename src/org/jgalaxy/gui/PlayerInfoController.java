@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import org.javelinfx.buttons.SButtons;
 import org.javelinfx.engine.JUnitPanelInterface;
 import org.javelinfx.fxml.FXMLLoad;
+import org.javelinfx.system.JavelinSystem;
 import org.javelinfx.window.S_Pane;
 import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.engine.IJG_Player;
@@ -29,7 +30,9 @@ public class PlayerInfoController extends JUnitPanelInterface implements Initial
   @FXML private Button mShipDesignerButton;
   @FXML private TextField mRightMouseSendNumber;
 
-  private IJG_Player mPlayer;
+  @FXML private Button mUserButton;
+
+//  private IJG_Player mPlayer;
   private IJG_Faction mFaction;
 
   private ShipDesignerController mController;
@@ -41,16 +44,22 @@ public class PlayerInfoController extends JUnitPanelInterface implements Initial
     Global.CURRENTSENDNUMBER.bindBidirectional(mRightMouseSendNumber.textProperty());
 
     SButtons.initButton(mShipDesignerButton, e -> {
-      try { // **** ShipDesignInfo
+      try { // **** ShipDesigner
         var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/ShipDesigner.fxml", null);
         mController = (ShipDesignerController)FXMLLoad.controller(contents);
         mStage = new Stage();
-        mStage.setScene(new Scene(mController.rootPane()));
+        Scene scene = new Scene(mController.rootPane());
+        scene.getStylesheets().add(JavelinSystem.stylesheet().file().toURI().toString());
+        mStage.setScene(scene);
         mController.setFaction(mFaction);
         mStage.show();
       } catch (Throwable t) {
         t.printStackTrace();
       }
+
+    });
+
+    SButtons.initButton(mUserButton, e -> {
 
     });
 
@@ -74,14 +83,17 @@ public class PlayerInfoController extends JUnitPanelInterface implements Initial
       mShieldsTech.setText("" + mFaction.tech().shields());
       mCargoTech.setText("" + mFaction.tech().cargo());
     }
+    if (Global.CURRENTPLAYERCHANGED.get()!=null) {
+      mUserButton.setText(Global.CURRENTPLAYERCHANGED.get().getUsername());
+    }
     return;
   }
 
-  public void setPlayer( IJG_Player pPlayer ) {
-    mPlayer = pPlayer;
-    refresh();
-    return;
-  }
+//  public void setPlayer( IJG_Player pPlayer ) {
+//    mPlayer = pPlayer;
+//    refresh();
+//    return;
+//  }
 
   public void setFaction(IJG_Faction pFaction) {
     mFaction = pFaction;

@@ -24,6 +24,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
   @FXML private TextField   mPlanetName;
 
   @FXML private Label   mSize;
+  @FXML private Label   mResource;
   @FXML private Label   mPopulation;
   @FXML private Label   mCol;
   @FXML private Label   mCap;
@@ -106,12 +107,13 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
         mInd.setText("");
       } else {
         mPlanetName.setText(mPlanet.name());
-        mSize.setText(""+mPlanet.size());
-        mPopulation.setText(String.valueOf(mPlanet.population()));
-        mCol.setText(String.valueOf(mPlanet.cols()));
-        mCap.setText(String.valueOf(mPlanet.capitals()));
-        mMat.setText(String.valueOf(mPlanet.materials()));
-        mInd.setText(String.valueOf(mPlanet.industry()));
+        Effects.setValueDouble02(mSize,mPlanet.size());
+        Effects.setValueDouble02(mResource, mPlanet.resources());
+        Effects.setValueDouble02(mPopulation,mPlanet.population());
+        Effects.setValueDouble02(mCol,mPlanet.cols());
+        Effects.setValueDouble02(mCap,mPlanet.capitals());
+        Effects.setValueDouble02(mMat,mPlanet.materials());
+        Effects.setValueDouble02(mInd,mPlanet.industry());
         mProduce.getItems().clear();
 
         mGroupsInOrbit.getItems().clear();

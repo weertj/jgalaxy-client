@@ -21,9 +21,12 @@ public class MapRenderItem extends JavelinUIElement {
   private final ObjectProperty<ISP_Position> mMiddleCanvasPosition = new SimpleObjectProperty<>(null);
   private final ObjectProperty<ISP_Position> mMiddleMoveToCanvasPosition = new SimpleObjectProperty<>(null);
 
-  public MapRenderItem(String id, Object element, ISP_Position position) {
+  public MapRenderItem(String id, Object element, ISP_Position position, boolean pAutoCenter ) {
     super(id, element, position);
     mMap = (IMAP_Map) element;
+    if (pAutoCenter) {
+      mMiddleMoveToCanvasPosition.set(SP_Position.of((mMap.xEnd() - mMap.xStart()) / 2, (mMap.yEnd() - mMap.yStart()) / 2, Global.DISTANCEUNIT));
+    }
     return;
   }
 
