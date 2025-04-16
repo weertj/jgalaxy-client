@@ -43,7 +43,7 @@ public class Global {
 
   static final private ObservableList<IJG_Group> SELECTEDGROUPS = FXCollections.observableArrayList();
 
-  static final public ObservableList<IEntity> SELECTEDENTITIES = FXCollections.observableArrayList();
+  static final private ObservableList<IEntity> SELECTEDENTITIES = FXCollections.observableArrayList();
 
   static final public ObjectProperty<IEntity> LASTSELECTEDENTITY = new SimpleObjectProperty<>(null);
 

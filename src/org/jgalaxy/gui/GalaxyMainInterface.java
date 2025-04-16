@@ -17,6 +17,7 @@ import org.javelinfx.player.JL_PlayerContext;
 import org.javelinfx.spatial.SP_Position;
 import org.javelinfx.window.S_Pane;
 import org.jgalaxy.IEntity;
+import org.jgalaxy.battle.ISB_BattleReport;
 import org.jgalaxy.engine.*;
 import org.jgalaxy.map.IMAP_Map;
 import org.jgalaxy.planets.IJG_Planet;
@@ -36,21 +37,23 @@ public class GalaxyMainInterface extends JMainInterface {
 
 //  private IJavelinCanvas mCanvas = new SimpleCanvas();
 
-  private TurnInfoController    mTurnInfoController;
-  private FactionInfoController mFactionInfoController;
-  private PlanetInfoController  mPlanetInfoController;
-  private GroupInfoController   mGroupInfoController;
-  private FleetInfoController   mFleetInfoController;
-  private ShipDesignsController mShipDesignsController;
-  private PlayerInfoController  mPlayerInfoController;
-  private StatusBarController   mStatusBarController;
-  private ContentTreeController mContentTreeController;
+  private TurnInfoController      mTurnInfoController;
+  private FactionInfoController   mFactionInfoController;
+  private PlanetInfoController    mPlanetInfoController;
+  private GroupInfoController     mGroupInfoController;
+  private FleetInfoController     mFleetInfoController;
+  private BattleReportController  mBattleReportController;
+  private ShipDesignsController   mShipDesignsController;
+  private PlayerInfoController    mPlayerInfoController;
+  private StatusBarController     mStatusBarController;
+  private ContentTreeController   mContentTreeController;
 
   private TabPane mTabControlPane;
   private Tab mFactionTab;
   private Tab mFleetTab;
   private Tab mGroupTab;
   private Tab mPlanetTab;
+  private Tab mBattleTab;
 
   private MapRenderItem mMapRenderItem;
 
@@ -110,6 +113,9 @@ public class GalaxyMainInterface extends JMainInterface {
     mGroupTab = new Tab("Group");
     mGroupTab.setClosable(false);
     mTabControlPane.getTabs().add(mGroupTab);
+    mBattleTab = new Tab("Battle");
+    mBattleTab.setClosable(false);
+    mTabControlPane.getTabs().add(mBattleTab);
     Tab designTab = new Tab("Ship design");
     designTab.setClosable(false);
     mTabControlPane.getTabs().add(designTab);
@@ -179,6 +185,15 @@ public class GalaxyMainInterface extends JMainInterface {
       e.printStackTrace();
     }
 
+    try { // **** BattleReport
+      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/BattleReport.fxml", null);
+      mBattleReportController = (BattleReportController)FXMLLoad.controller(contents);
+      mBattleTab.setContent(mBattleReportController.rootPane());
+      S_Pane.setAnchors( mBattleReportController.rootPane(), 0.0, 0.0, 0.0, 0.0);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     try { // **** GroupInfo
       var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/GroupInfo.fxml", null);
       mGroupInfoController = (GroupInfoController)FXMLLoad.controller(contents);
@@ -208,6 +223,8 @@ public class GalaxyMainInterface extends JMainInterface {
             selectGroup(group);
           } else if (entity instanceof IJG_Faction faction) {
             selectFaction(faction);
+          } else if (entity instanceof ISB_BattleReport battleReport) {
+            selectBattleReport(battleReport);
           }
         }
       }
@@ -360,6 +377,14 @@ public class GalaxyMainInterface extends JMainInterface {
   private void selectFaction( IJG_Faction pFaction ) {
     mFactionInfoController.setFaction(pFaction);
     mTabControlPane.getSelectionModel().select(mFactionTab);
+    return;
+  }
+
+  private void selectBattleReport( ISB_BattleReport pBattleReport ) {
+    mBattleReportController.setFaction(Global.CURRENTFACTION_CHANGED.get());
+    mBattleReportController.setBattleReport(pBattleReport);
+    mMapRenderItem.middleMoveToCanvasPositionProperty().set(SP_Position.of(pBattleReport.position().x(),pBattleReport.position().y(),Global.DISTANCEUNIT));
+    mTabControlPane.getSelectionModel().select(mBattleTab);
     return;
   }
 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mRootPane" prefHeight="659.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.BattleReportController">
+   <children>
+      <AnchorPane fx:id="mGeneralPane" layoutX="46.0" layoutY="-61.0" prefHeight="601.0" prefWidth="222.0" style="-fx-background-color: #331111;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label fx:id="mBattleTitle" alignment="CENTER" styleClass="label-main" text="..." AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0" />
+            <TableView fx:id="mOwnResultTableView" layoutX="14.0" layoutY="38.0" prefHeight="172.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="32.0">
+              <columns>
+                <TableColumn fx:id="mGroupNameColumn" prefWidth="100.0" text="Group" />
+                  <TableColumn fx:id="mStartedColumn" prefWidth="50.0" text="Started" />
+                <TableColumn fx:id="mLeftColumn" prefWidth="50.0" text="Left" />
+              </columns>
+            </TableView>
+            <TableView fx:id="mOthersResultTableView" layoutX="4.0" layoutY="214.0" prefHeight="172.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0">
+               <columns>
+                  <TableColumn fx:id="mOtherGroupNameColumn" prefWidth="100.0" text="Group" />
+                  <TableColumn fx:id="mOtherStartedColumn" prefWidth="50.0" text="Started" />
+                  <TableColumn fx:id="mOtherLeftColumn" prefWidth="50.0" text="Left" />
+               </columns>
+            </TableView>
+            <TableView fx:id="mBattleDetail" layoutX="11.0" layoutY="425.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0">
+              <columns>
+                <TableColumn fx:id="mBattleDetailRoundColumn" prefWidth="75.0" text="Round" />
+                <TableColumn fx:id="mBattleDetailTypeColumn" prefWidth="75.0" text="C2" />
+                  <TableColumn fx:id="mBattleDetailResultColumn" prefWidth="75.0" text="C2" />
+                  <TableColumn fx:id="mBattleDetailTargetIDColumn" prefWidth="75.0" text="C2" />
+                  <TableColumn fx:id="mBattleDetailTargetFactionColumn" prefWidth="75.0" text="C2" />
+                  <TableColumn fx:id="mBattleDetailHitsColumn" prefWidth="75.0" text="C2" />
+              </columns>
+            </TableView>
+         </children></AnchorPane>
+   </children>
+</AnchorPane>
