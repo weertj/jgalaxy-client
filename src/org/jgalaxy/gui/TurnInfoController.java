@@ -36,6 +36,8 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
   @FXML private Button            mSendOrders;
   @FXML private Button            mNextTurn;
 
+  @FXML private CheckBox          mAILoadTurn;
+
   private final IntegerProperty mTurnNumberProperty = new SimpleIntegerProperty(1);
 
   private IJG_GameInfo      mGameInfo;
@@ -44,6 +46,9 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+
+    Bindings.bindBidirectional(Global.AUTOTURNLOAD, mAILoadTurn.selectedProperty() );
+
     Global.CURRENTTURNNUMBER.addListener((observable, oldValue, newValue) -> {
       mTurnNumber.setText(newValue.toString());
     });

@@ -23,6 +23,10 @@ public class Global {
 
   static public double INDPERSHIP = 10.0;
 
+  static public long LASTTURNCHECK = 0L;
+
+  static final public BooleanProperty AUTOTURNLOAD = new SimpleBooleanProperty(false);
+
   static final public StringProperty CURRENTUSERNAME = new SimpleStringProperty("");
   static final public StringProperty CURRENTPASSWORD = new SimpleStringProperty("");
 

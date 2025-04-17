@@ -33,9 +33,11 @@ public class BattleReportController extends JUnitPanelInterface implements Initi
 
   static public class ShotDetail {
 
+    private IJG_Group group;
     private IB_Shot shot;
 
-    protected ShotDetail( IB_Shot pShot ) {
+    protected ShotDetail( IJG_Group pGroup, IB_Shot pShot ) {
+      group = pGroup;
       shot = pShot;
       return;
     }
@@ -43,6 +45,8 @@ public class BattleReportController extends JUnitPanelInterface implements Initi
     public IB_Shot.TYPE getType() { return shot.type(); }
     public IB_Shot.RESULT getResult() { return shot.result(); }
     public int getRound() { return shot.round(); }
+    public String getSourceID() { return group.id(); }
+    public String getSourceFaction() { return group.faction(); }
     public String getTargetID() { return shot.targetID(); }
     public String getTargetFaction() { return shot.targetFaction(); }
     public int getHits() { return shot.hits(); }
@@ -68,6 +72,7 @@ public class BattleReportController extends JUnitPanelInterface implements Initi
   @FXML private TableColumn<ShotDetail,Integer> mBattleDetailRoundColumn;
   @FXML private TableColumn<ShotDetail,IB_Shot.TYPE> mBattleDetailTypeColumn;
   @FXML private TableColumn<ShotDetail,IB_Shot.RESULT> mBattleDetailResultColumn;
+  @FXML private TableColumn<ShotDetail,String> mBattleDetailSourceIDColumn;
   @FXML private TableColumn<ShotDetail,String> mBattleDetailTargetIDColumn;
   @FXML private TableColumn<ShotDetail,String> mBattleDetailTargetFactionColumn;
   @FXML private TableColumn<ShotDetail,Integer> mBattleDetailHitsColumn;
@@ -96,6 +101,7 @@ public class BattleReportController extends JUnitPanelInterface implements Initi
     mBattleDetailRoundColumn.setCellValueFactory( new PropertyValueFactory<>("round"));
     mBattleDetailTypeColumn.setCellValueFactory( new PropertyValueFactory<>("type"));
     mBattleDetailResultColumn.setCellValueFactory( new PropertyValueFactory<>("result"));
+    mBattleDetailSourceIDColumn.setCellValueFactory( new PropertyValueFactory<>("sourceID"));
     mBattleDetailTargetIDColumn.setCellValueFactory( new PropertyValueFactory<>("targetID"));
     mBattleDetailTargetFactionColumn.setCellValueFactory(new PropertyValueFactory<>("targetFaction"));
     mBattleDetailHitsColumn.setCellValueFactory( new PropertyValueFactory<>("hits"));
@@ -140,11 +146,18 @@ public class BattleReportController extends JUnitPanelInterface implements Initi
       }
     }
 
-    var alldetails = mBattleReport.groups().stream().flatMap( g -> g.shotsMutable().stream() ).toList();
     mBattleDetail.getItems().clear();
-    for( IB_Shot shot : alldetails ) {
-      mBattleDetail.getItems().add(new ShotDetail(shot));
+    for( var bgroup : mBattleReport.groups() ) {
+      for( var shot : bgroup.shotsMutable() ) {
+        mBattleDetail.getItems().add(new ShotDetail(bgroup,shot));
+      }
     }
+
+//    var alldetails = mBattleReport.groups().stream().flatMap( g -> g.shotsMutable().stream() ).toList();
+//    mBattleDetail.getItems().clear();
+//    for( IB_Shot shot : alldetails ) {
+//      mBattleDetail.getItems().add(new ShotDetail(shot));
+//    }
 
     return;
   }

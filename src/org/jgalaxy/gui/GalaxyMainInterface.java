@@ -59,6 +59,8 @@ public class GalaxyMainInterface extends JMainInterface {
 
   private MapRenderItem mMapRenderItem;
 
+  private IJavelinCanvas mCanvas;
+
   private boolean mFirstRun = true;
 
   private final ChangeListener<Number> mFactionChanged = (observable, oldValue, newValue) -> {
@@ -70,6 +72,23 @@ public class GalaxyMainInterface extends JMainInterface {
   @Override
   public String title() {
     return "Galaxy Reloaded";
+  }
+
+  /**
+   * canvasCallback
+   */
+  private void canvasCallback() {
+    if (Global.AUTOTURNLOAD.get()) {
+      if ((System.currentTimeMillis()-Global.LASTTURNCHECK)>4000) {
+        try {
+          loadGameInfo(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get());
+          Global.CURRENTTURNNUMBER.setValue(Global.CURRENTGAMEINFO.get().currentTurnNumber());
+        } finally {
+          Global.LASTTURNCHECK = System.currentTimeMillis();
+        }
+      }
+    }
+    return;
   }
 
   @Override
@@ -86,18 +105,19 @@ public class GalaxyMainInterface extends JMainInterface {
 
     loadGameInfo(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get());
 
-    IJavelinCanvas canvas = GalaxyCanvas.of();
-    add( canvas );
-    canvas.canvas().setLayoutX( 200 );
-    canvas.canvas().setLayoutY( 40 );
+    mCanvas = GalaxyCanvas.of();
+    mCanvas.addCanvasRunnable( () -> canvasCallback() );
+    add( mCanvas );
+    mCanvas.canvas().setLayoutX( 200 );
+    mCanvas.canvas().setLayoutY( 40 );
     mainPane().widthProperty().addListener( (_,_,newValue) ->
-      canvas.canvas().setWidth( mainPane().getWidth()-420 )
+      mCanvas.canvas().setWidth( mainPane().getWidth()-420 )
     );
     mainPane().heightProperty().addListener( (_,_,newValue) -> {
-        canvas.canvas().setHeight(mainPane().getHeight() - 80);
+      mCanvas.canvas().setHeight(mainPane().getHeight() - 80);
       }
     );
-    mainPane().getChildren().add( canvas.canvas() );
+    mainPane().getChildren().add( mCanvas.canvas() );
 
     mTabControlPane = new TabPane();
     mTabControlPane.setSide(Side.TOP);

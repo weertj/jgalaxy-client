@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -24,16 +25,21 @@
                   <TableColumn fx:id="mOtherLeftColumn" prefWidth="50.0" text="Left" />
                </columns>
             </TableView>
-            <TableView fx:id="mBattleDetail" layoutX="11.0" layoutY="425.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0">
-              <columns>
-                <TableColumn fx:id="mBattleDetailRoundColumn" prefWidth="75.0" text="Round" />
-                <TableColumn fx:id="mBattleDetailTypeColumn" prefWidth="75.0" text="C2" />
-                  <TableColumn fx:id="mBattleDetailResultColumn" prefWidth="75.0" text="C2" />
-                  <TableColumn fx:id="mBattleDetailTargetIDColumn" prefWidth="75.0" text="C2" />
-                  <TableColumn fx:id="mBattleDetailTargetFactionColumn" prefWidth="75.0" text="C2" />
-                  <TableColumn fx:id="mBattleDetailHitsColumn" prefWidth="75.0" text="C2" />
-              </columns>
-            </TableView>
+            <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <content>
+                  <TableView fx:id="mBattleDetail" prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn fx:id="mBattleDetailRoundColumn" prefWidth="45.0" text="Round" />
+                      <TableColumn fx:id="mBattleDetailTypeColumn" prefWidth="75.0" text="Type" />
+                        <TableColumn fx:id="mBattleDetailSourceIDColumn" prefWidth="75.0" text="Source" />
+                        <TableColumn fx:id="mBattleDetailTargetIDColumn" prefWidth="75.0" text="Target" />
+                        <TableColumn fx:id="mBattleDetailTargetFactionColumn" prefWidth="75.0" text="Faction" />
+                        <TableColumn fx:id="mBattleDetailHitsColumn" prefWidth="75.0" text="Hits" />
+                        <TableColumn fx:id="mBattleDetailResultColumn" prefWidth="75.0" text="Result" />
+                    </columns>
+                  </TableView>
+               </content>
+            </ScrollPane>
          </children></AnchorPane>
    </children>
 </AnchorPane>
