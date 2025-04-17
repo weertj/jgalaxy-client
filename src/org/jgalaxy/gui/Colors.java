@@ -3,10 +3,30 @@ package org.jgalaxy.gui;
 import javafx.scene.paint.Color;
 import org.javelinfx.colors.SColors;
 import org.jgalaxy.IFactionOwner;
+import org.jgalaxy.battle.ISB_BattleReport;
 import org.jgalaxy.planets.IJG_Planet;
 import org.jgalaxy.units.IJG_Fleet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Colors {
+
+  static public Color planetUIColor() {
+    return SColors.KASHMIR;
+  }
+
+  static public Color factionUIColor() {
+    return SColors.CROCUS;
+  }
+
+  static public List<Color> battleColorsFor(ISB_BattleReport pReport) {
+    List<Color> colors = new ArrayList<>();
+    colors.add(Color.YELLOW);
+    colors.add(Color.ORANGE);
+    colors.add(Color.RED);
+    return colors;
+  }
 
   static public Color colorForMyFaction(IFactionOwner pOwner) {
     if (pOwner.faction()==null) {

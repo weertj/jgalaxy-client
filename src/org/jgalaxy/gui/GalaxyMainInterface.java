@@ -2,6 +2,7 @@ package org.jgalaxy.gui;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
+import javafx.geometry.Side;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Background;
@@ -18,6 +19,7 @@ import org.javelinfx.spatial.SP_Position;
 import org.javelinfx.window.S_Pane;
 import org.jgalaxy.IEntity;
 import org.jgalaxy.battle.ISB_BattleReport;
+import org.jgalaxy.battle.SB_BattleReport;
 import org.jgalaxy.engine.*;
 import org.jgalaxy.map.IMAP_Map;
 import org.jgalaxy.planets.IJG_Planet;
@@ -98,9 +100,10 @@ public class GalaxyMainInterface extends JMainInterface {
     mainPane().getChildren().add( canvas.canvas() );
 
     mTabControlPane = new TabPane();
+    mTabControlPane.setSide(Side.TOP);
     mainPane().getChildren().add(mTabControlPane);
-    mTabControlPane.setPrefWidth(200);
-    S_Pane.setAnchors(mTabControlPane, null, 0.0, 132.0, 0.0);
+    mTabControlPane.setPrefWidth(220);
+    S_Pane.setAnchors(mTabControlPane, null, 0.0, 110.0, null);
     mFactionTab = new Tab("Faction");
     mFactionTab.setClosable(false);
     mTabControlPane.getTabs().add(mFactionTab);
@@ -536,6 +539,14 @@ public class GalaxyMainInterface extends JMainInterface {
       return;
     });
     playerContext.addRenderItem(1, mMapRenderItem );
+
+    for( IJG_Planet planet : pFaction.planets().planets() ) {
+      ISB_BattleReport report = SB_BattleReport.of(pFaction, planet.position());
+      if (report.isBattle()) {
+        playerContext.addRenderItem(2,
+          new BattleRenderItem(report.id(), report, SP_Position.of(report.position().x(), report.position().y(), Global.DISTANCEUNIT)));
+      }
+    }
 
     for(IJG_Planet planet : pFaction.planets().planets()) {
       playerContext.addRenderItem(2,

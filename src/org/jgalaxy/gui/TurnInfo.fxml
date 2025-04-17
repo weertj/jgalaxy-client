@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="mRootPane" prefHeight="110.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.TurnInfoController">
+<AnchorPane fx:id="mRootPane" prefHeight="81.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.TurnInfoController">
    <children>
       <AnchorPane layoutX="46.0" layoutY="23.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #222222;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>

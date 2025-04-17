@@ -95,6 +95,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
 
   private TreeItem mRootFactions = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
+    @Override public String entityType() { return "Factions"; }
     @Override public String name() { return "Factions"; }
   });
   private TreeItem mRootFactionsTop = new TreeItem<>(new IEntity() {
@@ -132,12 +133,12 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
           if (tent instanceof IEntity ent) {
             AnchorPane pane = new AnchorPane();
             if ("Planets".equals(ent.entityType())) {
-              Label t = new Label(ent.name());
-              t.setText("Planets");
-              pane.getChildren().addAll(t);
+              Effects.setTreePaneFolder(pane, ent);
+            } else if ("Factions".equals(ent.entityType())) {
+              Effects.setTreePaneFolder(pane,ent);
             } else if (ent instanceof IJG_Planet planet) {
               Label t = new Label(ent.name());
-              t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUND));
+              t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDLIGHT));
               t.setLayoutX(24);
               Circle circle = new Circle(8);
               circle.setLayoutX(0);
@@ -145,11 +146,9 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
               circle.setFill(Colors.colorForMyFaction(planet));
               pane.getChildren().addAll(circle, t);
             } else if (ent instanceof IJG_Group group) {
-              Label t = new Label(group.name() + " " + group.getNumberOf() + "x " + group.unitDesign());
-              pane.getChildren().addAll( t);
+              Effects.setTreePaneFolder(pane,group);
             } else if (ent instanceof IJG_Faction faction) {
-              Label t = new Label(faction.name() + " (" + GEN_Math.round02(faction.getReconTotalPop()) + ")");
-              pane.getChildren().addAll( t);
+              Effects.setTreePaneFolder(pane,faction);
             } else {
               pane.getChildren().add(new Label(ent.name()));
             }
@@ -321,6 +320,12 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
 
 
     }
+
+    // **** Clean up empty folders
+//    if (mRootOwnFleets.getChildren().isEmpty() && mRootFleets.getChildren().size()==1) {
+//      mRoot.getChildren().remove(mRootFleets);
+//    }
+
     mContentTreeView.refresh();
     return;
   }

@@ -5,9 +5,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="mRootPane" prefHeight="540.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.FactionInfoController">
+<AnchorPane fx:id="mRootPane" prefHeight="540.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.FactionInfoController">
    <children>
-      <AnchorPane layoutX="46.0" layoutY="23.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #111111;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="46.0" layoutY="23.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label layoutX="22.0" layoutY="15.0" styleClass="label-main" text="Name" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="12.0" />
             <TextField fx:id="mFactionName" layoutX="46.0" layoutY="8.0" prefHeight="26.0" prefWidth="128.0" AnchorPane.topAnchor="8.0" />

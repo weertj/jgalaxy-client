@@ -5,6 +5,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import org.javelinfx.engine.JUnitPanelInterface;
 import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.planets.EProduceType;
@@ -36,8 +39,8 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
   @FXML private ListView<IJG_Group> mGroupsInOrbit;
   @FXML private ListView<IJG_Group> mOtherGroupsInOrbit;
 
-  @FXML private Button mAddToFleet;
-  @FXML private ComboBox<String> mFleetNames;
+//  @FXML private Button mAddToFleet;
+//  @FXML private ComboBox<String> mFleetNames;
 
   private IJG_Faction mFaction;
   private IJG_Planet  mPlanet;
@@ -45,6 +48,9 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+
+    mRootPane.setBackground(new Background(
+      new BackgroundFill(Effects.createBackground(Colors.planetUIColor().darker(),false), new CornerRadii(10.0,false), null )));
     mProduce.valueProperty().addListener((observable, oldValue, newValue) -> {
       if (mInRefresh) return;
       if (Objects.equals(newValue,EProduceType.PR_CAP.order())) {
@@ -79,9 +85,9 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
       Global.getSelectedGroups().addAll(mOtherGroupsInOrbit.getSelectionModel().getSelectedItems());
     });
 
-    mAddToFleet.setOnAction(event -> {
-      Global.getSelectedGroups().stream().forEach( g -> g.setFleet(mFleetNames.getSelectionModel().getSelectedItem()) );
-    });
+//    mAddToFleet.setOnAction(event -> {
+//      Global.getSelectedGroups().stream().forEach( g -> g.setFleet(mFleetNames.getSelectionModel().getSelectedItem()) );
+//    });
 
     return;
   }
@@ -118,7 +124,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
 
         mGroupsInOrbit.getItems().clear();
         mOtherGroupsInOrbit.getItems().clear();
-        mFleetNames.getItems().clear();
+//        mFleetNames.getItems().clear();
         IJG_Faction ownfaction = Global.CURRENTFACTION_CHANGED.get();
         if (ownfaction != null) {
           for (EProduceType produceType : EProduceType.values()) {
@@ -146,7 +152,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
               mOtherGroupsInOrbit.getItems().add(group);
             }
           }
-          ownfaction.groups().fleets().forEach(g -> mFleetNames.getItems().add(g.name()));
+//          ownfaction.groups().fleets().forEach(g -> mFleetNames.getItems().add(g.name()));
         }
         if (mPlanet.produceUnitDesign() == null) {
           if (mPlanet.produceType() == null) {

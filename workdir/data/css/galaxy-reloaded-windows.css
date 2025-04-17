@@ -110,7 +110,7 @@ is being used to size a border should also be in pixels.
 
     /* A bright blue for highlighting/accenting objects.  For example: selected
      * text; selected items in menus, lists, trees, and tables; progress bars */
-    -fx-accent: #755841;
+    -fx-accent: #464B65;
 
     /* Default buttons color, this is similar to accent but more subtle */
     -fx-default-button: #ABD8ED;
@@ -172,7 +172,7 @@ is being used to size a border should also be in pixels.
     /* A little lighter than -fx-base and used as the -fx-color for the
      * "hovered" pseudoclass state.
      */
-    -fx-hover-base: #FBC748;
+    -fx-hover-base: #E3BD33;
     /* A little darker than -fx-base and used as the -fx-color for the
      * "armed" pseudoclass state.
      *
@@ -1615,7 +1615,7 @@ is being used to size a border should also be in pixels.
     -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
 }
 .tab-pane > .tab-header-area > .headers-region > .tab:selected {
-    -fx-background-color: #755841;
+    -fx-background-color: #464B65;
     -fx-background-insets: 0 1 1 0, 1 2 0 1, 2 3 0 2;
 }
 .tab-pane > .tab-header-area > .headers-region > .tab:hover > .tab-container >  .tab-label {
@@ -3426,7 +3426,7 @@ is being used to size a border should also be in pixels.
 
 .label-value-value {
     -fx-font-size: 11px;
-    -fx-text-fill: #ffcc66;
+    -fx-text-fill: #E3BD33;
     -fx-background-color: #ffffff10;
     -fx-font-family: "Cousine Regular";
 }

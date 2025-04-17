@@ -6,6 +6,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import org.javelinfx.buttons.SButtons;
 import org.javelinfx.engine.JUnitPanelInterface;
 import org.jgalaxy.engine.IJG_Faction;
@@ -29,6 +32,8 @@ public class FactionInfoController extends JUnitPanelInterface implements Initia
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    mRootPane.setBackground(new Background(
+      new BackgroundFill(Effects.createBackground(Colors.factionUIColor().darker(),false), new CornerRadii(10.0,false), null )));
     mFactionName.setOnAction( e -> {
       mFaction.setName(mFactionName.getText());
       mFaction.newChange();

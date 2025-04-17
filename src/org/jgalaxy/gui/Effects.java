@@ -2,14 +2,77 @@ package org.jgalaxy.gui;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Paint;
+import javafx.scene.paint.Stop;
+import org.javelinfx.colors.SColors;
 import org.javelinfx.system.JavelinSystem;
+import org.jgalaxy.IEntity;
+import org.jgalaxy.engine.IJG_Faction;
+import org.jgalaxy.units.IJG_Group;
+import org.jgalaxy.utils.GEN_Math;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Objects;
 
 public class Effects {
 
   static public DecimalFormat DOUBLE02;
+
+  static public Paint createBackground( Color pColor, boolean pHorizontal ) {
+    Color startColor = pColor;
+    Color endColor = Color.TRANSPARENT;
+    if (pHorizontal) {
+      return new LinearGradient(0, 0, 1, 0, true, null, new Stop(0, startColor), new Stop(1, endColor));
+    } else {
+      return new LinearGradient(0, 0, 0, 1, true, null, new Stop(0, startColor), new Stop(1, endColor));
+    }
+  }
+
+  static public void setTreePaneFolder(Pane pPane, IEntity pEntity ) {
+    if (Objects.equals("Planets",pEntity.entityType())) {
+      pPane.setBackground(new Background(
+        new BackgroundFill(createBackground(Colors.planetUIColor(),true), new CornerRadii(10.0,false), null )));
+      Label t = new Label(pEntity.name());
+      t.setText("Planets");
+      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDDARK));
+      pPane.getChildren().addAll(t);
+      return;
+    } else if (Objects.equals("Factions",pEntity.entityType())) {
+      pPane.setBackground(new Background(
+        new BackgroundFill(createBackground(Colors.factionUIColor(),true), new CornerRadii(10.0,false), null )));
+      Label t = new Label(pEntity.name());
+      t.setText("Factions");
+      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDDARK));
+      pPane.getChildren().addAll(t);
+      return;
+
+    } else if (pEntity instanceof IJG_Faction faction) {
+      pPane.setBackground(new Background(
+        new BackgroundFill(Colors.factionUIColor().desaturate(), new CornerRadii(10.0, false), null)));
+      Label t = new Label(faction.name() + " (" + GEN_Math.round02(faction.getReconTotalPop()) + ")");
+      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDDARK));
+      pPane.getChildren().addAll(t);
+      return;
+
+    } else if (pEntity instanceof IJG_Group group) {
+      Label t = new Label(group.name() );
+      t.getStyleClass().add("label-value");
+      Label v = new Label("" + group.getNumberOf() + "x " + group.unitDesign());
+      v.getStyleClass().add("label-value-value");
+      v.setLayoutX(20);
+      pPane.getChildren().addAll( t,v);
+
+
+    }
+    return;
+  }
 
   static public void setText( Label pValueLabel, String text ) {
     pValueLabel.setText( text );
