@@ -51,7 +51,8 @@ public class PlayerInfoController extends JUnitPanelInterface implements Initial
         Scene scene = new Scene(mController.rootPane());
         scene.getStylesheets().add(JavelinSystem.stylesheet().file().toURI().toString());
         mStage.setScene(scene);
-        mController.setFaction(mFaction);
+        mController.setThisStage(mStage);
+        mController.setFaction(Global.CURRENTFACTION_CHANGED.get());
         mStage.show();
       } catch (Throwable t) {
         t.printStackTrace();

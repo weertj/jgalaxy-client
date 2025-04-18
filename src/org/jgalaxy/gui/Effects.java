@@ -1,5 +1,6 @@
 package org.jgalaxy.gui;
 
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
@@ -7,6 +8,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import org.javelinfx.colors.SColors;
 import org.javelinfx.system.JavelinSystem;
 import org.jgalaxy.IEntity;
@@ -33,6 +36,11 @@ public class Effects {
     }
   }
 
+  /**
+   * setTreePaneFolder
+   * @param pPane
+   * @param pEntity
+   */
   static public void setTreePaneFolder(Pane pPane, IEntity pEntity ) {
 
     if (Objects.equals("Planets",pEntity.entityType())) {
@@ -98,14 +106,18 @@ public class Effects {
       return;
 
     } else if (pEntity instanceof IJG_Group group) {
-      pPane.setBackground(new Background(
-        new BackgroundFill(createBackground(Colors.groupUIColor(),true), new CornerRadii(10.0,false), null )));
+//      pPane.setBackground(new Background(
+//        new BackgroundFill(createBackground(Colors.groupUIColor(),true), new CornerRadii(10.0,false), null )));
+      Rectangle c = new Rectangle(24,16);
+      c.setLayoutX(0);
+      c.setLayoutY(0);
+      c.setFill(Colors.colorForMyFaction(group));
       Label t = new Label(group.name() );
-      t.getStyleClass().add("label-value");
+      t.getStyleClass().add("label-value-dark");
       Label v = new Label("" + group.getNumberOf() + "x " + group.unitDesign());
       v.getStyleClass().add("label-value-value");
       v.setLayoutX(20);
-      pPane.getChildren().addAll( t,v);
+      pPane.getChildren().addAll(c, t,v);
 
     } else if (pEntity instanceof IJG_Fleet fleet) {
       pPane.setBackground(new Background(
@@ -132,7 +144,7 @@ public class Effects {
     return;
   }
 
-  static public void setValueDouble02(Label pValueLabel, Double pValue) {
+  static public void setValueDouble02(Node pValueLabel, Double pValue) {
     if (DOUBLE02==null) {
       DOUBLE02 = (DecimalFormat)NumberFormat.getNumberInstance(JavelinSystem.getLocale());
       DOUBLE02.applyPattern("##0.00");
@@ -142,22 +154,51 @@ public class Effects {
     } else {
       pValueLabel.setVisible(true);
       if (pValue<0) {
-        pValueLabel.setText("-");
+        if (pValueLabel instanceof Label l) {
+          l.setText("-");
+        } else if (pValueLabel instanceof TextField tf) {
+          tf.setText("-");
+        }
       } else {
         String v = DOUBLE02.format(pValue);
-        pValueLabel.setText(v);
+        if (pValueLabel instanceof Label l) {
+          l.setText(v);
+        } else if (pValueLabel instanceof TextField tf) {
+          tf.setText(v);
+        }
       }
     }
     return;
   }
 
-
-  static public void setValue(Label pValueLabel, Double pValue) {
+  static public void setValueInteger(Node pValueLabel, Integer pValue) {
     if (pValue==null) {
       pValueLabel.setVisible(false);
     } else {
       pValueLabel.setVisible(true);
       if (pValue<0) {
+        if (pValueLabel instanceof Label l) {
+          l.setText("-");
+        } else if (pValueLabel instanceof TextField tf) {
+          tf.setText("-");
+        }
+      } else {
+        if (pValueLabel instanceof Label l) {
+          l.setText(""+pValue.intValue());
+        } else if (pValueLabel instanceof TextField tf) {
+          tf.setText(""+pValue.intValue());
+        }
+      }
+    }
+    return;
+  }
+
+  static public void setValue(Label pValueLabel, Number pValue) {
+    if (pValue==null) {
+      pValueLabel.setVisible(false);
+    } else {
+      pValueLabel.setVisible(true);
+      if (pValue==null || pValue.intValue()<0) {
         pValueLabel.setText("-");
       } else {
         String v = String.format(JavelinSystem.getLocale(), "%.2f", pValue.doubleValue());

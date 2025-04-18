@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
@@ -7,14 +8,13 @@
 
 <AnchorPane fx:id="mRootPane" prefHeight="589.0" prefWidth="637.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.ShipDesignerController">
    <children>
-      <AnchorPane layoutX="46.0" prefHeight="392.0" prefWidth="519.0" style="-fx-background-color: #111111;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="46.0" prefHeight="392.0" prefWidth="519.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label layoutX="9.0" layoutY="12.0" styleClass="label-main" text="Design name" AnchorPane.leftAnchor="9.0" AnchorPane.topAnchor="12.0" />
-            <TextField fx:id="mGroupName" layoutX="86.0" layoutY="8.0" prefHeight="26.0" prefWidth="128.0" AnchorPane.topAnchor="8.0" />
-            <Label layoutX="24.0" layoutY="303.0" styleClass="smalllabel-value" text="Max speed:" />
+            <TextField fx:id="mDesignName" layoutX="98.0" layoutY="8.0" prefHeight="26.0" prefWidth="128.0" AnchorPane.topAnchor="8.0" />
             <Label layoutX="13.0" layoutY="55.0" styleClass="smalllabel-value" text="DRIVE" />
             <Label fx:id="mDriveTech" layoutX="48.0" layoutY="55.0" styleClass="smalllabel-value" text="0.0" />
-            <AnchorPane layoutX="9.0" layoutY="325.0" prefHeight="252.0" prefWidth="621.0">
+            <AnchorPane layoutX="9.0" layoutY="285.0" prefHeight="252.0" prefWidth="621.0">
                <children>
                   <ListView fx:id="mOurDesigns" layoutX="14.0" layoutY="38.0" prefHeight="200.0" prefWidth="200.0" />
                   <Label layoutX="14.0" layoutY="17.0" styleClass="label-value" text="Our designs" />
@@ -22,7 +22,7 @@
                   <Label layoutX="336.0" layoutY="17.0" styleClass="label-value" text="Other designs" />
                </children>
             </AnchorPane>
-            <AnchorPane layoutX="238.0" layoutY="101.0" prefHeight="165.0" prefWidth="325.0" style="-fx-background-color: #ffffff08;">
+            <AnchorPane layoutX="295.0" layoutY="101.0" prefHeight="165.0" prefWidth="268.0" style="-fx-background-color: #ffffff08;">
                <children>
                   <Label layoutX="14.0" layoutY="22.0" styleClass="label-main" text="DRIVE" />
                   <TextField fx:id="mDrive" alignment="CENTER" layoutX="84.0" layoutY="18.0" prefHeight="26.0" prefWidth="50.0" text="0.0" />
@@ -34,9 +34,10 @@
                   <TextField fx:id="mShields" alignment="CENTER" layoutX="84.0" layoutY="70.0" prefHeight="26.0" prefWidth="50.0" text="0.0" />
                   <Label layoutX="17.0" layoutY="100.0" styleClass="label-main" text="CARGO" />
                   <TextField fx:id="mCargo" alignment="CENTER" layoutX="84.0" layoutY="96.0" prefHeight="26.0" prefWidth="50.0" text="0.0" />
+                  <Button fx:id="mAddDesign" layoutX="75.0" layoutY="130.0" mnemonicParsing="false" text="ADD DESIGN" />
                </children>
             </AnchorPane>
-            <AnchorPane layoutX="45.0" layoutY="105.0" prefHeight="157.0" prefWidth="166.0">
+            <AnchorPane layoutX="45.0" layoutY="105.0" prefHeight="157.0" prefWidth="211.0" style="-fx-background-color: #ffffff08;">
                <children>
                   <Label layoutX="8.0" layoutY="6.0" styleClass="label-value" text="Mass:" />
                   <Label fx:id="mMass" layoutX="53.0" layoutY="6.0" styleClass="label-value-value" text="-" />
@@ -49,8 +50,11 @@
                   <Label layoutY="126.0" styleClass="label-value" text="Kill chance" />
                   <Label fx:id="mKillChance" layoutX="69.0" layoutY="126.0" styleClass="label-value-value" text="-" />
                   <TextField fx:id="mAgainstWeapon" alignment="CENTER" layoutX="106.0" layoutY="126.0" prefHeight="26.0" prefWidth="50.0" text="0.0" />
+                  <Label layoutX="9.0" layoutY="59.0" styleClass="label-value" text="Cargo:" />
+                  <Label fx:id="mCargoValue" layoutX="59.0" layoutY="61.0" styleClass="label-value-value" text="-" />
                </children>
             </AnchorPane>
+            <Button fx:id="mCloseButton" layoutX="563.0" layoutY="550.0" mnemonicParsing="false" text="CLOSE" />
          </children>
       </AnchorPane>
    </children>

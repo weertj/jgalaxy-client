@@ -1,16 +1,24 @@
 package org.jgalaxy.gui;
 
 import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
 import org.javelinfx.colors.SColors;
 import org.jgalaxy.IFactionOwner;
 import org.jgalaxy.battle.ISB_BattleReport;
 import org.jgalaxy.planets.IJG_Planet;
+import org.jgalaxy.units.IJG_Bombing;
 import org.jgalaxy.units.IJG_Fleet;
+import org.jgalaxy.units.IJG_Group;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Colors {
+
+  static public Color canvasTextColor() {
+    return SColors.ANTIQUE_WHITE;
+  }
+
 
   static public Color planetUIColor() {
     return SColors.KASHMIR;
@@ -37,6 +45,14 @@ public class Colors {
     colors.add(Color.YELLOW);
     colors.add(Color.ORANGE);
     colors.add(Color.RED);
+    return colors;
+  }
+
+  static public List<Color> bombingColorsFor(IJG_Bombing pBombing) {
+    List<Color> colors = new ArrayList<>();
+    colors.add(Color.GREEN);
+    colors.add(Color.DARKGRAY);
+    colors.add(Color.LIGHTGRAY);
     return colors;
   }
 
@@ -82,6 +98,9 @@ public class Colors {
   static final public Color MAPBG           = Color.web( "#333333" );
   static final public Color MAPLINE         = Color.web( "#999999" );
 
+  static final public Color TRAVELRANGE_STROKE  = SColors.MISTED_MARIGOLD;
+  static final public Color TRAVELRANGE_FILL    = SColors.transparent(TRAVELRANGE_STROKE, 0.1);
+
   static final public Color POPULATION      = SColors.KASHMIR;
   static final public Color COLS            = SColors.WHITE_GRAPE;
   static final public Color CARGO           = SColors.VAPOR_BLUE;
@@ -109,7 +128,6 @@ public class Colors {
   static       public Color NEUTRAL_FLEET = NEUTRAL_LIGHT;
   static       public Color HOSTILE_GROUP = HOSTILE_MEDIUM;
   static       public Color HOSTILE_FLEET = HOSTILE_LIGHT;
-
 
   private Colors() {
   }

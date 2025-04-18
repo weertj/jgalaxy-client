@@ -8,6 +8,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import org.javelinfx.buttons.SButtons;
 import org.javelinfx.engine.JUnitPanelInterface;
 import org.javelinfx.image.SImages;
@@ -39,6 +42,8 @@ public class FleetInfoController extends JUnitPanelInterface implements Initiali
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    mRootPane.setBackground(new Background(
+      new BackgroundFill(Effects.createBackground(Colors.fleetUIColor().darker(),false), new CornerRadii(10.0,false), null )));
 
     mCreateNewFleet.disableProperty().bind(mNewFleetName.textProperty().isEmpty());
     SButtons.initButton(mCreateNewFleet, event -> {

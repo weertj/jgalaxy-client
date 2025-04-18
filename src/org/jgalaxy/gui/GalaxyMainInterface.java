@@ -24,6 +24,7 @@ import org.jgalaxy.engine.*;
 import org.jgalaxy.map.IMAP_Map;
 import org.jgalaxy.planets.IJG_Planet;
 import org.jgalaxy.server.SimpleClient;
+import org.jgalaxy.units.IJG_Bombing;
 import org.jgalaxy.units.IJG_Fleet;
 import org.jgalaxy.units.IJG_Group;
 import org.jgalaxy.units.IJG_Incoming;
@@ -566,6 +567,10 @@ public class GalaxyMainInterface extends JMainInterface {
         playerContext.addRenderItem(2,
           new BattleRenderItem(report.id(), report, SP_Position.of(report.position().x(), report.position().y(), Global.DISTANCEUNIT)));
       }
+    }
+    for(IJG_Bombing bombing : pFaction.getBombingsMutable()) {
+      playerContext.addRenderItem(2,
+        new BombingRenderItem(bombing.whichGroup(), bombing, SP_Position.of(bombing.position().x(), bombing.position().y(), Global.DISTANCEUNIT)));
     }
 
     for(IJG_Planet planet : pFaction.planets().planets()) {

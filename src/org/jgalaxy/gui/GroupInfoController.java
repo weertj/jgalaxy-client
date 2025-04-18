@@ -9,6 +9,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import org.javelinfx.buttons.SButtons;
 import org.javelinfx.engine.JUnitPanelInterface;
 import org.javelinfx.fxml.FXMLLoad;
@@ -32,10 +35,15 @@ import java.util.ResourceBundle;
 public class GroupInfoController extends JUnitPanelInterface implements Initializable {
 
   @FXML private AnchorPane  mRootPane;
-  @FXML private TextField   mGroupName;
+  @FXML private Label       mGroupName;
+
+  @FXML private Label       mTransitStatus;
+  @FXML private Button      mTargetPlanet;
+
   @FXML private Label       mConfiguration;
 
   @FXML private AnchorPane mFleetPane;
+  @FXML private TextField  mAmountToFleet;
   @FXML private ComboBox<IJG_Fleet> mFleets;
 
   @FXML private AnchorPane mShipDesignPane;
@@ -43,12 +51,24 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
   @FXML private AnchorPane mCargoPane;
   @FXML private ImageView  mCargoHeaderImage;
   @FXML private Label      mCargoAmountLoaded;
+  @FXML private Label      mCargoType;
 
-  @FXML private AnchorPane mColsPane;
+  @FXML private AnchorPane mPlanetCargoPane;
   @FXML private ImageView  mColsHeaderImage;
   @FXML private Label      mColsAvailableLabel;
   @FXML private TextField  mNumberOfColsToBeLoaded;
   @FXML private Button     mLoadColsButton;
+  @FXML private Label      mCapsAvailableLabel;
+  @FXML private TextField  mNumberOfCapsToBeLoaded;
+  @FXML private Button     mLoadCapsButton;
+  @FXML private Label      mMatsAvailableLabel;
+  @FXML private TextField  mNumberOfMatsToBeLoaded;
+  @FXML private Button     mLoadMatsButton;
+
+  @FXML private Label      mDesignDrive;
+  @FXML private Label      mDesignWeapons;
+  @FXML private Label      mDesignShields;
+  @FXML private Label      mDesignCargo;
 
   @FXML private Button     mUnloadButton;
 
@@ -57,23 +77,30 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
   private IJG_Planet  mHoverPlanet;
   private boolean     mInRefresh = false;
 
-  private ShipDesignInfoController mShipDesignInfoController;
-
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    mRootPane.setBackground(new Background(
+      new BackgroundFill(Effects.createBackground(Colors.groupUIColor().darker(),false), new CornerRadii(10.0,false), null )));
 
     // **** Fleet
     mFleets.getSelectionModel().selectedItemProperty().addListener((_, oldValue, newValue) -> {
       if (newValue==null) {
 
       } else {
-        mGroup.setFleet(newValue.id());
+        try {
+          int amount = Integer.parseInt(mAmountToFleet.getText());
+          var newgroup = mGroup.breakOffGroup(Global.CURRENTGAMECHANGED.get(), mFaction, mGroup.id(), amount);
+          mFaction.groups().addGroupAlways(newgroup);
+          newgroup.setFleet(newValue.id());
+        } catch (NumberFormatException ne) {
+          mGroup.setFleet(newValue.id());
+        }
         mFaction.newChange();
       }
     });
 
-    Image im = SImages.getImage("data/icons/cols.png");
-    mColsHeaderImage.setImage(im);
+//    Image im = SImages.getImage("data/icons/cols.png");
+//    mColsHeaderImage.setImage(im);
 
     mNumberOfColsToBeLoaded.setOnKeyTyped(event -> {
       try {
@@ -83,10 +110,38 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
         mLoadColsButton.setDisable(true);
       }
     });
+    mNumberOfCapsToBeLoaded.setOnKeyTyped(event -> {
+      try {
+        Double.parseDouble(mNumberOfCapsToBeLoaded.getText());
+        mLoadCapsButton.setDisable(false);
+      } catch (Throwable e) {
+        mLoadCapsButton.setDisable(true);
+      }
+    });
+    mNumberOfMatsToBeLoaded.setOnKeyTyped(event -> {
+      try {
+        Double.parseDouble(mNumberOfMatsToBeLoaded.getText());
+        mLoadMatsButton.setDisable(false);
+      } catch (Throwable e) {
+        mLoadMatsButton.setDisable(true);
+      }
+    });
 
     SButtons.initButton(mLoadColsButton,  _ -> {
       var design = mFaction.getUnitDesignById(mGroup.unitDesign());
       SJG_LoadOrder.loadOrder(mGroup, design, "COL", mHoverPlanet, Double.parseDouble(mNumberOfColsToBeLoaded.getText()));
+      refresh();
+      return;
+    });
+    SButtons.initButton(mLoadCapsButton,  _ -> {
+      var design = mFaction.getUnitDesignById(mGroup.unitDesign());
+      SJG_LoadOrder.loadOrder(mGroup, design, "CAP", mHoverPlanet, Double.parseDouble(mNumberOfCapsToBeLoaded.getText()));
+      refresh();
+      return;
+    });
+    SButtons.initButton(mLoadMatsButton,  _ -> {
+      var design = mFaction.getUnitDesignById(mGroup.unitDesign());
+      SJG_LoadOrder.loadOrder(mGroup, design, "MAT", mHoverPlanet, Double.parseDouble(mNumberOfMatsToBeLoaded.getText()));
       refresh();
       return;
     });
@@ -105,6 +160,19 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
     return mRootPane;
   }
 
+  private void refreshDesign() {
+    IJG_UnitDesign design = mFaction.getUnitDesignById(mGroup.unitDesign());
+    Effects.setValueDouble02(mDesignDrive, design.drive());
+    if (design.nrweapons()>0) {
+      Effects.setText(mDesignWeapons, design.nrweapons() + "x " + design.weapons());
+    } else {
+      Effects.setText(mDesignWeapons, "");
+    }
+    Effects.setValueDouble02(mDesignShields, design.shields());
+    Effects.setValueDouble02(mDesignCargo, design.cargo());
+    return;
+  }
+
   /**
    * refresh
    */
@@ -119,19 +187,22 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
     try {
       mInRefresh = true;
 
-      try { // **** ShipDesignInfo
-        var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/ShipDesignInfo.fxml", null);
-        mShipDesignInfoController = (ShipDesignInfoController)FXMLLoad.controller(contents);
-        mShipDesignPane.getChildren().clear();
-        mShipDesignPane.getChildren().add(mShipDesignInfoController.rootPane());
-        S_Pane.setAnchors(mShipDesignInfoController.rootPane(),0.0,0.0,0.0,0.0);
-      } catch (Throwable e) {
-        e.printStackTrace();
-      }
-      mShipDesignInfoController.setGroup(mGroup);
+
 
       Effects.setText(mGroupName,mGroup.name());
       Effects.setText(mConfiguration, "" + mGroup.getNumberOf() + "x " + mGroup.unitDesign());
+
+      refreshDesign();
+
+      // **** Transit
+      if (mHoverPlanet==null) {
+        mTransitStatus.setText( "In space at " + mGroup.position().x() + " " + mGroup.position().y() );
+        mTargetPlanet.setVisible(false);
+      } else {
+        mTransitStatus.setText( "In orbit at" );
+        mTargetPlanet.setText(mHoverPlanet.name());
+        mTargetPlanet.setVisible(true);
+      }
 
       // **** Fleets
       if (mGroup==null) {
@@ -158,21 +229,44 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
       // **** Cargo
       if (mGroup!=null && mGroup.totalCargoMass()>0.0) {
         mCargoPane.setVisible(true);
-        Effects.setValue(mCargoAmountLoaded, mGroup.totalCargoMass());
+        mUnloadButton.setDisable(mHoverPlanet==null);
+        refreshGroupCargoPane();
       } else {
         mCargoPane.setVisible(false);
       }
 
       // **** Cols
       if (mHoverPlanet==null || !Objects.equals(mHoverPlanet.faction(),mFaction.id())) {
-        mColsPane.setVisible(false);
+        mPlanetCargoPane.setVisible(false);
       } else {
-        mColsPane.setVisible(true);
-        Effects.setValue(mColsAvailableLabel,mHoverPlanet.cols());
+        mPlanetCargoPane.setVisible(true);
+        refreshPlanetCargoPane();
       }
+
     } finally {
       mInRefresh = false;
     }
+
+    return;
+  }
+
+  private void refreshGroupCargoPane() {
+    Effects.setValueDouble02(mCargoAmountLoaded, mGroup.load());
+    Effects.setText(mCargoType, mGroup.loadType());
+    return;
+  }
+
+  private void refreshPlanetCargoPane() {
+    IJG_UnitDesign design = mFaction.getUnitDesignById(mGroup.unitDesign());
+    Effects.setValueDouble02(mColsAvailableLabel,mHoverPlanet.cols());
+    Effects.setValueDouble02(mCapsAvailableLabel,mHoverPlanet.capitals());
+    Effects.setValueDouble02(mMatsAvailableLabel,mHoverPlanet.materials());
+    mLoadColsButton.setDisable(mHoverPlanet.cols()<=0);
+    mLoadCapsButton.setDisable(mHoverPlanet.capitals()<=0);
+    mLoadMatsButton.setDisable(mHoverPlanet.materials()<=0);
+    Effects.setValueDouble02(mNumberOfColsToBeLoaded, Math.min(mHoverPlanet.cols(), mGroup.getNumberOf()*design.canCarry(mGroup.tech()) ));
+    Effects.setValueDouble02(mNumberOfCapsToBeLoaded, Math.min(mHoverPlanet.capitals(), mGroup.getNumberOf()*design.canCarry(mGroup.tech()) ));
+    Effects.setValueDouble02(mNumberOfMatsToBeLoaded, Math.min(mHoverPlanet.materials(), mGroup.getNumberOf()*design.canCarry(mGroup.tech()) ));
 
     return;
   }

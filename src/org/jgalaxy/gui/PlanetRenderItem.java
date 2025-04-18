@@ -64,7 +64,8 @@ public class PlanetRenderItem extends JavelinUIElement {
       gc.strokeOval(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight() );
     }
     if (pCanvas.getPixelZoom()>0.1) {
-      gc.fillText(element().name(), outline.getX(), outline.getY());
+      renderText(gc,"MapUnitDataFont",outline.getX(),outline.getY(),element().name());
+//      gc.fillText(element().name(), outline.getX(), outline.getY());
     }
 
 //    gc.fillOval( 10*element().position().x(), 10*element().position().y(), 10, 10 );
@@ -86,7 +87,7 @@ public class PlanetRenderItem extends JavelinUIElement {
           if (nr>0 && nr.intValue()<group.getNumberOf()) {
             IJG_Faction faction = Global.CURRENTFACTION_CHANGED.get();
             IJG_Group breakgroup = group.breakOffGroup(Global.CURRENTGAMECHANGED.get(), faction, group.id(), nr);
-            faction.groups().addGroup(breakgroup);
+            faction.groups().addGroupAlways(breakgroup);
             sendGroupTo(breakgroup, element());
             faction.newChange();
           } else {

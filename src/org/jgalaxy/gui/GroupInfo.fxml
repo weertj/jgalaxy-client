@@ -4,43 +4,57 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane fx:id="mRootPane" prefHeight="616.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.GroupInfoController">
+<AnchorPane fx:id="mRootPane" prefHeight="616.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.GroupInfoController">
    <children>
-      <AnchorPane layoutX="46.0" layoutY="23.0" prefHeight="628.0" prefWidth="222.0" style="-fx-background-color: #111111;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="46.0" layoutY="23.0" prefHeight="628.0" prefWidth="222.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label layoutX="22.0" layoutY="15.0" styleClass="label-main" text="Name" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="12.0" />
-            <Label fx:id="mConfiguration" layoutX="8.0" layoutY="43.0" styleClass="label-value-value" text="100x avbbcbcbbc" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" />
-            <TextField fx:id="mGroupName" layoutX="46.0" layoutY="8.0" prefHeight="26.0" prefWidth="128.0" AnchorPane.topAnchor="8.0" />
-            <Label layoutX="30.0" layoutY="79.0" styleClass="label-main" text="Max speed:" />
-            <AnchorPane fx:id="mShipDesignPane" prefHeight="120.0" style="-fx-background-color: #333300;" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="200.0" />
-            <AnchorPane fx:id="mFleetPane" layoutX="11.0" layoutY="114.0" prefHeight="72.0" prefWidth="206.0" style="-fx-background-color: #222222;" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0">
+            <Label fx:id="mGroupName" layoutX="61.0" layoutY="12.0" text="Label" />
+            <Label fx:id="mTransitStatus" layoutX="24.0" layoutY="218.0" styleClass="label-value-value" text="----&gt;" />
+            <Button fx:id="mTargetPlanet" layoutX="147.0" layoutY="214.0" mnemonicParsing="false" text="Button" />
+            <Label fx:id="mConfiguration" layoutX="8.0" layoutY="42.0" styleClass="label-value-value-big1" text="100x avbbcbcbbc" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" />
+            <AnchorPane fx:id="mShipDesignPane" layoutX="8.0" layoutY="68.0" prefHeight="147.0" prefWidth="206.0" style="-fx-background-color: #ffffff11;" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="68.0">
                <children>
-                  <ComboBox fx:id="mFleets" layoutX="64.0" layoutY="15.0" prefHeight="26.0" prefWidth="99.0" />
-                  <Label layoutX="20.0" layoutY="19.0" text="Fleet" />
+                  <Label layoutX="5.0" layoutY="3.0" styleClass="label-main" text="Design" />
+                  <Label layoutX="10.0" layoutY="39.0" styleClass="label-value" text="DRIVE" />
+                  <Label layoutX="11.0" layoutY="63.0" styleClass="label-value" text="WEAPONS" />
+                  <Label layoutX="10.0" layoutY="87.0" styleClass="label-value" text="SHIELDS" />
+                  <Label layoutX="13.0" layoutY="108.0" styleClass="label-value" text="CARGO" />
+                  <Label fx:id="mDesignDrive" layoutX="95.0" layoutY="39.0" styleClass="label-value" text="-" />
+                  <Label fx:id="mDesignWeapons" layoutX="95.0" layoutY="63.0" styleClass="label-value" text="-" />
+                  <Label fx:id="mDesignShields" layoutX="95.0" layoutY="87.0" styleClass="label-value" text="-" />
+                  <Label fx:id="mDesignCargo" layoutX="90.0" layoutY="104.0" styleClass="label-value" text="-" />
+               </children></AnchorPane>
+            <AnchorPane fx:id="mFleetPane" layoutX="8.0" layoutY="243.0" prefHeight="72.0" prefWidth="206.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0">
+               <children>
+                  <ComboBox fx:id="mFleets" layoutX="22.0" layoutY="36.0" prefHeight="26.0" prefWidth="99.0" />
+                  <Label layoutX="14.0" layoutY="6.0" styleClass="subheader" text="Add to fleet" />
+                  <TextField fx:id="mAmountToFleet" layoutX="104.0" layoutY="2.0" prefHeight="25.0" prefWidth="33.0" />
+                  <Label layoutX="150.0" layoutY="6.0" styleClass="subheader" text="x" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="mColsPane" layoutX="8.0" layoutY="362.0" prefHeight="164.0" style="-fx-background-color: #a6be4710;" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0">
+            <AnchorPane fx:id="mPlanetCargoPane" layoutX="8.0" layoutY="362.0" prefHeight="164.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0">
                <children>
-                  <Rectangle arcHeight="8.0" arcWidth="8.0" fill="#a6be47" height="8.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
-                  <ImageView fx:id="mColsHeaderImage" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
-                  <Label layoutX="38.0" layoutY="22.0" styleClass="label-value" text="available" />
-                  <Label fx:id="mColsAvailableLabel" layoutX="141.0" layoutY="22.0" styleClass="label-value-value" text="-" />
-                  <Label layoutX="23.0" layoutY="53.0" styleClass="label-value" text="can carry" />
-                  <Label layoutX="24.0" layoutY="61.0" styleClass="label-value" text="carry" />
-                  <TextField fx:id="mNumberOfColsToBeLoaded" layoutX="14.0" layoutY="95.0" prefHeight="26.0" prefWidth="48.0" />
-                  <Button fx:id="mLoadColsButton" layoutX="100.0" layoutY="95.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="56.0" text="LOAD" />
+                  <Label layoutX="14.0" layoutY="14.0" styleClass="label-value" text="available" />
+                  <Label fx:id="mColsAvailableLabel" layoutX="23.0" layoutY="49.0" styleClass="label-value-value" text="-" />
+                  <Button fx:id="mLoadColsButton" layoutX="67.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="LOAD COL" />
+                  <TextField fx:id="mNumberOfColsToBeLoaded" layoutX="151.0" layoutY="45.0" prefHeight="26.0" prefWidth="48.0" />
+                  <Label fx:id="mCapsAvailableLabel" layoutX="23.0" layoutY="77.0" styleClass="label-value-value" text="-" />
+                  <Button fx:id="mLoadCapsButton" layoutX="67.0" layoutY="73.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="LOAD CAP" />
+                  <TextField fx:id="mNumberOfCapsToBeLoaded" layoutX="151.0" layoutY="73.0" prefHeight="26.0" prefWidth="48.0" />
+                  <Label fx:id="mMatsAvailableLabel" layoutX="23.0" layoutY="105.0" styleClass="label-value-value" text="-" />
+                  <Button fx:id="mLoadMatsButton" layoutX="67.0" layoutY="101.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="LOAD MAT" />
+                  <TextField fx:id="mNumberOfMatsToBeLoaded" layoutX="151.0" layoutY="101.0" prefHeight="26.0" prefWidth="48.0" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="mCargoPane" layoutX="8.0" layoutY="229.0" prefHeight="111.0" style="-fx-background-color: #BDBEBF10;" AnchorPane.bottomAnchor="180.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0">
+            <AnchorPane fx:id="mCargoPane" layoutX="8.0" layoutY="317.0" prefHeight="111.0" style="-fx-background-color: #BDBEBF10;" AnchorPane.bottomAnchor="188.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0">
                <children>
-                  <Label layoutX="14.0" layoutY="32.0" styleClass="subheader" text="CARGO" />
-                  <Button fx:id="mUnloadButton" layoutX="112.0" layoutY="77.0" mnemonicParsing="false" text="UNLOAD" />
-                  <Label layoutX="16.0" layoutY="59.0" styleClass="label-value" text="carry" />
-                  <Label fx:id="mCargoAmountLoaded" layoutX="81.0" layoutY="43.0" styleClass="label-value-value" text="-" />
+                  <Label layoutX="14.0" layoutY="6.0" styleClass="subheader" text="CARGO" />
+                  <Button fx:id="mUnloadButton" layoutX="54.0" layoutY="27.0" mnemonicParsing="false" text="UNLOAD" />
+                  <Label fx:id="mCargoAmountLoaded" layoutX="32.0" layoutY="31.0" styleClass="label-value-value" text="-" />
+                  <Label fx:id="mCargoType" layoutX="131.0" layoutY="31.0" text="-" />
                </children>
             </AnchorPane>
          </children>

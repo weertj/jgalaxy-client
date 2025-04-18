@@ -3424,12 +3424,25 @@ is being used to size a border should also be in pixels.
     -fx-text-fill: #bbbbbb;
 }
 
+.label-value-dark {
+    -fx-font-size: 13px;
+    -fx-text-fill: #111111;
+}
+
 .label-value-value {
     -fx-font-size: 11px;
     -fx-text-fill: #E3BD33;
     -fx-background-color: #ffffff10;
     -fx-font-family: "Cousine Regular";
 }
+
+.label-value-value-big1 {
+    -fx-font-size: 15px;
+    -fx-text-fill: #E3BD33;
+    -fx-background-color: #ffffff10;
+    -fx-font-family: "Cousine Regular";
+}
+
 
 .label-value-value-fixed {
     -fx-font-size: 11px;

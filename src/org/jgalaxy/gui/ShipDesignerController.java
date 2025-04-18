@@ -26,18 +26,23 @@ import java.util.function.UnaryOperator;
 public class ShipDesignerController extends JPanelInterface implements Initializable {
 
   @FXML private AnchorPane  mRootPane;
+  @FXML private Button      mCloseButton;
 
   @FXML private Label  mDriveTech;
+
+  @FXML private TextField   mDesignName;
 
   @FXML private TextField   mDrive;
   @FXML private TextField   mWeapons;
   @FXML private TextField   mWeaponsNr;
   @FXML private TextField   mShields;
   @FXML private TextField   mCargo;
+  @FXML private Button      mAddDesign;
 
   @FXML private Label mMass;
   @FXML private Label mSpeed;
   @FXML private Label mShieldsValue;
+  @FXML private Label mCargoValue;
   @FXML private Label mResistant;
   @FXML private Label mKillChance;
 
@@ -50,6 +55,16 @@ public class ShipDesignerController extends JPanelInterface implements Initializ
   private IJG_Faction mFaction;
   private boolean     mInRefresh = false;
 
+  /**
+   * initialize
+   * @param location
+   * The location used to resolve relative paths for the root object, or
+   * {@code null} if the location is not known.
+   *
+   * @param resources
+   * The resources used to localize the root object, or {@code null} if
+   * the root object was not localized.
+   */
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     UnaryOperator<TextFormatter.Change> doubleFilter = change -> {
@@ -79,6 +94,24 @@ public class ShipDesignerController extends JPanelInterface implements Initializ
 
     mAgainstWeapon.setTextFormatter(new TextFormatter<>(doubleFilter));
     mAgainstWeapon.setOnKeyTyped( _ -> refreshUnitDesign());
+
+    mOurDesigns.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> {
+      setDesign(newValue);
+      return;
+    });
+    mOtherDesigns.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> {
+      setDesign(newValue);
+      return;
+    });
+
+    SButtons.initButton(mAddDesign, _ -> {
+      mFaction.addUnitDesign(getDesign());
+      refresh();
+    });
+    SButtons.initButton(mCloseButton, _ -> {
+      getThisStage().close();
+    });
+
     return;
   }
 
@@ -87,18 +120,34 @@ public class ShipDesignerController extends JPanelInterface implements Initializ
     return mRootPane;
   }
 
-  private void refreshUnitDesign() {
-    IJG_UnitDesign unitDesign = JG_UnitDesign.of("test",
-      "test",
+  private void setDesign( IJG_UnitDesign pDesign) {
+    mDesignName.setText(pDesign.name());
+    Effects.setValueDouble02(mDrive,pDesign.drive());
+    Effects.setValueDouble02(mWeapons,pDesign.weapons());
+    Effects.setValueInteger(mWeaponsNr, pDesign.nrweapons());
+    Effects.setValueDouble02(mShields,pDesign.shields());
+    Effects.setValueDouble02(mCargo,pDesign.cargo());
+    return;
+  }
+
+  private IJG_UnitDesign getDesign() {
+    IJG_UnitDesign unitDesign = JG_UnitDesign.of(mDesignName.getText(),
+      mDesignName.getText(),
       Double.parseDouble(mDrive.getText()),
       Double.parseDouble(mWeapons.getText()),
       Integer.parseInt(mWeaponsNr.getText()),
       Double.parseDouble(mShields.getText()),
       Double.parseDouble(mCargo.getText())
     );
+    return unitDesign;
+  }
+
+  private void refreshUnitDesign() {
+    IJG_UnitDesign unitDesign = getDesign();
     Effects.setValue(mMass, unitDesign.mass());
     Effects.setValue(mSpeed, unitDesign.speed(mFaction.tech(),0));
     Effects.setValue(mShieldsValue, unitDesign.effectiveShield(mFaction.tech()));
+    Effects.setValue(mCargoValue, unitDesign.canCarry(mFaction.tech()));
 
     Effects.setValue( mKillChance, JG_UnitDesign.killChance( Double.parseDouble(mAgainstWeapon.getText()), unitDesign.effectiveShield(mFaction.tech()) ) );
 
