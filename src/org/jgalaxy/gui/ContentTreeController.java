@@ -65,6 +65,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
   });
   private TreeItem mRootGroups = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
+    @Override public String entityType() { return "Groups"; }
     @Override public String name() { return "Groups"; }
   });
   private TreeItem mRootOwnGroups = new TreeItem<>(new IEntity() {
@@ -77,6 +78,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
   });
   private TreeItem mRootFleets = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
+    @Override public String entityType() { return "Fleets"; }
     @Override public String name() { return "Fleets"; }
   });
   private TreeItem mRootOwnFleets = new TreeItem<>(new IEntity() {
@@ -86,6 +88,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
 
   private TreeItem mRootBattles = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
+    @Override public String entityType() { return "Battles"; }
     @Override public String name() { return "Battles"; }
   });
   private TreeItem mRootOwnBattles = new TreeItem<>(new IEntity() {
@@ -131,10 +134,17 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
           setGraphic(null);
         } else {
           if (tent instanceof IEntity ent) {
+            String etype = ent.entityType();
             AnchorPane pane = new AnchorPane();
-            if ("Planets".equals(ent.entityType())) {
+            if ("Planets".equals(etype)) {
               Effects.setTreePaneFolder(pane, ent);
-            } else if ("Factions".equals(ent.entityType())) {
+            } else if ("Factions".equals(etype)) {
+              Effects.setTreePaneFolder(pane,ent);
+            } else if ("Groups".equals(etype)) {
+              Effects.setTreePaneFolder(pane,ent);
+            } else if ("Fleets".equals(etype)) {
+              Effects.setTreePaneFolder(pane,ent);
+            } else if ("Battles".equals(etype)) {
               Effects.setTreePaneFolder(pane,ent);
             } else if (ent instanceof IJG_Planet planet) {
               Label t = new Label(ent.name());

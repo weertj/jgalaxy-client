@@ -6,6 +6,7 @@ import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.JavelinUIElement;
 import org.javelinfx.colors.SUX_Colors;
 import org.javelinfx.player.IJL_PlayerContext;
+import org.javelinfx.shape.SRectangle;
 import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.window.S_Pointer;
 import org.jgalaxy.engine.IJG_Faction;
@@ -36,6 +37,11 @@ public class PlanetRenderItem extends JavelinUIElement {
     super.render(pCanvas, pContext);
     GraphicsContext gc = pCanvas.context();
     Rectangle2D outline = getOutline();
+
+//    if (grow()!=0.0) {
+//      outline = SRectangle.shrink(outline, -grow()/2.0, -grow()/2.0, 1.0 + grow(), 1.0 + grow());
+//    }
+
 //    gc.setFill(Color.BLACK);
 //    double grow = 0.4;
 //    gc.fillArc(outline.getX()-outline.getWidth() * grow/2, outline.getY()-outline.getHeight() * grow/2, outline.getWidth() * (1.0+grow), outline.getHeight() * (1.0+grow), 0, 270, ArcType.ROUND);
@@ -97,13 +103,4 @@ public class PlanetRenderItem extends JavelinUIElement {
     return;
   }
 
-  @Override
-  public void pointerEntered( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
-    return;
-  }
-
-  @Override
-  public void pointerLeft( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, ISP_Position pPosition) {
-    return;
-  }
 }

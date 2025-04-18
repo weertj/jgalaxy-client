@@ -20,6 +20,18 @@ public class Colors {
     return SColors.CROCUS;
   }
 
+  static public Color groupUIColor() {
+    return SColors.DEJAVU_BLUE;
+  }
+
+  static public Color fleetUIColor() {
+    return SColors.DEJAVU_BLUE.brighter();
+  }
+
+  static public Color battlesUIColor() {
+    return SColors.WINTERBERRY;
+  }
+
   static public List<Color> battleColorsFor(ISB_BattleReport pReport) {
     List<Color> colors = new ArrayList<>();
     colors.add(Color.YELLOW);

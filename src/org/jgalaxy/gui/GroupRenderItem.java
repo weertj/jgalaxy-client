@@ -6,6 +6,7 @@ import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.JavelinUIElement;
 import org.javelinfx.colors.SUX_Colors;
 import org.javelinfx.player.IJL_PlayerContext;
+import org.javelinfx.shape.SRectangle;
 import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.window.S_Pointer;
 import org.jgalaxy.planets.IJG_Planet;
@@ -37,6 +38,10 @@ public class GroupRenderItem extends JavelinUIElement {
     gc.setFill(mainCol);
     gc.setStroke(mainCol);
     Rectangle2D outline = getOutline();
+//    if (grow()!=0.0) {
+//      outline = SRectangle.shrink(outline, -grow()/2.0, -grow()/2.0, 1.0 + grow(), 1.0 + grow());
+//    }
+
     if (element().getNumberOf()<=0) {
       gc.strokeRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
     } else {
@@ -72,22 +77,6 @@ public class GroupRenderItem extends JavelinUIElement {
       gc.stroke();
     }
 
-    return;
-  }
-
-  @Override
-  public void pointerPressed( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
-    return;
-  }
-
-  @Override
-  public void pointerEntered( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
-//    System.out.println(" --- GROUP " + element().id());
-    return;
-  }
-
-  @Override
-  public void pointerLeft( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, ISP_Position pPosition) {
     return;
   }
 }

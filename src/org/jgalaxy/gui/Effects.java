@@ -2,10 +2,7 @@ package org.jgalaxy.gui;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
@@ -14,6 +11,7 @@ import org.javelinfx.colors.SColors;
 import org.javelinfx.system.JavelinSystem;
 import org.jgalaxy.IEntity;
 import org.jgalaxy.engine.IJG_Faction;
+import org.jgalaxy.units.IJG_Fleet;
 import org.jgalaxy.units.IJG_Group;
 import org.jgalaxy.utils.GEN_Math;
 
@@ -36,35 +34,85 @@ public class Effects {
   }
 
   static public void setTreePaneFolder(Pane pPane, IEntity pEntity ) {
+
     if (Objects.equals("Planets",pEntity.entityType())) {
       pPane.setBackground(new Background(
         new BackgroundFill(createBackground(Colors.planetUIColor(),true), new CornerRadii(10.0,false), null )));
       Label t = new Label(pEntity.name());
       t.setText("Planets");
-      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDDARK));
+      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDLIGHT));
       pPane.getChildren().addAll(t);
       return;
+
+    } else if (Objects.equals("Groups",pEntity.entityType())) {
+      pPane.setBackground(new Background(
+        new BackgroundFill(createBackground(Colors.groupUIColor(),true), new CornerRadii(10.0,false), null )));
+      Label t = new Label(pEntity.name());
+      t.setText("Groups");
+      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDLIGHT));
+      pPane.getChildren().addAll(t);
+      return;
+
+    } else if (Objects.equals("Fleets",pEntity.entityType())) {
+      pPane.setBackground(new Background(
+        new BackgroundFill(createBackground(Colors.fleetUIColor(),true), new CornerRadii(10.0,false), null )));
+      Label t = new Label(pEntity.name());
+      t.setText("Fleets");
+      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDLIGHT));
+      pPane.getChildren().addAll(t);
+      return;
+
+    } else if (Objects.equals("Battles",pEntity.entityType())) {
+      pPane.setBackground(new Background(
+        new BackgroundFill(createBackground(Colors.battlesUIColor(),true), new CornerRadii(10.0,false), null )));
+      Label t = new Label(pEntity.name());
+      t.setText("Battles");
+      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDLIGHT));
+      pPane.getChildren().addAll(t);
+      return;
+
     } else if (Objects.equals("Factions",pEntity.entityType())) {
       pPane.setBackground(new Background(
         new BackgroundFill(createBackground(Colors.factionUIColor(),true), new CornerRadii(10.0,false), null )));
       Label t = new Label(pEntity.name());
       t.setText("Factions");
-      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDDARK));
+      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDLIGHT));
       pPane.getChildren().addAll(t);
       return;
 
     } else if (pEntity instanceof IJG_Faction faction) {
+
       pPane.setBackground(new Background(
-        new BackgroundFill(Colors.factionUIColor().desaturate(), new CornerRadii(10.0, false), null)));
+        new BackgroundFill(Colors.factionUIColor().deriveColor(0,0,0,0.5), null, null)));
+//      pPane.setBorder( new Border(new BorderStroke(Colors.factionUIColor(),BorderStrokeStyle.SOLID,new CornerRadii(10.0,false),new BorderWidths(1))));
       Label t = new Label(faction.name() + " (" + GEN_Math.round02(faction.getReconTotalPop()) + ")");
-      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDDARK));
+      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(Colors.factionUIColor()));
       pPane.getChildren().addAll(t);
+
+
+//      pPane.setBackground(new Background(
+//        new BackgroundFill(Colors.factionUIColor().desaturate(), new CornerRadii(10.0, false), null)));
+//      Label t = new Label(faction.name() + " (" + GEN_Math.round02(faction.getReconTotalPop()) + ")");
+//      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDLIGHT));
+//      pPane.getChildren().addAll(t);
       return;
 
     } else if (pEntity instanceof IJG_Group group) {
+      pPane.setBackground(new Background(
+        new BackgroundFill(createBackground(Colors.groupUIColor(),true), new CornerRadii(10.0,false), null )));
       Label t = new Label(group.name() );
       t.getStyleClass().add("label-value");
       Label v = new Label("" + group.getNumberOf() + "x " + group.unitDesign());
+      v.getStyleClass().add("label-value-value");
+      v.setLayoutX(20);
+      pPane.getChildren().addAll( t,v);
+
+    } else if (pEntity instanceof IJG_Fleet fleet) {
+      pPane.setBackground(new Background(
+        new BackgroundFill(createBackground(Colors.fleetUIColor(),true), new CornerRadii(10.0,false), null )));
+      Label t = new Label(fleet.name() );
+      t.getStyleClass().add("label-value");
+      Label v = new Label("" + fleet.getNumberOf() + "x ships");
       v.getStyleClass().add("label-value-value");
       v.setLayoutX(20);
       pPane.getChildren().addAll( t,v);

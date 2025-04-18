@@ -62,18 +62,4 @@ public class FleetRenderItem extends JavelinUIElement {
     return;
   }
 
-  @Override
-  public void pointerPressed( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
-    return;
-  }
-
-  @Override
-  public void pointerEntered( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
-    return;
-  }
-
-  @Override
-  public void pointerLeft( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, ISP_Position pPosition) {
-    return;
-  }
 }
