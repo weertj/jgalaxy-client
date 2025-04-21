@@ -5,13 +5,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="mRootPane" prefHeight="81.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.TurnInfoController">
+<AnchorPane fx:id="mRootPane" prefHeight="81.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.TurnInfoController">
    <children>
       <AnchorPane layoutX="46.0" layoutY="23.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #222222;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label layoutX="14.0" layoutY="14.0" text="TURN" />
             <Button fx:id="mNextTurn" layoutX="126.0" layoutY="44.0" mnemonicParsing="false" text="NEXT TURN" />
-            <Button fx:id="mSendOrders" layoutX="14.0" layoutY="44.0" mnemonicParsing="false" text="SEND ORDERS" />
+            <Button fx:id="mSendOrders" layoutX="14.0" layoutY="44.0" mnemonicParsing="false" text="SEND ORDERS" visible="false" />
             <Button fx:id="mMinTurn" layoutX="65.0" layoutY="11.0" mnemonicParsing="false" text="-" />
             <Label fx:id="mTurnNumber" layoutX="96.0" layoutY="16.0" text="-" />
             <Button fx:id="mPlusTurn" layoutX="142.0" layoutY="10.0" mnemonicParsing="false" text="+" />

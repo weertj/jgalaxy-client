@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.javelinfx.buttons.SButtons;
@@ -21,6 +22,9 @@ import java.util.ResourceBundle;
 public class PlayerInfoController extends JUnitPanelInterface implements Initializable {
 
   @FXML private AnchorPane  mRootPane;
+
+  @FXML private ImageView mBanner;
+  @FXML private Label mFactionName;
 
   @FXML private Label mDriveTech;
   @FXML private Label mWeaponsTech;
@@ -48,6 +52,7 @@ public class PlayerInfoController extends JUnitPanelInterface implements Initial
         var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/ShipDesigner.fxml", null);
         mController = (ShipDesignerController)FXMLLoad.controller(contents);
         mStage = new Stage();
+        mStage.setTitle("Ship Designer");
         Scene scene = new Scene(mController.rootPane());
         scene.getStylesheets().add(JavelinSystem.stylesheet().file().toURI().toString());
         mStage.setScene(scene);
@@ -74,11 +79,14 @@ public class PlayerInfoController extends JUnitPanelInterface implements Initial
 
   public void refresh() {
     if (mFaction==null) {
+      mFactionName.setText("-");
       mDriveTech.setText("-");
       mWeaponsTech.setText("-");
       mShieldsTech.setText("-");
       mCargoTech.setText("-");
     } else {
+      mBanner.setImage( Global.BANNERS.get(mFaction.id()));
+      mFactionName.setText(mFaction.name());
       mDriveTech.setText("" + mFaction.tech().drive());
       mWeaponsTech.setText("" + mFaction.tech().weapons());
       mShieldsTech.setText("" + mFaction.tech().shields());

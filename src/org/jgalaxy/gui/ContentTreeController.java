@@ -38,7 +38,6 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
 
   @FXML private AnchorPane  mRootPane;
   @FXML private TreeView<IEntity>  mContentTreeView;
-
   private IJL_PlayerContext mPlayerContext;
   private IJG_Faction mFaction;
   private TreeItem mRoot;
@@ -49,18 +48,22 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
   });
   private TreeItem mRootOwnPlanets = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
+    @Override public String entityType() { return "Planets/Own"; }
     @Override public String name() { return Global.CURRENTFACTION_CHANGED.get().name(); }
   });
   private TreeItem mRootUnknownPlanets = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
+    @Override public String entityType() { return "Planets/Unknown"; }
     @Override public String name() { return "Unknown"; }
   });
   private TreeItem mRootUninhabitedPlanets = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
+    @Override public String entityType() { return "Planets/Uninhabited"; }
     @Override public String name() { return "Uninhabited"; }
   });
   private TreeItem mRootUnknownInhabitedPlanets = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
+    @Override public String entityType() { return "Planets/Inhabited"; }
     @Override public String name() { return "Inhabited"; }
   });
   private TreeItem mRootGroups = new TreeItem<>(new IEntity() {
@@ -70,6 +73,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
   });
   private TreeItem mRootOwnGroups = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
+    @Override public String entityType() { return "Faction"; }
     @Override public String name() { return Global.CURRENTFACTION_CHANGED.get().name(); }
   });
   private TreeItem mRootOwnCargoGroups = new TreeItem<>(new IEntity() {
@@ -114,7 +118,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    mRoot = new TreeItem<>();
+    mRoot = new TreeItem<>("<>");
     mContentTreeView.setRoot(mRoot);
     mContentTreeView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     mRoot.getChildren().add(mRootPlanets);
@@ -136,7 +140,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
           if (tent instanceof IEntity ent) {
             String etype = ent.entityType();
             AnchorPane pane = new AnchorPane();
-            if ("Planets".equals(etype)) {
+            if (etype.startsWith("Planets")) {
               Effects.setTreePaneFolder(pane, ent);
             } else if ("Factions".equals(etype)) {
               Effects.setTreePaneFolder(pane,ent);
@@ -218,6 +222,8 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
   }
 
   public void refresh() {
+
+    mRoot.setValue(Global.CURRENTGAMECHANGED.get());
 
     // **** Planets
     mRootPlanets.getChildren().clear();

@@ -130,24 +130,28 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
     SButtons.initButton(mLoadColsButton,  _ -> {
       var design = mFaction.getUnitDesignById(mGroup.unitDesign());
       SJG_LoadOrder.loadOrder(mGroup, design, "COL", mHoverPlanet, Double.parseDouble(mNumberOfColsToBeLoaded.getText()));
+      mFaction.newChange();
       refresh();
       return;
     });
     SButtons.initButton(mLoadCapsButton,  _ -> {
       var design = mFaction.getUnitDesignById(mGroup.unitDesign());
       SJG_LoadOrder.loadOrder(mGroup, design, "CAP", mHoverPlanet, Double.parseDouble(mNumberOfCapsToBeLoaded.getText()));
+      mFaction.newChange();
       refresh();
       return;
     });
     SButtons.initButton(mLoadMatsButton,  _ -> {
       var design = mFaction.getUnitDesignById(mGroup.unitDesign());
       SJG_LoadOrder.loadOrder(mGroup, design, "MAT", mHoverPlanet, Double.parseDouble(mNumberOfMatsToBeLoaded.getText()));
+      mFaction.newChange();
       refresh();
       return;
     });
 
     SButtons.initButton(mUnloadButton,  _ -> {
       SJG_LoadOrder.unloadOrder( Global.CURRENTGAMECHANGED.get(), mGroup, mHoverPlanet, 999999.0 );
+      mFaction.newChange();
       refresh();
       return;
     });
@@ -162,14 +166,16 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
 
   private void refreshDesign() {
     IJG_UnitDesign design = mFaction.getUnitDesignById(mGroup.unitDesign());
-    Effects.setValueDouble02(mDesignDrive, design.drive());
-    if (design.nrweapons()>0) {
-      Effects.setText(mDesignWeapons, design.nrweapons() + "x " + design.weapons());
-    } else {
-      Effects.setText(mDesignWeapons, "");
+    if (design!=null) {
+      Effects.setValueDouble02(mDesignDrive, design.drive());
+      if (design.nrweapons() > 0) {
+        Effects.setText(mDesignWeapons, design.nrweapons() + "x " + design.weapons());
+      } else {
+        Effects.setText(mDesignWeapons, "");
+      }
+      Effects.setValueDouble02(mDesignShields, design.shields());
+      Effects.setValueDouble02(mDesignCargo, design.cargo());
     }
-    Effects.setValueDouble02(mDesignShields, design.shields());
-    Effects.setValueDouble02(mDesignCargo, design.cargo());
     return;
   }
 
@@ -264,10 +270,11 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
     mLoadColsButton.setDisable(mHoverPlanet.cols()<=0);
     mLoadCapsButton.setDisable(mHoverPlanet.capitals()<=0);
     mLoadMatsButton.setDisable(mHoverPlanet.materials()<=0);
-    Effects.setValueDouble02(mNumberOfColsToBeLoaded, Math.min(mHoverPlanet.cols(), mGroup.getNumberOf()*design.canCarry(mGroup.tech()) ));
-    Effects.setValueDouble02(mNumberOfCapsToBeLoaded, Math.min(mHoverPlanet.capitals(), mGroup.getNumberOf()*design.canCarry(mGroup.tech()) ));
-    Effects.setValueDouble02(mNumberOfMatsToBeLoaded, Math.min(mHoverPlanet.materials(), mGroup.getNumberOf()*design.canCarry(mGroup.tech()) ));
-
+    if (design!=null) {
+      Effects.setValueDouble02(mNumberOfColsToBeLoaded, Math.min(mHoverPlanet.cols(), mGroup.getNumberOf() * design.canCarry(mGroup.tech())));
+      Effects.setValueDouble02(mNumberOfCapsToBeLoaded, Math.min(mHoverPlanet.capitals(), mGroup.getNumberOf() * design.canCarry(mGroup.tech())));
+      Effects.setValueDouble02(mNumberOfMatsToBeLoaded, Math.min(mHoverPlanet.materials(), mGroup.getNumberOf() * design.canCarry(mGroup.tech())));
+    }
     return;
   }
 

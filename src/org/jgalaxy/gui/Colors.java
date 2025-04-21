@@ -25,7 +25,7 @@ public class Colors {
   }
 
   static public Color factionUIColor() {
-    return SColors.CROCUS;
+    return SColors.DAMSON;
   }
 
   static public Color groupUIColor() {
@@ -97,6 +97,8 @@ public class Colors {
 
   static final public Color MAPBG           = Color.web( "#333333" );
   static final public Color MAPLINE         = Color.web( "#999999" );
+
+  static final public Color PLANNED    = SColors.MISTED_MARIGOLD;
 
   static final public Color TRAVELRANGE_STROKE  = SColors.MISTED_MARIGOLD;
   static final public Color TRAVELRANGE_FILL    = SColors.transparent(TRAVELRANGE_STROKE, 0.1);

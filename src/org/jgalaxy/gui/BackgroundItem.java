@@ -31,7 +31,8 @@ public class BackgroundItem extends JavelinUIElement {
     Rectangle2D outline = getOutline();
     Image im = SImages.getImage("data/gfx/mapelements/bg.jpg");
     double ratio = im.getWidth() / im.getHeight();
-    gc.drawImage(im, 0, 0, pCanvas.canvas().getWidth(), pCanvas.canvas().getHeight()*ratio );
+//    gc.drawImage(im, 0, 0, pCanvas.canvas().getWidth(), pCanvas.canvas().getHeight()*ratio );
+    gc.drawImage(im, 0, 0 );
     return;
   }
 

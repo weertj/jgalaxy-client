@@ -61,30 +61,31 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
 
     // **** SEND ORDERS
     mSendOrders.setOnAction(event -> {
-      IJG_Orders orders = JG_Orders.generateOf(Global.CURRENTTURNNUMBER.get(), Global.CURRENTFACTION.get(), Global.CURRENTFACTION_CHANGED.get());
-      Document doc = XML_Utils.newXMLDocument();
-      Node root = doc.createElement("root" );
-      doc.appendChild(root);
-      orders.storeObject(null, root, "", "");
-      try {
-        String result = XML_Utils.documentToString(doc);
-        System.out.println(result);
-
-        String url =
-              Global.CURRENTSERVER.get() + "/" +
-//              Global.CURRENTGAMEINFO.get().name() + "/" +
-              Global.CURRENTGAME.get().name() + "/" +
-              Global.CURRENTTURNNUMBER.get() + "/" +
-              Global.CURRENTPLAYERID.get() + "/" +
-              Global.CURRENTFACTION.get().id() + "/" +
-              "orders?alt=xml";
-        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
-          .PUT(HttpRequest.BodyPublishers.ofString(result))
-          .build();
-          HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
-      } catch (Throwable e) {
-        e.printStackTrace();
-      }
+      Global.sendOrders();
+//      IJG_Orders orders = JG_Orders.generateOf(Global.CURRENTTURNNUMBER.get(), Global.CURRENTFACTION.get(), Global.CURRENTFACTION_CHANGED.get());
+//      Document doc = XML_Utils.newXMLDocument();
+//      Node root = doc.createElement("root" );
+//      doc.appendChild(root);
+//      orders.storeObject(null, root, "", "");
+//      try {
+//        String result = XML_Utils.documentToString(doc);
+//        System.out.println(result);
+//
+//        String url =
+//              Global.CURRENTSERVER.get() + "/" +
+////              Global.CURRENTGAMEINFO.get().name() + "/" +
+//              Global.CURRENTGAME.get().name() + "/" +
+//              Global.CURRENTTURNNUMBER.get() + "/" +
+//              Global.CURRENTPLAYERID.get() + "/" +
+//              Global.CURRENTFACTION.get().id() + "/" +
+//              "orders?alt=xml";
+//        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+//          .PUT(HttpRequest.BodyPublishers.ofString(result))
+//          .build();
+//          HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
+//      } catch (Throwable e) {
+//        e.printStackTrace();
+//      }
     });
 
     mNextTurn.setOnAction(event -> {

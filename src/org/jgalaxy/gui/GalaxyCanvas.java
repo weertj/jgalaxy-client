@@ -18,4 +18,13 @@ public class GalaxyCanvas extends JavelinCanvas {
     return;
   }
 
+  @Override
+  protected double zoomLimitUpper() {
+    return 4.0;
+  }
+
+  @Override
+  protected double zoomLimitLower() {
+    return 0.1;
+  }
 }

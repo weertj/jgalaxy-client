@@ -5,6 +5,7 @@ import javafx.collections.ListChangeListener;
 import javafx.geometry.Side;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
@@ -31,6 +32,7 @@ import org.jgalaxy.units.IJG_Incoming;
 import org.jgalaxy.utils.XML_Utils;
 import org.w3c.dom.Node;
 
+import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -46,7 +48,6 @@ public class GalaxyMainInterface extends JMainInterface {
   private GroupInfoController     mGroupInfoController;
   private FleetInfoController     mFleetInfoController;
   private BattleReportController  mBattleReportController;
-  private ShipDesignsController   mShipDesignsController;
   private PlayerInfoController    mPlayerInfoController;
   private StatusBarController     mStatusBarController;
   private ContentTreeController   mContentTreeController;
@@ -65,6 +66,7 @@ public class GalaxyMainInterface extends JMainInterface {
   private boolean mFirstRun = true;
 
   private final ChangeListener<Number> mFactionChanged = (observable, oldValue, newValue) -> {
+    Global.sendOrders();
     refresh();
     return;
   };
@@ -105,17 +107,18 @@ public class GalaxyMainInterface extends JMainInterface {
     Global.CURRENTPLAYERID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("player", ""));
 
     loadGameInfo(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get());
+    loadBanners(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get());
 
     mCanvas = GalaxyCanvas.of();
     mCanvas.addCanvasRunnable( () -> canvasCallback() );
     add( mCanvas );
     mCanvas.canvas().setLayoutX( 200 );
-    mCanvas.canvas().setLayoutY( 40 );
+    mCanvas.canvas().setLayoutY( 32 );
     mainPane().widthProperty().addListener( (_,_,newValue) ->
       mCanvas.canvas().setWidth( mainPane().getWidth()-420 )
     );
     mainPane().heightProperty().addListener( (_,_,newValue) -> {
-      mCanvas.canvas().setHeight(mainPane().getHeight() - 80);
+      mCanvas.canvas().setHeight(mainPane().getHeight() - 64);
       }
     );
     mainPane().getChildren().add( mCanvas.canvas() );
@@ -140,10 +143,6 @@ public class GalaxyMainInterface extends JMainInterface {
     mBattleTab = new Tab("Battle");
     mBattleTab.setClosable(false);
     mTabControlPane.getTabs().add(mBattleTab);
-    Tab designTab = new Tab("Ship design");
-    designTab.setClosable(false);
-    mTabControlPane.getTabs().add(designTab);
-
 
     try { // **** Content Tree
       var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/ContentTree.fxml", null);
@@ -227,15 +226,6 @@ public class GalaxyMainInterface extends JMainInterface {
       e.printStackTrace();
     }
 
-    try { // **** ShipDesigner
-      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/ShipDesigns.fxml", null);
-      mShipDesignsController = (ShipDesignsController)FXMLLoad.controller(contents);
-      designTab.setContent(mShipDesignsController.rootPane());
-      S_Pane.setAnchors( mShipDesignsController.rootPane(), 0.0, 0.0, 0.0, 0.0);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
     Global.getSelectedEntities().addListener((ListChangeListener<IEntity>) c -> {
       while(c.next()) {
         for (IEntity entity : c.getAddedSubList()) {
@@ -246,6 +236,7 @@ public class GalaxyMainInterface extends JMainInterface {
           } else if (entity instanceof IJG_Group group) {
             selectGroup(group);
           } else if (entity instanceof IJG_Faction faction) {
+            faction = Global.resolveFaction(faction);
             selectFaction(faction);
           } else if (entity instanceof ISB_BattleReport battleReport) {
             selectBattleReport(battleReport);
@@ -261,7 +252,38 @@ public class GalaxyMainInterface extends JMainInterface {
 
     Global.CURRENTTURNNUMBER.setValue(Global.CURRENTGAMEINFO.get().currentTurnNumber());
 
+    setUIFaction(Global.CURRENTFACTION_CHANGED.get());
+
     return;
+  }
+
+  private void loadBanners(String pURL, String pGameName) {
+    Global.BANNERS.clear();
+    for( String faction : Global.CURRENTGAMEINFO.get().factions()) {
+      Image banner = loadBanner(pURL, pGameName, faction);
+      if (banner!=null) {
+        Global.BANNERS.put(faction, banner);
+      }
+    }
+    return;
+  }
+
+  private Image loadBanner(String pURL, String pGameName, String pFaction) {
+    String url = pURL;
+    url += "/" + pGameName + "/banners/" + pFaction + ".png";
+    HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+      .GET()
+      .build();
+    try {
+      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofByteArray() );
+      if (response.statusCode()==200) {
+        var bais = new ByteArrayInputStream((byte[]) response.body());
+        return new Image(bais);
+      }
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   private IJG_GameInfo loadGameInfo(String pURL, String pGameName) {
@@ -359,7 +381,6 @@ public class GalaxyMainInterface extends JMainInterface {
 
   private void setUIFaction(IJG_Faction pFaction) {
     mPlanetInfoController.setFaction(pFaction);
-    mShipDesignsController.setFaction(pFaction);
     mPlayerInfoController.setFaction(pFaction);
     mFactionInfoController.setFaction(pFaction);
     mFleetInfoController.setFaction(pFaction);
@@ -417,26 +438,17 @@ public class GalaxyMainInterface extends JMainInterface {
       Global.addSelectedIdentity(entity,true);
     }
 
-    setUIFaction(Global.CURRENTFACTION_CHANGED.get());
+//    setUIFaction(Global.CURRENTFACTION_CHANGED.get());
 
     if (pItem instanceof PlanetRenderItem planetRI) {
       selectPlanet(planetRI.element());
-//      IJG_Planet planet = planetRI.element();
-//      mPlanetInfoController.setPlanet(planet);
-//      if (planet.faction()==null) {
-//        setUIFaction(null);
-//      } else {
-//        IJG_Faction faction = Global.retrieveFactionByID(planet.faction() );
-//        setUIFaction(faction);
-//      }
+      Global.resolveFaction(planetRI.element().faction());
     } else if (pItem instanceof GroupRenderItem groupRI) {
       selectGroup(groupRI.element());
-//      IJG_Group group = groupRI.element();
-//      mGroupInfoController.setGroup(group);
+      Global.resolveFaction(groupRI.element().faction());
     } else if (pItem instanceof FleetRenderItem fleetRI) {
       selectFleet(fleetRI.element());
-//      IJG_Fleet fleet = fleetRI.element();
-//      mFleetInfoController.setFleet(fleet);
+      Global.resolveFaction(fleetRI.element().faction());
     }
     return;
   }
@@ -449,12 +461,11 @@ public class GalaxyMainInterface extends JMainInterface {
   private void loadFaction( IJG_Faction pFaction ) {
     IJL_PlayerContext playerContext = JL_PlayerContext.of();
     setPlayerContext(playerContext);
-//   setUIFaction(pFaction);
+    setUIFaction(pFaction);
 //    mPlanetInfoController.setFaction(pFaction);
     mTurnInfoController.setFaction(pFaction);
     mPlayerInfoController.setFaction(pFaction);
     mFactionInfoController.setFaction(pFaction);
-    mShipDesignsController.setFaction(pFaction);
     mContentTreeController.setPlayerContext( playerContext );
     mContentTreeController.setFaction(pFaction);
     playerContext.selectedItems().selectedItems().addListener((ListChangeListener<IJavelinUIElement>) c -> {

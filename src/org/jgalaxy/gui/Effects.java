@@ -36,6 +36,16 @@ public class Effects {
     }
   }
 
+  static private void generateFolder( Pane pPane, IEntity pEntity, String pText ) {
+    pPane.setBackground(new Background(
+      new BackgroundFill(createBackground(Colors.planetUIColor(),true), new CornerRadii(10.0,false), null )));
+    Label t = new Label(pEntity.name());
+    t.setText(pText);
+    t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDLIGHT));
+    pPane.getChildren().addAll(t);
+    return;
+  }
+
   /**
    * setTreePaneFolder
    * @param pPane
@@ -44,12 +54,23 @@ public class Effects {
   static public void setTreePaneFolder(Pane pPane, IEntity pEntity ) {
 
     if (Objects.equals("Planets",pEntity.entityType())) {
-      pPane.setBackground(new Background(
-        new BackgroundFill(createBackground(Colors.planetUIColor(),true), new CornerRadii(10.0,false), null )));
-      Label t = new Label(pEntity.name());
-      t.setText("Planets");
-      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDLIGHT));
-      pPane.getChildren().addAll(t);
+      generateFolder(pPane,pEntity,"Planets" );
+      return;
+
+    } else if (Objects.equals("Planets/Uninhabited",pEntity.entityType())) {
+      generateFolder(pPane,pEntity,"Uninhabited" );
+      return;
+
+    } else if (Objects.equals("Planets/Inhabited",pEntity.entityType())) {
+      generateFolder(pPane,pEntity,"Inhabited" );
+      return;
+
+    } else if (Objects.equals("Planets/Unknown",pEntity.entityType())) {
+      generateFolder(pPane,pEntity,"Unknown" );
+      return;
+
+    } else if (Objects.equals("Planets/Own",pEntity.entityType())) {
+      generateFolder(pPane,pEntity,"Ours" );
       return;
 
     } else if (Objects.equals("Groups",pEntity.entityType())) {
@@ -75,6 +96,15 @@ public class Effects {
         new BackgroundFill(createBackground(Colors.battlesUIColor(),true), new CornerRadii(10.0,false), null )));
       Label t = new Label(pEntity.name());
       t.setText("Battles");
+      t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDLIGHT));
+      pPane.getChildren().addAll(t);
+      return;
+
+    } else if (Objects.equals("Faction",pEntity.entityType()) && (pEntity instanceof IJG_Faction faction)) {
+      pPane.setBackground(new Background(
+        new BackgroundFill(createBackground(Colors.factionUIColor(),true), new CornerRadii(10.0,false), null )));
+      Label t = new Label(pEntity.name());
+      t.setText(faction.name());
       t.setStyle("-fx-text-fill: " + SColors.toRGBCode(SColors.DEFAULT_TEXTFOREGROUNDLIGHT));
       pPane.getChildren().addAll(t);
       return;

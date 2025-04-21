@@ -3,6 +3,8 @@ package org.jgalaxy.gui;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
+import org.javelinfx.log.LOG_Handler;
 import org.javelinfx.units.EUDistance;
 import org.javelinfx.units.IU_Unit;
 import org.jgalaxy.IEntity;
@@ -10,12 +12,24 @@ import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.engine.IJG_Game;
 import org.jgalaxy.engine.IJG_GameInfo;
 import org.jgalaxy.engine.IJG_Player;
+import org.jgalaxy.orders.IJG_Orders;
+import org.jgalaxy.orders.JG_Orders;
 import org.jgalaxy.planets.IJG_Planet;
+import org.jgalaxy.server.SimpleClient;
 import org.jgalaxy.units.IJG_Group;
 import org.jgalaxy.units.IJG_Unit;
+import org.jgalaxy.utils.XML_Utils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
+import java.net.URI;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
 
 public class Global {
 
@@ -24,6 +38,8 @@ public class Global {
   static public double INDPERSHIP = 10.0;
 
   static public long LASTTURNCHECK = 0L;
+
+  static final public Map<String, Image> BANNERS = new HashMap<String, Image>();
 
   static final public BooleanProperty AUTOTURNLOAD = new SimpleBooleanProperty(false);
 
@@ -102,6 +118,43 @@ public class Global {
       return CURRENTPLAYERCHANGED.get().getFactionByID(pName);
     }
     return null;
+  }
+
+  static public IJG_Faction resolveFaction( Object pFaction ) {
+    if (pFaction instanceof IJG_Faction f) {
+      return CURRENTFACTION_CHANGED.get().resolveFactionById(f.id());
+    }
+    if (pFaction instanceof String fid) {
+      return CURRENTFACTION_CHANGED.get().resolveFactionById(fid);
+    }
+    return null;
+  }
+
+  static public void sendOrders() {
+    IJG_Orders orders = JG_Orders.generateOf(Global.CURRENTTURNNUMBER.get(), Global.CURRENTFACTION.get(), Global.CURRENTFACTION_CHANGED.get());
+    Document doc = XML_Utils.newXMLDocument();
+    Node root = doc.createElement("root");
+    doc.appendChild(root);
+    orders.storeObject(null, root, "", "");
+    try {
+      String result = XML_Utils.documentToString(doc);
+      System.out.println(result);
+
+      String url =
+        Global.CURRENTSERVER.get() + "/" +
+          Global.CURRENTGAME.get().name() + "/" +
+          Global.CURRENTTURNNUMBER.get() + "/" +
+          Global.CURRENTPLAYERID.get() + "/" +
+          Global.CURRENTFACTION.get().id() + "/" +
+          "orders?alt=xml";
+      HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+        .PUT(HttpRequest.BodyPublishers.ofString(result))
+        .build();
+      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString());
+    } catch (Throwable e) {
+      LOG_Handler.log("Global.sendOrders", Level.WARNING,e.getMessage(),e);
+    }
+    return;
   }
 
 }

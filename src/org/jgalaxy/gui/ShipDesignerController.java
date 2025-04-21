@@ -9,6 +9,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.converter.NumberStringConverter;
 import org.javelinfx.buttons.SButtons;
+import org.javelinfx.convert.DoubleConvert;
+import org.javelinfx.convert.IntegerConvert;
 import org.javelinfx.engine.JPanelInterface;
 import org.javelinfx.engine.JUnitPanelInterface;
 import org.javelinfx.system.JavelinSystem;
@@ -41,6 +43,7 @@ public class ShipDesignerController extends JPanelInterface implements Initializ
 
   @FXML private Label mMass;
   @FXML private Label mSpeed;
+  @FXML private Label mSpeedLoaded;
   @FXML private Label mShieldsValue;
   @FXML private Label mCargoValue;
   @FXML private Label mResistant;
@@ -106,6 +109,7 @@ public class ShipDesignerController extends JPanelInterface implements Initializ
 
     SButtons.initButton(mAddDesign, _ -> {
       mFaction.addUnitDesign(getDesign());
+      mFaction.newChange();
       refresh();
     });
     SButtons.initButton(mCloseButton, _ -> {
@@ -133,11 +137,11 @@ public class ShipDesignerController extends JPanelInterface implements Initializ
   private IJG_UnitDesign getDesign() {
     IJG_UnitDesign unitDesign = JG_UnitDesign.of(mDesignName.getText(),
       mDesignName.getText(),
-      Double.parseDouble(mDrive.getText()),
-      Double.parseDouble(mWeapons.getText()),
-      Integer.parseInt(mWeaponsNr.getText()),
-      Double.parseDouble(mShields.getText()),
-      Double.parseDouble(mCargo.getText())
+      DoubleConvert.convert(mDrive.getText(),0),
+      DoubleConvert.convert(mWeapons.getText(),0),
+      IntegerConvert.convert(mWeaponsNr.getText(),0),
+      DoubleConvert.convert(mShields.getText(),0),
+      DoubleConvert.convert(mCargo.getText(),0)
     );
     return unitDesign;
   }
@@ -146,6 +150,7 @@ public class ShipDesignerController extends JPanelInterface implements Initializ
     IJG_UnitDesign unitDesign = getDesign();
     Effects.setValue(mMass, unitDesign.mass());
     Effects.setValue(mSpeed, unitDesign.speed(mFaction.tech(),0));
+    Effects.setValue(mSpeedLoaded, unitDesign.speed(mFaction.tech(),unitDesign.canCarry(mFaction.tech())));
     Effects.setValue(mShieldsValue, unitDesign.effectiveShield(mFaction.tech()));
     Effects.setValue(mCargoValue, unitDesign.canCarry(mFaction.tech()));
 

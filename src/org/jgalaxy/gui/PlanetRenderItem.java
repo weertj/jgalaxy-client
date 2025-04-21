@@ -15,6 +15,7 @@ import org.jgalaxy.units.IJG_Fleet;
 import org.jgalaxy.units.IJG_Group;
 
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 
 public class PlanetRenderItem extends JavelinUIElement {
 
@@ -75,9 +76,11 @@ public class PlanetRenderItem extends JavelinUIElement {
   @Override
   public void pointerPressed( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
     if (pPointer==S_Pointer.POINTER.SECONDARY) {
-      for(IJG_Group group : Global.getSelectedGroups()) {
+      for(IJG_Group group : new ArrayList<>(Global.getSelectedGroups())) {
+        IJG_Faction faction = Global.CURRENTFACTION_CHANGED.get();
         if (group instanceof IJG_Fleet fleet) {
           fleet.groups().stream().forEach( g -> sendGroupTo(g, element()));
+          faction.newChange();
         } else {
           Integer nr = -1;
           try {
@@ -85,13 +88,13 @@ public class PlanetRenderItem extends JavelinUIElement {
           } catch (NumberFormatException e) {
           }
           if (nr>0 && nr.intValue()<group.getNumberOf()) {
-            IJG_Faction faction = Global.CURRENTFACTION_CHANGED.get();
             IJG_Group breakgroup = group.breakOffGroup(Global.CURRENTGAMECHANGED.get(), faction, group.id(), nr);
             faction.groups().addGroupAlways(breakgroup);
             sendGroupTo(breakgroup, element());
             faction.newChange();
           } else {
             sendGroupTo(group, element());
+            faction.newChange();
           }
         }
       }

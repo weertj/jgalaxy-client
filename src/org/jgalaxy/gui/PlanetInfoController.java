@@ -10,6 +10,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import org.javelinfx.engine.JUnitPanelInterface;
 import org.jgalaxy.engine.IJG_Faction;
+import org.jgalaxy.los.FLOS_Visibility;
 import org.jgalaxy.planets.EProduceType;
 import org.jgalaxy.planets.IJG_Planet;
 import org.jgalaxy.units.IJG_Fleet;
@@ -68,6 +69,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
       } else {
         mPlanet.setProduceType(EProduceType.PR_SHIP,newValue);
       }
+      mFaction.newChange();
     });
     mGroupsInOrbit.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     mGroupsInOrbit.getSelectionModel().getSelectedItems().addListener( (ListChangeListener)c -> {
@@ -176,6 +178,16 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
             }
           }
         }
+
+        double vis = mPlanet.visibilityFor( Global.CURRENTGAMECHANGED.get(),Global.CURRENTFACTION_CHANGED.get());
+        if (vis==FLOS_Visibility.VIS_FULL) {
+          mPlanetName.setDisable(false);
+          mProduce.setDisable(false);
+        } else {
+          mPlanetName.setDisable(true);
+          mProduce.setDisable(true);
+        }
+
       }
     } finally {
       mInRefresh = false;

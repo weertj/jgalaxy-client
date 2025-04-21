@@ -3461,3 +3461,12 @@ is being used to size a border should also be in pixels.
     -fx-font-size: 10px;
     -fx-text-fill: #999999;
 }
+
+.left-treeview,
+.left-treeview:focused .tree-cell:filled:selected,
+.left-treeview .tree-cell:filled:selected,
+.left-treeview .tree-cell {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+}
+

@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="mRootPane" prefHeight="589.0" prefWidth="637.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.ShipDesignerController">
+<AnchorPane fx:id="mRootPane" prefHeight="589.0" prefWidth="637.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.ShipDesignerController">
    <children>
       <AnchorPane layoutX="46.0" prefHeight="392.0" prefWidth="519.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -52,6 +52,8 @@
                   <TextField fx:id="mAgainstWeapon" alignment="CENTER" layoutX="106.0" layoutY="126.0" prefHeight="26.0" prefWidth="50.0" text="0.0" />
                   <Label layoutX="9.0" layoutY="59.0" styleClass="label-value" text="Cargo:" />
                   <Label fx:id="mCargoValue" layoutX="59.0" layoutY="61.0" styleClass="label-value-value" text="-" />
+                  <Label layoutX="86.0" layoutY="23.0" styleClass="label-value" text="Loaded:" />
+                  <Label fx:id="mSpeedLoaded" layoutX="140.0" layoutY="23.0" styleClass="label-value-value" text="-" />
                </children>
             </AnchorPane>
             <Button fx:id="mCloseButton" layoutX="563.0" layoutY="550.0" mnemonicParsing="false" text="CLOSE" />
