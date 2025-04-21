@@ -228,7 +228,7 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
         if (mGroup.getFleet()==null) {
 
         } else {
-          mFleets.getSelectionModel().select(mFaction.groups().getFleetByName(mGroup.getFleet()));
+//          mFleets.getSelectionModel().select(mFaction.groups().getFleetByName(mGroup.getFleet()));
         }
       }
 

@@ -104,7 +104,9 @@ public class Colors {
   static final public Color TRAVELRANGE_FILL    = SColors.transparent(TRAVELRANGE_STROKE, 0.1);
 
   static final public Color POPULATION      = SColors.KASHMIR;
-  static final public Color COLS            = SColors.WHITE_GRAPE;
+  static final public Color COLS            = SColors.KASHMIR;
+  static final public Color CAPS            = SColors.ORANGEADE;
+  static final public Color MATS            = SColors.COCOON;
   static final public Color CARGO           = SColors.VAPOR_BLUE;
 
   // **** MIL-STD-2525D

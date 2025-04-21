@@ -135,6 +135,17 @@ public class Effects {
 //      pPane.getChildren().addAll(t);
       return;
 
+    } else if (pEntity instanceof IJG_Fleet fleet) {
+      pPane.setBackground(new Background(
+        new BackgroundFill(createBackground(Colors.fleetUIColor(),true), new CornerRadii(10.0,false), null )));
+      Label t = new Label(fleet.name() );
+      t.getStyleClass().add("label-value");
+      Label v = new Label("" + fleet.getNumberOf() + "x ships");
+      v.getStyleClass().add("label-value-value");
+      v.setLayoutX(20);
+      pPane.getChildren().addAll( t);
+
+
     } else if (pEntity instanceof IJG_Group group) {
 //      pPane.setBackground(new Background(
 //        new BackgroundFill(createBackground(Colors.groupUIColor(),true), new CornerRadii(10.0,false), null )));
@@ -146,18 +157,8 @@ public class Effects {
       t.getStyleClass().add("label-value-dark");
       Label v = new Label("" + group.getNumberOf() + "x " + group.unitDesign());
       v.getStyleClass().add("label-value-value");
-      v.setLayoutX(20);
+      v.setLayoutX(25);
       pPane.getChildren().addAll(c, t,v);
-
-    } else if (pEntity instanceof IJG_Fleet fleet) {
-      pPane.setBackground(new Background(
-        new BackgroundFill(createBackground(Colors.fleetUIColor(),true), new CornerRadii(10.0,false), null )));
-      Label t = new Label(fleet.name() );
-      t.getStyleClass().add("label-value");
-      Label v = new Label("" + fleet.getNumberOf() + "x ships");
-      v.getStyleClass().add("label-value-value");
-      v.setLayoutX(20);
-      pPane.getChildren().addAll( t,v);
 
 
     }

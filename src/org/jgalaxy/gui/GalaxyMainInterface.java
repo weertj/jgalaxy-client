@@ -406,6 +406,7 @@ public class GalaxyMainInterface extends JMainInterface {
   private void selectGroup( IJG_Group pGroup ) {
     mGroupInfoController.setFaction(Global.CURRENTFACTION_CHANGED.get().resolveFactionById(pGroup.faction()));
     mGroupInfoController.setGroup(pGroup);
+    mFleetInfoController.setFleet( Global.CURRENTFACTION_CHANGED.get().groups().getFleetByName(pGroup.getFleet()) );
     mMapRenderItem.middleMoveToCanvasPositionProperty().set(SP_Position.of(pGroup.position().x(),pGroup.position().y(),Global.DISTANCEUNIT));
     mTabControlPane.getSelectionModel().select(mGroupTab);
     return;

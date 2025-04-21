@@ -70,6 +70,8 @@ public class FleetInfoController extends JUnitPanelInterface implements Initiali
       return;
     }
 
+    mHoverPlanet = mFaction.planets().findPlanetByPosition(mFleet.position());
+
     try {
       mInRefresh = true;
       Effects.setText(mFleetName,mFleet.name());
@@ -83,7 +85,6 @@ public class FleetInfoController extends JUnitPanelInterface implements Initiali
 
   public void setFleet(IJG_Fleet pFleet) {
     mFleet = pFleet;
-    mHoverPlanet = mFaction.planets().findPlanetByPosition(mFleet.position());
     refresh();
     return;
   }

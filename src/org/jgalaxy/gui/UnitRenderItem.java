@@ -69,10 +69,16 @@ public class UnitRenderItem extends JavelinUIElement {
       } else {
         gc.fillRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
         if ("COL".equals(group.loadType())) {
-          gc.setStroke(Colors.COLS);
-        } else {
-          gc.setStroke(Color.BLACK);
+          gc.setFill(Colors.COLS);
+          gc.fillOval(outline.getMaxX()+outline.getWidth()/5, outline.getMinY(), outline.getWidth()/3, outline.getHeight()/3);
+        } else if ("CAP".equals(group.loadType())) {
+          gc.setFill(Colors.CAPS);
+          gc.fillOval(outline.getMaxX()+outline.getWidth()/5, outline.getMinY(), outline.getWidth()/3, outline.getHeight()/3);
+        } else if ("MAT".equals(group.loadType())) {
+          gc.setFill(Colors.MATS);
+          gc.fillOval(outline.getMaxX()+outline.getWidth()/5, outline.getMinY(), outline.getWidth()/3, outline.getHeight()/3);
         }
+        gc.setStroke(Color.BLACK);
         gc.strokeRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
       }
       if (pCanvas.getPixelZoom()>0.1) {
