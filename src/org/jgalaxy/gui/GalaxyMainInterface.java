@@ -16,6 +16,7 @@ import org.javelinfx.engine.startJavelin;
 import org.javelinfx.fxml.FXMLLoad;
 import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.player.JL_PlayerContext;
+import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.spatial.SP_Position;
 import org.javelinfx.window.S_Pane;
 import org.jgalaxy.IEntity;
@@ -558,7 +559,7 @@ public class GalaxyMainInterface extends JMainInterface {
         var group = fleet.groups().getFirst();
         playerContext.addRenderItem(3,
           new FleetRenderItem(fleet.id(), fleet,
-            SP_Position.of(group.position().x(), group.position().y(), Global.DISTANCEUNIT)));
+            SP_Position.of(group.calcCurrentPosition().x(), group.calcCurrentPosition().y(), Global.DISTANCEUNIT)));
       }
     }
 

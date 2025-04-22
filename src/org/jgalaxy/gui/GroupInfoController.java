@@ -70,6 +70,7 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
   @FXML private Label      mDesignWeapons;
   @FXML private Label      mDesignShields;
   @FXML private Label      mDesignCargo;
+  @FXML private Label      mCurrentSpeed;
 
   @FXML private Button     mUnloadButton;
 
@@ -177,6 +178,7 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
       }
       Effects.setValueDouble02(mDesignShields, design.shields());
       Effects.setValueDouble02(mDesignCargo, design.cargo());
+      Effects.setValueDouble02( mCurrentSpeed, mGroup.maxSpeed(Global.CURRENTGAMECHANGED.get(),mFaction));
     }
     return;
   }
