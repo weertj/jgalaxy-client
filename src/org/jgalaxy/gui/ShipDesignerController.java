@@ -1,27 +1,18 @@
 package org.jgalaxy.gui;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.converter.NumberStringConverter;
 import org.javelinfx.buttons.SButtons;
 import org.javelinfx.convert.DoubleConvert;
 import org.javelinfx.convert.IntegerConvert;
 import org.javelinfx.engine.JPanelInterface;
-import org.javelinfx.engine.JUnitPanelInterface;
-import org.javelinfx.system.JavelinSystem;
 import org.jgalaxy.engine.IJG_Faction;
-import org.jgalaxy.units.IJG_Group;
 import org.jgalaxy.units.IJG_UnitDesign;
 import org.jgalaxy.units.JG_UnitDesign;
 
 import java.net.URL;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
@@ -108,9 +99,11 @@ public class ShipDesignerController extends JPanelInterface implements Initializ
     });
 
     SButtons.initButton(mAddDesign, _ -> {
-      mFaction.addUnitDesign(getDesign());
-      mFaction.newChange();
-      refresh();
+      if (getDesign().mass()>0) {
+        mFaction.addUnitDesign(getDesign());
+        mFaction.newChange();
+        refresh();
+      }
     });
     SButtons.initButton(mCloseButton, _ -> {
       getThisStage().close();

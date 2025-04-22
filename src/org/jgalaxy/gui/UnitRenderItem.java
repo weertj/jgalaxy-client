@@ -40,7 +40,7 @@ public class UnitRenderItem extends JavelinUIElement {
         // **** Draw range circle
 //        IJG_UnitDesign design = faction.getUnitDesignById(group.unitDesign());
 //        if (design.drive() > 0) {
-          double range1turn = group.maxSpeed(faction);
+          double range1turn = group.maxSpeed(Global.CURRENTGAMECHANGED.get(),faction);
           double radius = Math.abs(pCanvas.toPixelX(range1turn, Global.DISTANCEUNIT) - pCanvas.toPixelX(0, Global.DISTANCEUNIT));
           gc.setFill(Colors.TRAVELRANGE_FILL);
           gc.fillOval(outline.getCenterX() - radius, outline.getCenterY() - radius, radius * 2, radius * 2);

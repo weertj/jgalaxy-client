@@ -25,6 +25,7 @@ import org.jgalaxy.engine.*;
 import org.jgalaxy.map.IMAP_Map;
 import org.jgalaxy.planets.IJG_Planet;
 import org.jgalaxy.server.SimpleClient;
+import org.jgalaxy.server.SimpleServer;
 import org.jgalaxy.units.IJG_Bombing;
 import org.jgalaxy.units.IJG_Fleet;
 import org.jgalaxy.units.IJG_Group;
@@ -37,6 +38,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 
 public class GalaxyMainInterface extends JMainInterface {
 
@@ -124,6 +126,11 @@ public class GalaxyMainInterface extends JMainInterface {
     mainPane().getChildren().add( mCanvas.canvas() );
 
     mTabControlPane = new TabPane();
+//    mTabControlPane.getSelectionModel().selectedItemProperty().addListener((_,_, newValue) -> {
+//      if (newValue==mPlanetTab) {
+//        refresh();
+//      }
+//    });
     mTabControlPane.setSide(Side.TOP);
     mainPane().getChildren().add(mTabControlPane);
     mTabControlPane.setPrefWidth(220);
@@ -228,7 +235,7 @@ public class GalaxyMainInterface extends JMainInterface {
 
     Global.getSelectedEntities().addListener((ListChangeListener<IEntity>) c -> {
       while(c.next()) {
-        for (IEntity entity : c.getAddedSubList()) {
+        for(IEntity entity : c.getAddedSubList()) {
           if (entity instanceof IJG_Planet planet) {
             selectPlanet(planet);
           } else if (entity instanceof IJG_Fleet fleet) {
@@ -248,6 +255,7 @@ public class GalaxyMainInterface extends JMainInterface {
     Global.CURRENTTURNNUMBER.addListener((observable, oldValue, newValue) -> {
       IJG_Faction faction = loadPlayer(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get(), Global.CURRENTPLAYERID.get(), newValue.intValue() );
       loadFaction(faction);
+      return;
     });
 
     Global.CURRENTTURNNUMBER.setValue(Global.CURRENTGAMEINFO.get().currentTurnNumber());
@@ -310,21 +318,11 @@ public class GalaxyMainInterface extends JMainInterface {
 //    IJG_GameInfo gameinfo = null;
     String url = pURL;
     url += "/" + pGameName;
-//    HttpRequest request = HttpRequest.newBuilder(URI.create(url+ "?alt=xml"))
-//      .GET()
-//      .build();
-//    Node root = null;
-//    try {
-//      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
-//      String result = response.body().toString();
-//      root = XML_Utils.rootNodeBy(result);
-//      gameinfo = JG_GameInfo.of( XML_Utils.childNodeByPath(root,"game").get());
-//      Global.CURRENTGAMEINFO.set( gameinfo );
-//    } catch (Throwable e) {
-//      e.printStackTrace();
-//    }
-
-    url += "/" + pTurnNumber;
+    if (Global.CURRENTGAMECHANGED.get()!=null && Global.CURRENTGAMECHANGED.get().isRealTime()) {
+      url += "/current";
+    } else {
+      url += "/" + pTurnNumber;
+    }
 
     HttpRequest request = HttpRequest.newBuilder(URI.create(url + "?alt=xml"))
       .GET()
@@ -392,7 +390,7 @@ public class GalaxyMainInterface extends JMainInterface {
 
   private void selectPlanet( IJG_Planet pPlanet ) {
     mPlanetInfoController.setPlanet(pPlanet);
-    if (pPlanet.faction()==null) {
+    if (pPlanet==null || pPlanet.faction()==null) {
       setUIFaction(null);
     } else {
       IJG_Faction faction = Global.retrieveFactionByID(pPlanet.faction() );
@@ -486,58 +484,15 @@ public class GalaxyMainInterface extends JMainInterface {
 
     addRenderItems( pFaction );
 
-//    IMAP_Map map = Global.CURRENTGAME.get().galaxy().map();
-//
-//    BackgroundItem bgi = new BackgroundItem("map", map, SP_Position.of(map.xStart(), map.yStart(), Global.DISTANCEUNIT));
-//    playerContext.addRenderItem(0, bgi );
-//
-//
-//    mMapRenderItem = new MapRenderItem("map", map, SP_Position.of(map.xStart(), map.yStart(), Global.DISTANCEUNIT));
-//    mMapRenderItem.mouseOverMapPositionProperty().addListener((_, _, newValue) -> {
-//      mStatusBarController.setMouseMovePosition(newValue);
-//      return;
-//    });
-//    mMapRenderItem.middleCanvasPositionProperty().addListener((_, _, newValue) -> {
-//      mStatusBarController.setCenterPosition(newValue);
-//      return;
-//    });
-//    playerContext.addRenderItem(1, mMapRenderItem );
-//
-//    for(IJG_Planet planet : pFaction.planets().planets()) {
-//      playerContext.addRenderItem(2,
-//        new PlanetRenderItem(planet.id(),planet,
-//          SP_Position.of(planet.position().x(),planet.position().y(), Global.DISTANCEUNIT)));
-//    }
-//
-//    for( IJG_Group group : pFaction.groups().getGroups()) {
-//      if (group.getFleet()==null) {
-//        playerContext.addRenderItem(3,
-//          new GroupRenderItem(group.id(), group,
-//            SP_Position.of(group.position().x(), group.position().y(), Global.DISTANCEUNIT)));
+//    if (oldPlayerContext!=null) {
+//      for( IEntity entity : Global.getSelectedEntities()) {
+//        System.out.println(entity);
 //      }
-//    }
-//    for(IJG_Fleet fleet : pFaction.groups().fleets()) {
-//      if (!fleet.groups().isEmpty()) {
-//        var group = fleet.groups().getFirst();
-//        playerContext.addRenderItem(3,
-//          new FleetRenderItem(fleet.id(), fleet,
-//            SP_Position.of(group.position().x(), group.position().y(), Global.DISTANCEUNIT)));
+//      for( IJavelinUIElement item : oldPlayerContext.selectedItems().selectedItems()) {
+//        if (item.element() instanceof IEntity entity) {
+//          Global.addSelectedIdentity(entity,true);
+//        }
 //      }
-//    }
-//
-//    // **** Other faction groups
-//    for( IJG_Faction otherFaction : pFaction.getOtherFactionsMutable()) {
-//      for( IJG_Group othergroup : otherFaction.groups().getGroups()) {
-//        playerContext.addRenderItem( 2,
-//          new GroupRenderItem(othergroup.id(),othergroup,
-//            SP_Position.of(othergroup.position().x(), othergroup.position().y(), Global.DISTANCEUNIT)));
-//      }
-//    }
-//
-//    // **** Incoming groups
-//    for(IJG_Incoming incoming : pFaction.getIncomingMutable()) {
-//      playerContext.addRenderItem( 2,
-//        new IncomingGroupRenderItem(null,incoming, SP_Position.of(incoming.current().x(),incoming.current().y(), Global.DISTANCEUNIT)));
 //    }
 
     return;
@@ -638,6 +593,7 @@ public class GalaxyMainInterface extends JMainInterface {
 
   private void refresh() {
     mContentTreeController.refresh();
+    mPlanetInfoController.refresh();
     addRenderItems( Global.CURRENTFACTION_CHANGED.get() );
     return;
   }

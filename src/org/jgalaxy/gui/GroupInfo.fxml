@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="mRootPane" prefHeight="616.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.GroupInfoController">
+<AnchorPane fx:id="mRootPane" prefHeight="616.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.GroupInfoController">
    <children>
       <AnchorPane layoutX="46.0" layoutY="23.0" prefHeight="628.0" prefWidth="222.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -15,17 +15,18 @@
             <Label fx:id="mTransitStatus" layoutX="24.0" layoutY="218.0" styleClass="label-value-value" text="----&gt;" />
             <Button fx:id="mTargetPlanet" layoutX="147.0" layoutY="214.0" mnemonicParsing="false" text="Button" />
             <Label fx:id="mConfiguration" layoutX="8.0" layoutY="42.0" styleClass="label-value-value-big1" text="100x avbbcbcbbc" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" />
-            <AnchorPane fx:id="mShipDesignPane" layoutX="8.0" layoutY="68.0" prefHeight="147.0" prefWidth="206.0" style="-fx-background-color: #ffffff11;" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="68.0">
+            <AnchorPane fx:id="mShipDesignPane" layoutX="8.0" layoutY="68.0" prefHeight="120.0" prefWidth="206.0" style="-fx-background-color: #ffffff11;" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="68.0">
                <children>
-                  <Label layoutX="5.0" layoutY="3.0" styleClass="label-main" text="Design" />
-                  <Label layoutX="10.0" layoutY="39.0" styleClass="label-value" text="DRIVE" />
-                  <Label layoutX="11.0" layoutY="63.0" styleClass="label-value" text="WEAPONS" />
-                  <Label layoutX="10.0" layoutY="87.0" styleClass="label-value" text="SHIELDS" />
-                  <Label layoutX="13.0" layoutY="108.0" styleClass="label-value" text="CARGO" />
-                  <Label fx:id="mDesignDrive" layoutX="95.0" layoutY="39.0" styleClass="label-value" text="-" />
-                  <Label fx:id="mDesignWeapons" layoutX="95.0" layoutY="63.0" styleClass="label-value" text="-" />
-                  <Label fx:id="mDesignShields" layoutX="95.0" layoutY="87.0" styleClass="label-value" text="-" />
-                  <Label fx:id="mDesignCargo" layoutX="90.0" layoutY="104.0" styleClass="label-value" text="-" />
+                  <Label layoutX="5.0" layoutY="3.0" styleClass="label-main" text="Design" AnchorPane.leftAnchor="4.0" AnchorPane.topAnchor="4.0" />
+                  <Label fx:id="mDesignName" layoutX="75.0" layoutY="6.0" text="..." AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="4.0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="30.0" layoutY="24.0" prefWidth="70.0" styleClass="label-value" text="DRIVE" AnchorPane.leftAnchor="8.0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="11.0" layoutY="40.0" prefWidth="70.0" styleClass="label-value" text="WEAPONS" AnchorPane.leftAnchor="8.0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="56.0" prefWidth="70.0" styleClass="label-value" text="SHIELDS" AnchorPane.leftAnchor="8.0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="13.0" layoutY="72.0" prefWidth="70.0" styleClass="label-value" text="CARGO" AnchorPane.leftAnchor="8.0" />
+                  <Label fx:id="mDesignDrive" layoutX="90.0" layoutY="24.0" styleClass="label-value" text="-" />
+                  <Label fx:id="mDesignWeapons" layoutX="90.0" layoutY="40.0" styleClass="label-value" text="-" />
+                  <Label fx:id="mDesignShields" layoutX="90.0" layoutY="56.0" styleClass="label-value" text="-" />
+                  <Label fx:id="mDesignCargo" layoutX="90.0" layoutY="72.0" styleClass="label-value" text="-" />
                </children></AnchorPane>
             <AnchorPane fx:id="mFleetPane" layoutX="8.0" layoutY="243.0" prefHeight="72.0" prefWidth="206.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0">
                <children>

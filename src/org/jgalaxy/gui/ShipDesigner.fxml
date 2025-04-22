@@ -39,21 +39,21 @@
             </AnchorPane>
             <AnchorPane layoutX="45.0" layoutY="105.0" prefHeight="157.0" prefWidth="211.0" style="-fx-background-color: #ffffff08;">
                <children>
-                  <Label layoutX="8.0" layoutY="6.0" styleClass="label-value" text="Mass:" />
-                  <Label fx:id="mMass" layoutX="53.0" layoutY="6.0" styleClass="label-value-value" text="-" />
-                  <Label layoutX="8.0" layoutY="23.0" styleClass="label-value" text="Speed:" />
-                  <Label fx:id="mSpeed" layoutX="54.0" layoutY="22.0" styleClass="label-value-value" text="-" />
+                  <Label layoutX="8.0" layoutY="8.0" styleClass="label-value" text="Mass:" />
+                  <Label fx:id="mMass" layoutX="60.0" layoutY="8.0" styleClass="label-value-value" text="-" />
+                  <Label layoutX="8.0" layoutY="24.0" styleClass="label-value" text="Speed:" />
+                  <Label fx:id="mSpeed" layoutX="60.0" layoutY="24.0" styleClass="label-value-value" text="-" />
                   <Label layoutX="8.0" layoutY="40.0" styleClass="label-value" text="Shields:" />
-                  <Label fx:id="mShieldsValue" layoutX="57.0" layoutY="40.0" styleClass="label-value-value" text="-" />
-                  <Label layoutY="96.0" styleClass="label-value" text="Resistant against:" />
-                  <Label fx:id="mResistant" layoutX="107.0" layoutY="97.0" styleClass="label-value-value" text="-" />
-                  <Label layoutY="126.0" styleClass="label-value" text="Kill chance" />
-                  <Label fx:id="mKillChance" layoutX="69.0" layoutY="126.0" styleClass="label-value-value" text="-" />
-                  <TextField fx:id="mAgainstWeapon" alignment="CENTER" layoutX="106.0" layoutY="126.0" prefHeight="26.0" prefWidth="50.0" text="0.0" />
-                  <Label layoutX="9.0" layoutY="59.0" styleClass="label-value" text="Cargo:" />
-                  <Label fx:id="mCargoValue" layoutX="59.0" layoutY="61.0" styleClass="label-value-value" text="-" />
-                  <Label layoutX="86.0" layoutY="23.0" styleClass="label-value" text="Loaded:" />
-                  <Label fx:id="mSpeedLoaded" layoutX="140.0" layoutY="23.0" styleClass="label-value-value" text="-" />
+                  <Label fx:id="mShieldsValue" layoutX="60.0" layoutY="40.0" styleClass="label-value-value" text="-" />
+                  <Label layoutX="8.0" layoutY="96.0" styleClass="label-value" text="Resistant against:" />
+                  <Label fx:id="mResistant" layoutX="113.0" layoutY="96.0" styleClass="label-value-value" text="-" />
+                  <Label disable="true" layoutX="8.0" layoutY="126.0" styleClass="label-value" text="Kill chance" />
+                  <Label fx:id="mKillChance" disable="true" layoutX="75.0" layoutY="126.0" styleClass="label-value-value" text="-" />
+                  <TextField fx:id="mAgainstWeapon" alignment="CENTER" disable="true" layoutX="106.0" layoutY="122.0" prefHeight="26.0" prefWidth="50.0" text="0.0" />
+                  <Label layoutX="8.0" layoutY="56.0" styleClass="label-value" text="Cargo:" />
+                  <Label fx:id="mCargoValue" layoutX="60.0" layoutY="56.0" styleClass="label-value-value" text="-" />
+                  <Label layoutX="93.0" layoutY="24.0" styleClass="label-value" text="Loaded:" />
+                  <Label fx:id="mSpeedLoaded" layoutX="147.0" layoutY="24.0" styleClass="label-value-value" text="-" />
                </children>
             </AnchorPane>
             <Button fx:id="mCloseButton" layoutX="563.0" layoutY="550.0" mnemonicParsing="false" text="CLOSE" />

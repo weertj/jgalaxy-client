@@ -25,6 +25,6 @@ public class GalaxyCanvas extends JavelinCanvas {
 
   @Override
   protected double zoomLimitLower() {
-    return 0.1;
+    return 0.01;
   }
 }

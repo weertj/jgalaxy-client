@@ -65,6 +65,7 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
   @FXML private TextField  mNumberOfMatsToBeLoaded;
   @FXML private Button     mLoadMatsButton;
 
+  @FXML private Label      mDesignName;
   @FXML private Label      mDesignDrive;
   @FXML private Label      mDesignWeapons;
   @FXML private Label      mDesignShields;
@@ -167,6 +168,7 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
   private void refreshDesign() {
     IJG_UnitDesign design = mFaction.getUnitDesignById(mGroup.unitDesign());
     if (design!=null) {
+      Effects.setText(mDesignName,design.name());
       Effects.setValueDouble02(mDesignDrive, design.drive());
       if (design.nrweapons() > 0) {
         Effects.setText(mDesignWeapons, design.nrweapons() + "x " + design.weapons());

@@ -64,33 +64,6 @@ public class GroupRenderItem extends UnitRenderItem {
     drawUnit(pCanvas);
     drawMovementPositionLines(pCanvas);
 
-//    var group = element();
-//    // **** Movement line
-//    if (group.lastStaticPosition()!=null && !Objects.equals(group.lastStaticPosition(), group.position())) {
-//      var fromplanet = Global.CURRENTFACTION_CHANGED.get().planets().findPlanetByPosition(group.lastStaticPosition());
-//      double x = pCanvas.toPixelX( fromplanet.position().x(), Global.DISTANCEUNIT );
-//      double y = pCanvas.toPixelY( fromplanet.position().y(), Global.DISTANCEUNIT );
-//      CanvasUtils.drawGradientLine(gc,outline.getX() + outline.getWidth()/2, outline.getY() + outline.getHeight()/2,x, y,Colors.FRIEND_LIGHT);
-//    }
-//    if (group.to()!=null) {
-//      var toplanet = Global.CURRENTFACTION_CHANGED.get().planets().findPlanetById(group.to());
-//      double x = pCanvas.toPixelX( toplanet.position().x(), Global.DISTANCEUNIT );
-//      double y = pCanvas.toPixelY( toplanet.position().y(), Global.DISTANCEUNIT );
-//      gc.setLineWidth(3);
-//      gc.setLineDashes(8,8);
-//      CanvasUtils.drawGradientLine(gc, x,y,outline.getX() + outline.getWidth()/2, outline.getY() + outline.getHeight()/2,Colors.FRIEND_DARK);
-//      gc.setLineDashes(0);
-//      gc.setLineWidth(1);
-//
-//    } else if (!group.toPosition().equals(group.position())) {
-//      double x = pCanvas.toPixelX( group.toPosition().x(), Global.DISTANCEUNIT );
-//      double y = pCanvas.toPixelY( group.toPosition().y(), Global.DISTANCEUNIT );
-//      gc.setStroke(Colors.FRIEND_LIGHT);
-//      gc.setLineDashes(4,4);
-//      gc.strokeLine(outline.getX() + outline.getWidth()/2, outline.getY() + outline.getHeight()/2,x, y);
-//      gc.stroke();
-//      gc.setLineDashes(0);
-//    }
     gc.restore();
     return;
   }
