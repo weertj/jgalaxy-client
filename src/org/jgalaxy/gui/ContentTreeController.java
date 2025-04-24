@@ -226,124 +226,105 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
 
     IGameContext gameContext = Global.GAMECONTEXT;
 
-    mRoot.setValue(Global.GAMECONTEXT.currentGameChanged());
+    if (mRoot.getValue()!=Global.GAMECONTEXT.currentGameChanged()) {
+      mRoot.setValue(Global.GAMECONTEXT.currentGameChanged());
 
-    // **** Planets
-    mRootPlanets.getChildren().clear();
-    mRootOwnPlanets.getChildren().clear();
-    mRootUnknownPlanets.getChildren().clear();
-    mRootUninhabitedPlanets.getChildren().clear();
-    mRootUnknownInhabitedPlanets.getChildren().clear();
-    mRootPlanets.getChildren().add(mRootOwnPlanets);
-    mRootPlanets.getChildren().add(mRootUninhabitedPlanets);
-    mRootPlanets.getChildren().add(mRootUnknownInhabitedPlanets);
-    mRootPlanets.getChildren().add(mRootUnknownPlanets);
-    mRootGroups.getChildren().clear();
-    mRootOwnGroups.getChildren().clear();
-    mRootGroups.getChildren().add(mRootOwnGroups);
-    mRootOwnCargoGroups.getChildren().clear();
-    mRootOwnGroups.getChildren().add(mRootOwnCargoGroups);
-    mRootFleets.getChildren().clear();
-    mRootOwnFleets.getChildren().clear();
-    mRootFleets.getChildren().add(mRootOwnFleets);
+      // **** Planets
+      mRootPlanets.getChildren().clear();
+      mRootOwnPlanets.getChildren().clear();
+      mRootUnknownPlanets.getChildren().clear();
+      mRootUninhabitedPlanets.getChildren().clear();
+      mRootUnknownInhabitedPlanets.getChildren().clear();
+      mRootPlanets.getChildren().add(mRootOwnPlanets);
+      mRootPlanets.getChildren().add(mRootUninhabitedPlanets);
+      mRootPlanets.getChildren().add(mRootUnknownInhabitedPlanets);
+      mRootPlanets.getChildren().add(mRootUnknownPlanets);
+      mRootGroups.getChildren().clear();
+      mRootOwnGroups.getChildren().clear();
+      mRootGroups.getChildren().add(mRootOwnGroups);
+      mRootOwnCargoGroups.getChildren().clear();
+      mRootOwnGroups.getChildren().add(mRootOwnCargoGroups);
+      mRootFleets.getChildren().clear();
+      mRootOwnFleets.getChildren().clear();
+      mRootFleets.getChildren().add(mRootOwnFleets);
 
-    mRootBattles.getChildren().clear();
-    mRootOwnBattles.getChildren().clear();
-    mRootBattles.getChildren().add(mRootOwnBattles);
+      mRootBattles.getChildren().clear();
+      mRootOwnBattles.getChildren().clear();
+      mRootBattles.getChildren().add(mRootOwnBattles);
 
-    mRootFactions.getChildren().clear();
-    mRootFactionsTop.getChildren().clear();
-    mRootFactions.getChildren().add(mRootFactionsTop);
+      mRootFactions.getChildren().clear();
+      mRootFactionsTop.getChildren().clear();
+      mRootFactions.getChildren().add(mRootFactionsTop);
 
-    if (mFaction!=null) {
+      if (mFaction != null) {
 
-      for(IJG_Planet planet : mFaction.planets().planetsOwnedBy(mFaction)) {
-        mRootOwnPlanets.getChildren().add(new TreeItem<>(planet));
-      }
-      for(IJG_Planet planet : mFaction.planets().planets()) {
-        if (planet.faction()==null) {
-          if (planet.size() >= 0) {
-            mRootUninhabitedPlanets.getChildren().add(new TreeItem<>(planet));
-          } else {
-            mRootUnknownPlanets.getChildren().add(new TreeItem<>(planet));
-          }
-        } else if (Objects.equals(planet.faction(),"")) {
-          mRootUnknownInhabitedPlanets.getChildren().add(new TreeItem<>(planet));
+        for (IJG_Planet planet : mFaction.planets().planetsOwnedBy(mFaction)) {
+          mRootOwnPlanets.getChildren().add(new TreeItem<>(planet));
         }
-      }
-
-      // **** Own groups
-      for(IJG_Group group : mFaction.groups().getGroups()){
-        if (group.getFleet()==null) {
-          mRootOwnGroups.getChildren().add(new TreeItem<>(group));
-        }
-      }
-      for(IJG_Group group : mFaction.groups().getGroups()){
-        if (group.getFleet()==null) {
-          if (mFaction.getUnitDesignById(group.unitDesign()).cargo()>0) {
-            mRootOwnCargoGroups.getChildren().add(new TreeItem<>(group));
+        for (IJG_Planet planet : mFaction.planets().planets()) {
+          if (planet.faction() == null) {
+            if (planet.size() >= 0) {
+              mRootUninhabitedPlanets.getChildren().add(new TreeItem<>(planet));
+            } else {
+              mRootUnknownPlanets.getChildren().add(new TreeItem<>(planet));
+            }
+          } else if (Objects.equals(planet.faction(), "")) {
+            mRootUnknownInhabitedPlanets.getChildren().add(new TreeItem<>(planet));
           }
         }
-      }
-      for( IJG_Faction otherfaction : mFaction.getOtherFactionsMutable()) {
-        TreeItem ofti = new TreeItem(otherfaction);
-        for( var group : otherfaction.groups().getGroups() ) {
-          ofti.getChildren().add(new TreeItem<>(group));
-        }
-        mRootGroups.getChildren().add(ofti);
-      }
 
-      // **** Fleets
-      for(IJG_Fleet fleet : mFaction.groups().fleets()){
-        TreeItem ti = new TreeItem<>(fleet);
-        mRootOwnFleets.getChildren().add(ti);
-        for( IJG_Group group : fleet.groups()) {
-          ti.getChildren().add(new TreeItem<>(group));
+        // **** Own groups
+        for (IJG_Group group : mFaction.groups().getGroups()) {
+          if (group.getFleet() == null) {
+            mRootOwnGroups.getChildren().add(new TreeItem<>(group));
+          }
         }
-      }
+        for (IJG_Group group : mFaction.groups().getGroups()) {
+          if (group.getFleet() == null) {
+            if (mFaction.getUnitDesignById(group.unitDesign()).cargo() > 0) {
+              mRootOwnCargoGroups.getChildren().add(new TreeItem<>(group));
+            }
+          }
+        }
+        for (IJG_Faction otherfaction : mFaction.getOtherFactionsMutable()) {
+          TreeItem ofti = new TreeItem(otherfaction);
+          for (var group : otherfaction.groups().getGroups()) {
+            ofti.getChildren().add(new TreeItem<>(group));
+          }
+          mRootGroups.getChildren().add(ofti);
+        }
 
-      // **** Battles
+        // **** Fleets
+        for (IJG_Fleet fleet : mFaction.groups().fleets()) {
+          TreeItem ti = new TreeItem<>(fleet);
+          mRootOwnFleets.getChildren().add(ti);
+          for (IJG_Group group : fleet.groups()) {
+            ti.getChildren().add(new TreeItem<>(group));
+          }
+        }
+
+        // **** Battles
 //      IJG_Game game = Global.CURRENTGAMECHANGED.get();
 
-      for( IJG_Planet planet : mFaction.planets().planets() ) {
-        ISB_BattleReport report = SB_BattleReport.of(mFaction, planet.position() );
-        if (report.isInvolved(mFaction)) {
-          mRootOwnBattles.getChildren().add(new TreeItem<>(report));
+        for (IJG_Planet planet : mFaction.planets().planets()) {
+          ISB_BattleReport report = SB_BattleReport.of(mFaction, planet.position());
+          if (report.isInvolved(mFaction)) {
+            mRootOwnBattles.getChildren().add(new TreeItem<>(report));
+          }
+        }
+
+        // **** Factions
+        for (IJG_Faction faction : mFaction.getOtherFactionsMutable()) {
+          mRootFactions.getChildren().add(new TreeItem<>(faction));
+        }
+        // **** TopFactions
+        var topfactions = gameContext.currentGame().topFactions();
+        for (IJG_Faction faction : topfactions) {
+          mRootFactionsTop.getChildren().add(new TreeItem<>(faction));
         }
       }
-
-      // **** Factions
-      for( IJG_Faction faction : mFaction.getOtherFactionsMutable() ) {
-        mRootFactions.getChildren().add(new TreeItem<>(faction));
-      }
-      // **** TopFactions
-      var topfactions = gameContext.currentGame().topFactions();
-      for(IJG_Faction faction : topfactions) {
-        mRootFactionsTop.getChildren().add(new TreeItem<>(faction));
-      }
-
-
-
-//      List<ISB_BattleField> battles = new ArrayList<>(8);
-//      for(IJG_Group group : mFaction.groups().getGroups()) {
-//        var gfaction = game.getFactionById(group.faction());
-//        for(IB_Shot shot : group.shotsMutable()) {
-//          if (shot.type()==IB_Shot.TYPE.SHIP_SHIP) {
-//            ISB_BattleField battleField = SB_BattleField.of(game);
-//            battleField.addEntry(gfaction,group);
-//            battles.add(battleField);
-//          }
-//        }
-//      }
-//      mRootBattles.getChildren().addAll(battles);
-
-
     }
 
-    // **** Clean up empty folders
-//    if (mRootOwnFleets.getChildren().isEmpty() && mRootFleets.getChildren().size()==1) {
-//      mRoot.getChildren().remove(mRootFleets);
-//    }
 
     mContentTreeView.refresh();
     return;

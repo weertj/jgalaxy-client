@@ -88,14 +88,20 @@ public class GalaxyMainInterface extends JMainInterface {
    */
   private void canvasCallback() {
     if (Global.AUTOTURNLOAD.get()) {
-      if ((System.currentTimeMillis()-Global.LASTTURNCHECK)>4000) {
+      if ((System.currentTimeMillis()-Global.LASTTURNCHECK)>1000) {
         try {
           IGameContext context = Global.GAMECONTEXT;
           context.loadGameInfo();
 //          loadGameInfo(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get());
           if (context.currentGame().isRealTime()) {
 //            Global.CURRENTTURNNUMBER.setValue(Global.CURRENTTURNNUMBER.get() + 1);
-            context.nextTurnNumber();
+//            context.nextTurnNumber();
+            try {
+              context.nextTurn();
+              context.currentFactionChanged().newChange();
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
           } else {
             context.setTurnNumber(""+context.currentGameInfo().currentTurnNumber());
           }
@@ -114,7 +120,7 @@ public class GalaxyMainInterface extends JMainInterface {
 //    mainPane().getStylesheets().add(getClass().getResource("/org/jgalaxy/gui/jgalaxy.css").toExternalForm());
 
     Global.GAMECONTEXT = GameContext.of(
-      startJavelin.PARAMETERS.getNamed().getOrDefault("directory", ""),
+      startJavelin.PARAMETERS.getNamed().getOrDefault("directory", null),
       startJavelin.PARAMETERS.getNamed().getOrDefault("server", ""),
       startJavelin.PARAMETERS.getNamed().getOrDefault("game", ""),
       startJavelin.PARAMETERS.getNamed().getOrDefault("player", ""),

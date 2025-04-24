@@ -100,6 +100,7 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
 //          .PUT(HttpRequest.BodyPublishers.ofString(""))
 //          .build();
 //        HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
+        Global.GAMECONTEXT.currentFactionChanged().newChange();
       } catch (Throwable e) {
         e.printStackTrace();
       }
