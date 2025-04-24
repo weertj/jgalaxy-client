@@ -126,7 +126,7 @@ public class OOBController extends JUnitPanelInterface implements Initializable 
         if (planet!=null) {
           Button button = new Button("unload");
           button.setOnAction(e -> {
-            SJG_LoadOrder.unloadOrder(Global.CURRENTGAME.get(),group, planet,9999999);
+            SJG_LoadOrder.unloadOrder(Global.GAMECONTEXT.currentGame(),group, planet,9999999);
             mOOBTree.refresh();
           });
           return new ReadOnlyObjectWrapper<>(button);

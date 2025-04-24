@@ -19,7 +19,9 @@ import org.javelinfx.player.JL_PlayerContext;
 import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.spatial.SP_Position;
 import org.javelinfx.window.S_Pane;
+import org.jgalaxy.GameContext;
 import org.jgalaxy.IEntity;
+import org.jgalaxy.IGameContext;
 import org.jgalaxy.battle.ISB_BattleReport;
 import org.jgalaxy.battle.SB_BattleReport;
 import org.jgalaxy.engine.*;
@@ -69,7 +71,8 @@ public class GalaxyMainInterface extends JMainInterface {
   private boolean mFirstRun = true;
 
   private final ChangeListener<Number> mFactionChanged = (observable, oldValue, newValue) -> {
-    Global.sendOrders();
+//    Global.sendOrders();
+    Global.GAMECONTEXT.sendCurrentOrders();
     refresh();
     return;
   };
@@ -87,8 +90,15 @@ public class GalaxyMainInterface extends JMainInterface {
     if (Global.AUTOTURNLOAD.get()) {
       if ((System.currentTimeMillis()-Global.LASTTURNCHECK)>4000) {
         try {
-          loadGameInfo(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get());
-          Global.CURRENTTURNNUMBER.setValue(Global.CURRENTGAMEINFO.get().currentTurnNumber());
+          IGameContext context = Global.GAMECONTEXT;
+          context.loadGameInfo();
+//          loadGameInfo(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get());
+          if (context.currentGame().isRealTime()) {
+//            Global.CURRENTTURNNUMBER.setValue(Global.CURRENTTURNNUMBER.get() + 1);
+            context.nextTurnNumber();
+          } else {
+            context.setTurnNumber(""+context.currentGameInfo().currentTurnNumber());
+          }
         } finally {
           Global.LASTTURNCHECK = System.currentTimeMillis();
         }
@@ -103,14 +113,27 @@ public class GalaxyMainInterface extends JMainInterface {
 
 //    mainPane().getStylesheets().add(getClass().getResource("/org/jgalaxy/gui/jgalaxy.css").toExternalForm());
 
-    Global.CURRENTUSERNAME.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("username", ""));
-    Global.CURRENTPASSWORD.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("password", ""));
-    Global.CURRENTSERVER.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("server", ""));
-    Global.CURRENTGAMEID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("game", ""));
-    Global.CURRENTPLAYERID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("player", ""));
+    Global.GAMECONTEXT = GameContext.of(
+      startJavelin.PARAMETERS.getNamed().getOrDefault("directory", ""),
+      startJavelin.PARAMETERS.getNamed().getOrDefault("server", ""),
+      startJavelin.PARAMETERS.getNamed().getOrDefault("game", ""),
+      startJavelin.PARAMETERS.getNamed().getOrDefault("player", ""),
+      startJavelin.PARAMETERS.getNamed().getOrDefault("username", ""),
+      startJavelin.PARAMETERS.getNamed().getOrDefault("password", "")
+    );
+    IGameContext context = Global.GAMECONTEXT;
 
-    loadGameInfo(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get());
-    loadBanners(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get());
+    context.loadGameInfo();
+    context.loadBanners();
+
+//    Global.CURRENTUSERNAME.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("username", ""));
+//    Global.CURRENTPASSWORD.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("password", ""));
+//    Global.CURRENTSERVER.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("server", ""));
+//    Global.CURRENTGAMEID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("game", ""));
+//    Global.CURRENTPLAYERID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("player", ""));
+
+//    loadGameInfo(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get());
+//    loadBanners(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get());
 
     mCanvas = GalaxyCanvas.of();
     mCanvas.addCanvasRunnable( () -> canvasCallback() );
@@ -244,7 +267,7 @@ public class GalaxyMainInterface extends JMainInterface {
           } else if (entity instanceof IJG_Group group) {
             selectGroup(group);
           } else if (entity instanceof IJG_Faction faction) {
-            faction = Global.resolveFaction(faction);
+            faction = context.resolveFaction(faction);
             selectFaction(faction);
           } else if (entity instanceof ISB_BattleReport battleReport) {
             selectBattleReport(battleReport);
@@ -253,130 +276,134 @@ public class GalaxyMainInterface extends JMainInterface {
       }
     });
 
-    Global.CURRENTTURNNUMBER.addListener((observable, oldValue, newValue) -> {
-      IJG_Faction faction = loadPlayer(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get(), Global.CURRENTPLAYERID.get(), newValue.intValue() );
+    context.turnNumberProperty().addListener((observable, oldValue, newValue) -> {
+//    Global.CURRENTTURNNUMBER.addListener((observable, oldValue, newValue) -> {
+      IJG_Faction faction = context.loadFaction();
+      context.addFactionChangeListener(mFactionChanged);
+//      IJG_Faction faction = loadPlayer(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get(), Global.CURRENTPLAYERID.get(), newValue.intValue() );
       loadFaction(faction);
       return;
     });
 
-    Global.CURRENTTURNNUMBER.setValue(Global.CURRENTGAMEINFO.get().currentTurnNumber());
+//    Global.CURRENTTURNNUMBER.setValue(Global.GAMECONTEXT.currentGameInfo().currentTurnNumber());
+    context.setTurnNumber( "" + context.currentGameInfo().currentTurnNumber());
 
-    setUIFaction(Global.CURRENTFACTION_CHANGED.get());
+    setUIFaction(Global.GAMECONTEXT.currentFactionChanged());
 
     return;
   }
 
-  private void loadBanners(String pURL, String pGameName) {
-    Global.BANNERS.clear();
-    for( String faction : Global.CURRENTGAMEINFO.get().factions()) {
-      Image banner = loadBanner(pURL, pGameName, faction);
-      if (banner!=null) {
-        Global.BANNERS.put(faction, banner);
-      }
-    }
-    return;
-  }
+//  private void loadBanners(String pURL, String pGameName) {
+//    Global.BANNERS.clear();
+//    for( String faction : Global.CURRENTGAMEINFO.get().factions()) {
+//      Image banner = loadBanner(pURL, pGameName, faction);
+//      if (banner!=null) {
+//        Global.BANNERS.put(faction, banner);
+//      }
+//    }
+//    return;
+//  }
+//
+//  private Image loadBanner(String pURL, String pGameName, String pFaction) {
+//    String url = pURL;
+//    url += "/" + pGameName + "/banners/" + pFaction + ".png";
+//    HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+//      .GET()
+//      .build();
+//    try {
+//      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofByteArray() );
+//      if (response.statusCode()==200) {
+//        var bais = new ByteArrayInputStream((byte[]) response.body());
+//        return new Image(bais);
+//      }
+//    } catch (Throwable e) {
+//      e.printStackTrace();
+//    }
+//    return null;
+//  }
 
-  private Image loadBanner(String pURL, String pGameName, String pFaction) {
-    String url = pURL;
-    url += "/" + pGameName + "/banners/" + pFaction + ".png";
-    HttpRequest request = HttpRequest.newBuilder(URI.create(url))
-      .GET()
-      .build();
-    try {
-      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofByteArray() );
-      if (response.statusCode()==200) {
-        var bais = new ByteArrayInputStream((byte[]) response.body());
-        return new Image(bais);
-      }
-    } catch (Throwable e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
-
-  private IJG_GameInfo loadGameInfo(String pURL, String pGameName) {
-    IJG_GameInfo gameinfo = null;
-    String url = pURL;
-    url += "/" + pGameName;
-    HttpRequest request = HttpRequest.newBuilder(URI.create(url+ "?alt=xml"))
-      .GET()
-      .build();
-    Node root;
-    try {
-      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
-      String result = response.body().toString();
-      root = XML_Utils.rootNodeBy(result);
-      gameinfo = JG_GameInfo.of( XML_Utils.childNodeByPath(root,"game").get());
-      Global.CURRENTGAMEINFO.set( gameinfo );
-    } catch (Throwable e) {
-      e.printStackTrace();
-    }
-    return gameinfo;
-  }
-
-  private IJG_Faction loadPlayer( String pURL, String pGameName, String pPlayerName, int pTurnNumber ) {
+//  private IJG_GameInfo loadGameInfo(String pURL, String pGameName) {
 //    IJG_GameInfo gameinfo = null;
-    String url = pURL;
-    url += "/" + pGameName;
-    if (Global.CURRENTGAMECHANGED.get()!=null && Global.CURRENTGAMECHANGED.get().isRealTime()) {
-      url += "/current";
-    } else {
-      url += "/" + pTurnNumber;
-    }
+//    String url = pURL;
+//    url += "/" + pGameName;
+//    HttpRequest request = HttpRequest.newBuilder(URI.create(url+ "?alt=xml"))
+//      .GET()
+//      .build();
+//    Node root;
+//    try {
+//      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
+//      String result = response.body().toString();
+//      root = XML_Utils.rootNodeBy(result);
+//      gameinfo = JG_GameInfo.of( XML_Utils.childNodeByPath(root,"game").get());
+//      Global.CURRENTGAMEINFO.set( gameinfo );
+//    } catch (Throwable e) {
+//      e.printStackTrace();
+//    }
+//    return gameinfo;
+//  }
 
-    HttpRequest request = HttpRequest.newBuilder(URI.create(url + "?alt=xml"))
-      .GET()
-      .build();
-    Node root = null;
-    IJG_Game game = null;
-    IJG_Game gamechanged = null;
-    try {
-      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
-      String result = response.body().toString();
-      root = XML_Utils.rootNodeBy(result);
-      game = JG_Game.of( null, root, pTurnNumber);
-      Global.CURRENTGAME.set( game );
-      gamechanged = JG_Game.of( null, root, pTurnNumber);
-      Global.CURRENTGAMECHANGED.set( gamechanged );
-    } catch (Throwable e) {
-      e.printStackTrace();
-    }
-
-    IJG_Player player = game.getPlayerByID(pPlayerName);
-    Global.CURRENTPLAYER.set( player );
-    IJG_Player playerchanged = gamechanged.getPlayerByID(pPlayerName);
-    Global.CURRENTPLAYERCHANGED.set( playerchanged );
-
-    url += "/" + player.id() + "/" + player.factions().getFirst().id();
-
-    request = HttpRequest.newBuilder(URI.create(url + "?alt=xml"))
-      .GET()
-      .build();
-    root = null;
-    try {
-      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
-      String result = response.body().toString();
-      root = XML_Utils.rootNodeBy(result);
-    } catch (Throwable e) {
-      e.printStackTrace();
-    }
-    IJG_Faction faction = JG_Faction.of(game,XML_Utils.childNodeByPath(root,"faction").orElse(null));
-    if (Global.CURRENTFACTION.get() != null) {
-      Global.CURRENTFACTION.get().close();
-    }
-    Global.CURRENTFACTION.set( faction );
-    IJG_Faction factionchanged = JG_Faction.of(gamechanged,XML_Utils.childNodeByPath(root,"faction").orElse(null));
-    if (Global.CURRENTFACTION_CHANGED.get() != null) {
-      Global.CURRENTFACTION_CHANGED.get().changeCounterProperty().removeListener(mFactionChanged);
-      Global.CURRENTFACTION_CHANGED.get().close();
-    }
-    Global.CURRENTFACTION_CHANGED.set( factionchanged );
-
-    factionchanged.changeCounterProperty().addListener(mFactionChanged);
-
-    return factionchanged;
-  }
+//  private IJG_Faction loadPlayer( String pURL, String pGameName, String pPlayerName, int pTurnNumber ) {
+////    IJG_GameInfo gameinfo = null;
+//    String url = pURL;
+//    url += "/" + pGameName;
+//    if (Global.CURRENTGAMECHANGED.get()!=null && Global.CURRENTGAMECHANGED.get().isRealTime()) {
+//      url += "/current";
+//    } else {
+//      url += "/" + pTurnNumber;
+//    }
+//
+//    HttpRequest request = HttpRequest.newBuilder(URI.create(url + "?alt=xml"))
+//      .GET()
+//      .build();
+//    Node root = null;
+//    IJG_Game game = null;
+//    IJG_Game gamechanged = null;
+//    try {
+//      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
+//      String result = response.body().toString();
+//      root = XML_Utils.rootNodeBy(result);
+//      game = JG_Game.of( null, root, pTurnNumber);
+//      Global.CURRENTGAME.set( game );
+//      gamechanged = JG_Game.of( null, root, pTurnNumber);
+//      Global.CURRENTGAMECHANGED.set( gamechanged );
+//    } catch (Throwable e) {
+//      e.printStackTrace();
+//    }
+//
+//    IJG_Player player = game.getPlayerByID(pPlayerName);
+//    Global.CURRENTPLAYER.set( player );
+//    IJG_Player playerchanged = gamechanged.getPlayerByID(pPlayerName);
+//    Global.CURRENTPLAYERCHANGED.set( playerchanged );
+//
+//    url += "/" + player.id() + "/" + player.factions().getFirst().id();
+//
+//    request = HttpRequest.newBuilder(URI.create(url + "?alt=xml"))
+//      .GET()
+//      .build();
+//    root = null;
+//    try {
+//      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
+//      String result = response.body().toString();
+//      root = XML_Utils.rootNodeBy(result);
+//    } catch (Throwable e) {
+//      e.printStackTrace();
+//    }
+//    IJG_Faction faction = JG_Faction.of(game,XML_Utils.childNodeByPath(root,"faction").orElse(null));
+//    if (Global.CURRENTFACTION.get() != null) {
+//      Global.CURRENTFACTION.get().close();
+//    }
+//    Global.CURRENTFACTION.set( faction );
+//    IJG_Faction factionchanged = JG_Faction.of(gamechanged,XML_Utils.childNodeByPath(root,"faction").orElse(null));
+//    if (Global.CURRENTFACTION_CHANGED.get() != null) {
+//      Global.CURRENTFACTION_CHANGED.get().changeCounterProperty().removeListener(mFactionChanged);
+//      Global.CURRENTFACTION_CHANGED.get().close();
+//    }
+//    Global.CURRENTFACTION_CHANGED.set( factionchanged );
+//
+//    factionchanged.changeCounterProperty().addListener(mFactionChanged);
+//
+//    return factionchanged;
+//  }
 
   private void setUIFaction(IJG_Faction pFaction) {
     mPlanetInfoController.setFaction(pFaction);
@@ -394,7 +421,7 @@ public class GalaxyMainInterface extends JMainInterface {
     if (pPlanet==null || pPlanet.faction()==null) {
       setUIFaction(null);
     } else {
-      IJG_Faction faction = Global.retrieveFactionByID(pPlanet.faction() );
+      IJG_Faction faction = Global.GAMECONTEXT.retrieveFactionByID(pPlanet.faction() );
       setUIFaction(faction);
     }
     mMapRenderItem.middleMoveToCanvasPositionProperty().set(SP_Position.of(pPlanet.position().x(),pPlanet.position().y(),Global.DISTANCEUNIT));
@@ -403,16 +430,16 @@ public class GalaxyMainInterface extends JMainInterface {
   }
 
   private void selectGroup( IJG_Group pGroup ) {
-    mGroupInfoController.setFaction(Global.CURRENTFACTION_CHANGED.get().resolveFactionById(pGroup.faction()));
+    mGroupInfoController.setFaction(Global.GAMECONTEXT.currentFactionChanged().resolveFactionById(pGroup.faction()));
     mGroupInfoController.setGroup(pGroup);
-    mFleetInfoController.setFleet( Global.CURRENTFACTION_CHANGED.get().groups().getFleetByName(pGroup.getFleet()) );
+    mFleetInfoController.setFleet( Global.GAMECONTEXT.currentFactionChanged().groups().getFleetByName(pGroup.getFleet()) );
     mMapRenderItem.middleMoveToCanvasPositionProperty().set(SP_Position.of(pGroup.position().x(),pGroup.position().y(),Global.DISTANCEUNIT));
     mTabControlPane.getSelectionModel().select(mGroupTab);
     return;
   }
 
   private void selectFleet( IJG_Fleet pFleet ) {
-    mFleetInfoController.setFaction(Global.CURRENTFACTION_CHANGED.get().resolveFactionById(pFleet.faction()));
+    mFleetInfoController.setFaction(Global.GAMECONTEXT.currentFactionChanged().resolveFactionById(pFleet.faction()));
     mFleetInfoController.setFleet(pFleet);
     mMapRenderItem.middleMoveToCanvasPositionProperty().set(SP_Position.of(pFleet.position().x(),pFleet.position().y(),Global.DISTANCEUNIT));
     mTabControlPane.getSelectionModel().select(mFleetTab);
@@ -426,7 +453,7 @@ public class GalaxyMainInterface extends JMainInterface {
   }
 
   private void selectBattleReport( ISB_BattleReport pBattleReport ) {
-    mBattleReportController.setFaction(Global.CURRENTFACTION_CHANGED.get());
+    mBattleReportController.setFaction(Global.GAMECONTEXT.currentFactionChanged());
     mBattleReportController.setBattleReport(pBattleReport);
     mMapRenderItem.middleMoveToCanvasPositionProperty().set(SP_Position.of(pBattleReport.position().x(),pBattleReport.position().y(),Global.DISTANCEUNIT));
     mTabControlPane.getSelectionModel().select(mBattleTab);
@@ -442,13 +469,13 @@ public class GalaxyMainInterface extends JMainInterface {
 
     if (pItem instanceof PlanetRenderItem planetRI) {
       selectPlanet(planetRI.element());
-      Global.resolveFaction(planetRI.element().faction());
+      Global.GAMECONTEXT.resolveFaction(planetRI.element().faction());
     } else if (pItem instanceof GroupRenderItem groupRI) {
       selectGroup(groupRI.element());
-      Global.resolveFaction(groupRI.element().faction());
+      Global.GAMECONTEXT.resolveFaction(groupRI.element().faction());
     } else if (pItem instanceof FleetRenderItem fleetRI) {
       selectFleet(fleetRI.element());
-      Global.resolveFaction(fleetRI.element().faction());
+      Global.GAMECONTEXT.resolveFaction(fleetRI.element().faction());
     }
     return;
   }
@@ -508,7 +535,7 @@ public class GalaxyMainInterface extends JMainInterface {
     IJL_PlayerContext playerContext = getPlayerContext();
     playerContext.clearRenderItems();
 
-    IMAP_Map map = Global.CURRENTGAMECHANGED.get().galaxy().map();
+    IMAP_Map map = Global.GAMECONTEXT.currentGameChanged().galaxy().map();
 
     BackgroundItem bgi = new BackgroundItem("map", map, SP_Position.of(map.xStart(), map.yStart(), Global.DISTANCEUNIT));
     playerContext.addRenderItem(0, bgi );
@@ -595,7 +622,7 @@ public class GalaxyMainInterface extends JMainInterface {
   private void refresh() {
     mContentTreeController.refresh();
     mPlanetInfoController.refresh();
-    addRenderItems( Global.CURRENTFACTION_CHANGED.get() );
+    addRenderItems( Global.GAMECONTEXT.currentFactionChanged() );
     return;
   }
 

@@ -35,6 +35,7 @@ public class PlayerInfoController extends JUnitPanelInterface implements Initial
   @FXML private TextField mRightMouseSendNumber;
 
   @FXML private Button mUserButton;
+  @FXML private ImageView mUserIcon;
 
 //  private IJG_Player mPlayer;
   private IJG_Faction mFaction;
@@ -57,7 +58,7 @@ public class PlayerInfoController extends JUnitPanelInterface implements Initial
         scene.getStylesheets().add(JavelinSystem.stylesheet().file().toURI().toString());
         mStage.setScene(scene);
         mController.setThisStage(mStage);
-        mController.setFaction(Global.CURRENTFACTION_CHANGED.get());
+        mController.setFaction(Global.GAMECONTEXT.currentFactionChanged());
         mStage.show();
       } catch (Throwable t) {
         t.printStackTrace();
@@ -85,15 +86,15 @@ public class PlayerInfoController extends JUnitPanelInterface implements Initial
       mShieldsTech.setText("-");
       mCargoTech.setText("-");
     } else {
-      mBanner.setImage( Global.BANNERS.get(mFaction.id()));
+      mBanner.setImage( Global.GAMECONTEXT.imageForFaction(mFaction));
       mFactionName.setText(mFaction.name());
       mDriveTech.setText("" + mFaction.tech().drive());
       mWeaponsTech.setText("" + mFaction.tech().weapons());
       mShieldsTech.setText("" + mFaction.tech().shields());
       mCargoTech.setText("" + mFaction.tech().cargo());
     }
-    if (Global.CURRENTPLAYERCHANGED.get()!=null) {
-      mUserButton.setText(Global.CURRENTPLAYERCHANGED.get().getUsername());
+    if (Global.GAMECONTEXT.currentPlayerChanged()!=null) {
+      mUserButton.setText(Global.GAMECONTEXT.currentPlayerChanged().getUsername());
     }
     return;
   }

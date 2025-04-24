@@ -40,11 +40,11 @@ public class UnitRenderItem extends JavelinUIElement {
           gc.setFill(SUX_Colors.SELECTION);
           gc.fillRect(outline.getX() - 4, outline.getY() - 4, outline.getWidth() + 8, outline.getHeight() + 8);
           if (element() instanceof IJG_Group group) {
-            var faction = Global.resolveFaction(group.faction());
+            var faction = Global.GAMECONTEXT.resolveFaction(group.faction());
             // **** Draw range circle
 //        IJG_UnitDesign design = faction.getUnitDesignById(group.unitDesign());
 //        if (design.drive() > 0) {
-            double range1turn = group.maxSpeed(Global.CURRENTGAMECHANGED.get(), faction);
+            double range1turn = group.maxSpeed(Global.GAMECONTEXT.currentGameChanged(), faction);
             double radius = Math.abs(pCanvas.toPixelX(range1turn, Global.DISTANCEUNIT) - pCanvas.toPixelX(0, Global.DISTANCEUNIT));
             gc.setFill(Colors.TRAVELRANGE_FILL);
             gc.fillOval(outline.getCenterX() - radius, outline.getCenterY() - radius, radius * 2, radius * 2);
@@ -102,13 +102,13 @@ public class UnitRenderItem extends JavelinUIElement {
     if (element() instanceof IJG_Group group) {
       // **** Movement line
       if (group.lastStaticPosition() != null && !Objects.equals(group.lastStaticPosition(), group.position())) {
-        var fromplanet = Global.CURRENTFACTION_CHANGED.get().planets().findPlanetByPosition(group.lastStaticPosition());
+        var fromplanet = Global.GAMECONTEXT.currentFactionChanged().planets().findPlanetByPosition(group.lastStaticPosition());
         double x = pCanvas.toPixelX(fromplanet.position().x(), Global.DISTANCEUNIT);
         double y = pCanvas.toPixelY(fromplanet.position().y(), Global.DISTANCEUNIT);
         CanvasUtils.drawGradientLine(gc, outline.getX() + outline.getWidth() / 2, outline.getY() + outline.getHeight() / 2, x, y, Colors.FRIEND_LIGHT);
       }
       if (group.to() != null) {
-        var toplanet = Global.CURRENTFACTION_CHANGED.get().planets().findPlanetById(group.to());
+        var toplanet = Global.GAMECONTEXT.currentFactionChanged().planets().findPlanetById(group.to());
         double x = pCanvas.toPixelX(toplanet.position().x(), Global.DISTANCEUNIT);
         double y = pCanvas.toPixelY(toplanet.position().y(), Global.DISTANCEUNIT);
         gc.setLineWidth(3);

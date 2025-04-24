@@ -9,6 +9,7 @@ import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.shape.SRectangle;
 import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.window.S_Pointer;
+import org.jgalaxy.IGameContext;
 import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.planets.IJG_Planet;
 import org.jgalaxy.units.IJG_Fleet;
@@ -76,8 +77,9 @@ public class PlanetRenderItem extends JavelinUIElement {
   @Override
   public void pointerPressed( IJavelinCanvas pCanvas, IJL_PlayerContext pContext, S_Pointer.POINTER pPointer, ISP_Position pPosition) {
     if (pPointer==S_Pointer.POINTER.SECONDARY) {
+      IGameContext gameContext = Global.GAMECONTEXT;
       for(IJG_Group group : new ArrayList<>(Global.getSelectedGroups())) {
-        IJG_Faction faction = Global.CURRENTFACTION_CHANGED.get();
+        IJG_Faction faction = Global.GAMECONTEXT.currentFactionChanged();
         if (group instanceof IJG_Fleet fleet) {
           fleet.groups().stream().forEach( g -> sendGroupTo(g, element()));
           faction.newChange();
@@ -88,7 +90,7 @@ public class PlanetRenderItem extends JavelinUIElement {
           } catch (NumberFormatException e) {
           }
           if (nr>0 && nr.intValue()<group.getNumberOf()) {
-            IJG_Group breakgroup = group.breakOffGroup(Global.CURRENTGAMECHANGED.get(), faction, group.id(), nr);
+            IJG_Group breakgroup = group.breakOffGroup(gameContext.currentGameChanged(), faction, group.id(), nr);
             faction.groups().addGroupAlways(breakgroup);
             sendGroupTo(breakgroup, element());
             faction.newChange();

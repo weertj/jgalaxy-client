@@ -5,6 +5,7 @@ import javafx.scene.paint.LinearGradient;
 import org.javelinfx.colors.SColors;
 import org.jgalaxy.IFactionOwner;
 import org.jgalaxy.battle.ISB_BattleReport;
+import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.planets.IJG_Planet;
 import org.jgalaxy.units.IJG_Bombing;
 import org.jgalaxy.units.IJG_Fleet;
@@ -66,14 +67,15 @@ public class Colors {
       }
       return UNKNOWN_MEDIUM;
     }
-    String factionid = Global.CURRENTFACTION_CHANGED.get().id();
+    IJG_Faction faction = Global.GAMECONTEXT.currentFactionChanged();
+    String factionid = faction.id();
 
     // **** Fleet?
     if (pOwner instanceof IJG_Fleet fleet) {
       if (factionid.equals( pOwner.faction())) {
         return FRIEND_FLEET;
       } else {
-        if (Global.CURRENTFACTION_CHANGED.get().atWarWith().contains(pOwner.faction())) {
+        if (faction.atWarWith().contains(pOwner.faction())) {
           return HOSTILE_FLEET;
         } else {
           return NEUTRAL_FLEET;
@@ -84,7 +86,7 @@ public class Colors {
     if (factionid.equals( pOwner.faction())) {
       return FRIEND_GROUP;
     } else {
-      if (Global.CURRENTFACTION_CHANGED.get().atWarWith().contains(pOwner.faction())) {
+      if (faction.atWarWith().contains(pOwner.faction())) {
         return Colors.HOSTILE_GROUP;
       } else {
         return Colors.NEUTRAL_GROUP;

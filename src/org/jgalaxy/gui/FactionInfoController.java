@@ -45,11 +45,11 @@ public class FactionInfoController extends JUnitPanelInterface implements Initia
       mFaction.newChange();
     });
     SButtons.initButton(mDeclareWar, _ -> {
-      Global.CURRENTFACTION_CHANGED.get().addWarWith(mFaction.id());
+      Global.GAMECONTEXT.currentFactionChanged().addWarWith(mFaction.id());
       mFaction.newChange();
     });
     SButtons.initButton(mDeclarePeace, _ -> {
-      Global.CURRENTFACTION_CHANGED.get().removeWarWith(mFaction.id());
+      Global.GAMECONTEXT.currentFactionChanged().removeWarWith(mFaction.id());
       mFaction.newChange();
     });
     return;
@@ -75,10 +75,10 @@ public class FactionInfoController extends JUnitPanelInterface implements Initia
       mInRefresh = true;
       Effects.setText(mFactionName,mFaction.name());
 
-      Image banner = Global.BANNERS.get(mFaction.id());
+      Image banner = Global.GAMECONTEXT.imageForFaction(mFaction);
       mFactionBanner.setImage(banner);
 
-      IJG_Faction myFaction = Global.CURRENTFACTION_CHANGED.get();
+      IJG_Faction myFaction = Global.GAMECONTEXT.currentFactionChanged();
 
       boolean sameFaction = Objects.equals(mFaction.id(),myFaction.id());
       mFactionName.setEditable(sameFaction);
@@ -104,7 +104,7 @@ public class FactionInfoController extends JUnitPanelInterface implements Initia
 
   public void setFaction(IJG_Faction pFaction) {
     if (pFaction==null) {
-      pFaction = Global.CURRENTFACTION_CHANGED.get();
+      pFaction = Global.GAMECONTEXT.currentFactionChanged();
     }
     mFaction = pFaction;
     refresh();

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mRootPane" prefHeight="32.0" prefWidth="965.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.PlayerInfoController">
+<AnchorPane fx:id="mRootPane" prefHeight="32.0" prefWidth="965.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.PlayerInfoController">
    <children>
       <AnchorPane layoutX="-141.0" layoutY="23.0" prefHeight="32.0" prefWidth="866.0" style="-fx-background-color: #111111;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -43,7 +43,10 @@
             </AnchorPane>
             <Button fx:id="mShipDesignerButton" layoutX="506.0" layoutY="3.0" mnemonicParsing="false" text="SHIP DESIGNER" AnchorPane.topAnchor="3.0" />
             <TextField fx:id="mRightMouseSendNumber" layoutX="706.0" layoutY="4.0" prefWidth="64.0" AnchorPane.topAnchor="3.0" />
-            <Button fx:id="mUserButton" layoutX="659.0" layoutY="6.0" mnemonicParsing="false" prefWidth="100.0" text="{user}" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="3.0" />
+            <Button fx:id="mUserButton" layoutX="659.0" layoutY="6.0" mnemonicParsing="false" prefWidth="100.0" text="{user}" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="3.0">
+               <graphic>
+                  <ImageView fx:id="mUserIcon" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+               </graphic></Button>
          </children>
       </AnchorPane>
    </children>

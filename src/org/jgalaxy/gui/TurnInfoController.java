@@ -49,19 +49,23 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
 
     Bindings.bindBidirectional(Global.AUTOTURNLOAD, mAILoadTurn.selectedProperty() );
 
-    Global.CURRENTTURNNUMBER.addListener((observable, oldValue, newValue) -> {
+//    Global.CURRENTTURNNUMBER.addListener((observable, oldValue, newValue) -> {
+    Global.GAMECONTEXT.turnNumberProperty().addListener((observable, oldValue, newValue) -> {
       mTurnNumber.setText(newValue.toString());
     });
     mMinTurn.setOnAction(e -> {
-      Global.CURRENTTURNNUMBER.setValue(Global.CURRENTTURNNUMBER.get()-1);
+      Global.GAMECONTEXT.previousTurnNumber();
+//      Global.CURRENTTURNNUMBER.setValue(Global.CURRENTTURNNUMBER.get()-1);
     });
     mPlusTurn.setOnAction(e -> {
-      Global.CURRENTTURNNUMBER.setValue(Global.CURRENTTURNNUMBER.get()+1);
+      Global.GAMECONTEXT.nextTurnNumber();
+//      Global.CURRENTTURNNUMBER.setValue(Global.CURRENTTURNNUMBER.get()+1);
     });
 
     // **** SEND ORDERS
     mSendOrders.setOnAction(event -> {
-      Global.sendOrders();
+      Global.GAMECONTEXT.sendCurrentOrders();
+//      Global.sendOrders();
 //      IJG_Orders orders = JG_Orders.generateOf(Global.CURRENTTURNNUMBER.get(), Global.CURRENTFACTION.get(), Global.CURRENTFACTION_CHANGED.get());
 //      Document doc = XML_Utils.newXMLDocument();
 //      Node root = doc.createElement("root" );
@@ -90,11 +94,12 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
 
     mNextTurn.setOnAction(event -> {
       try {
-        String url = Global.CURRENTSERVER.get() + "/" + Global.CURRENTGAME.get().name() + "/" + Global.CURRENTTURNNUMBER.get() + "?nextTurn&alt=xml";
-        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
-          .PUT(HttpRequest.BodyPublishers.ofString(""))
-          .build();
-        HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
+        Global.GAMECONTEXT.nextTurn();
+//        String url = Global.CURRENTSERVER.get() + "/" + Global.CURRENTGAME.get().name() + "/" + Global.CURRENTTURNNUMBER.get() + "?nextTurn&alt=xml";
+//        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+//          .PUT(HttpRequest.BodyPublishers.ofString(""))
+//          .build();
+//        HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
       } catch (Throwable e) {
         e.printStackTrace();
       }

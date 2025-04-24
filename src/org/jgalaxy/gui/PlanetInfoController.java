@@ -127,7 +127,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
         mGroupsInOrbit.getItems().clear();
         mOtherGroupsInOrbit.getItems().clear();
 //        mFleetNames.getItems().clear();
-        IJG_Faction ownfaction = Global.CURRENTFACTION_CHANGED.get();
+        IJG_Faction ownfaction = Global.GAMECONTEXT.currentFactionChanged();
         if (ownfaction != null) {
           for (EProduceType produceType : EProduceType.values()) {
             if (produceType != EProduceType.PR_SHIP) {
@@ -179,7 +179,7 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
           }
         }
 
-        double vis = mPlanet.visibilityFor( Global.CURRENTGAMECHANGED.get(),Global.CURRENTFACTION_CHANGED.get());
+        double vis = mPlanet.visibilityFor( Global.GAMECONTEXT.currentGameChanged(),Global.GAMECONTEXT.currentFactionChanged());
         if (vis==FLOS_Visibility.VIS_FULL) {
           mPlanetName.setDisable(false);
           mProduce.setDisable(false);

@@ -21,6 +21,7 @@ import org.javelinfx.system.JavelinSystem;
 import org.javelinfx.tree.ITreeEntity;
 import org.javelinfx.tree.STreeView;
 import org.jgalaxy.IEntity;
+import org.jgalaxy.IGameContext;
 import org.jgalaxy.battle.*;
 import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.engine.IJG_Game;
@@ -49,7 +50,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
   private TreeItem mRootOwnPlanets = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
     @Override public String entityType() { return "Planets/Own"; }
-    @Override public String name() { return Global.CURRENTFACTION_CHANGED.get().name(); }
+    @Override public String name() { return Global.GAMECONTEXT.currentFactionChanged().name(); }
   });
   private TreeItem mRootUnknownPlanets = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
@@ -74,7 +75,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
   private TreeItem mRootOwnGroups = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
     @Override public String entityType() { return "Faction"; }
-    @Override public String name() { return Global.CURRENTFACTION_CHANGED.get().name(); }
+    @Override public String name() { return Global.GAMECONTEXT.currentFactionChanged().name(); }
   });
   private TreeItem mRootOwnCargoGroups = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
@@ -87,7 +88,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
   });
   private TreeItem mRootOwnFleets = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
-    @Override public String name() { return Global.CURRENTFACTION_CHANGED.get().name(); }
+    @Override public String name() { return Global.GAMECONTEXT.currentFactionChanged().name(); }
   });
 
   private TreeItem mRootBattles = new TreeItem<>(new IEntity() {
@@ -97,7 +98,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
   });
   private TreeItem mRootOwnBattles = new TreeItem<>(new IEntity() {
     @Override public String id() { return ""; }
-    @Override public String name() { return Global.CURRENTFACTION_CHANGED.get().name(); }
+    @Override public String name() { return Global.GAMECONTEXT.currentFactionChanged().name(); }
   });
 
   private TreeItem mRootFactions = new TreeItem<>(new IEntity() {
@@ -223,7 +224,9 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
 
   public void refresh() {
 
-    mRoot.setValue(Global.CURRENTGAMECHANGED.get());
+    IGameContext gameContext = Global.GAMECONTEXT;
+
+    mRoot.setValue(Global.GAMECONTEXT.currentGameChanged());
 
     // **** Planets
     mRootPlanets.getChildren().clear();
@@ -300,7 +303,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
       }
 
       // **** Battles
-      IJG_Game game = Global.CURRENTGAMECHANGED.get();
+//      IJG_Game game = Global.CURRENTGAMECHANGED.get();
 
       for( IJG_Planet planet : mFaction.planets().planets() ) {
         ISB_BattleReport report = SB_BattleReport.of(mFaction, planet.position() );
@@ -314,7 +317,7 @@ public class ContentTreeController extends JUnitPanelInterface implements Initia
         mRootFactions.getChildren().add(new TreeItem<>(faction));
       }
       // **** TopFactions
-      var topfactions = Global.CURRENTGAME.get().topFactions();
+      var topfactions = gameContext.currentGame().topFactions();
       for(IJG_Faction faction : topfactions) {
         mRootFactionsTop.getChildren().add(new TreeItem<>(faction));
       }
