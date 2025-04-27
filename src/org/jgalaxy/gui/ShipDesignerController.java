@@ -100,8 +100,9 @@ public class ShipDesignerController extends JPanelInterface implements Initializ
 
     SButtons.initButton(mAddDesign, _ -> {
       if (getDesign().mass()>0) {
-        mFaction.addUnitDesign(getDesign());
-        mFaction.newChange();
+        SOrders.addUnitDesign(getDesign());
+//        mFaction.addUnitDesign(getDesign());
+//        mFaction.newChange();
         refresh();
       }
     });

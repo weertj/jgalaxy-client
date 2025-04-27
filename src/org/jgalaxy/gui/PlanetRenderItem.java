@@ -79,9 +79,9 @@ public class PlanetRenderItem extends JavelinUIElement {
     if (pPointer==S_Pointer.POINTER.SECONDARY) {
       IGameContext gameContext = Global.GAMECONTEXT;
       for(IJG_Group group : new ArrayList<>(Global.getSelectedGroups())) {
-        IJG_Faction faction = Global.GAMECONTEXT.currentFactionChanged();
+        IJG_Faction faction = gameContext.currentFactionChanged();
         if (group instanceof IJG_Fleet fleet) {
-          fleet.groups().stream().forEach( g -> sendGroupTo(g, element()));
+          fleet.groups().stream().forEach( g -> SOrders.sendGroup(g, element()));
           faction.newChange();
         } else {
           Integer nr = -1;
@@ -90,12 +90,17 @@ public class PlanetRenderItem extends JavelinUIElement {
           } catch (NumberFormatException e) {
           }
           if (nr>0 && nr.intValue()<group.getNumberOf()) {
-            IJG_Group breakgroup = group.breakOffGroup(gameContext.currentGameChanged(), faction, group.id(), nr);
+            IJG_Group breakgroup;
+            if (gameContext.currentGameChanged().isRealTime()) {
+              breakgroup = group.breakOffGroup(gameContext.currentGameChanged(), faction, null, nr);
+            } else {
+              breakgroup = group.breakOffGroup(gameContext.currentGameChanged(), faction, group.id(), nr);
+            }
             faction.groups().addGroupAlways(breakgroup);
-            sendGroupTo(breakgroup, element());
+            SOrders.sendGroup(breakgroup, element());
             faction.newChange();
           } else {
-            sendGroupTo(group, element());
+            SOrders.sendGroup(group, element());
             faction.newChange();
           }
         }
@@ -104,9 +109,9 @@ public class PlanetRenderItem extends JavelinUIElement {
     return;
   }
 
-  private void sendGroupTo( IJG_Group pGroup, IJG_Planet pPlanet ) {
-    pGroup.setTo(pPlanet.id());
-    return;
-  }
+//  private void sendGroupTo( IJG_Group pGroup, IJG_Planet pPlanet ) {
+//    pGroup.setTo(pPlanet.id());
+//    return;
+//  }
 
 }

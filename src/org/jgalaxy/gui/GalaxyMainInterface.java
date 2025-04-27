@@ -72,8 +72,12 @@ public class GalaxyMainInterface extends JMainInterface {
 
   private final ChangeListener<Number> mFactionChanged = (observable, oldValue, newValue) -> {
 //    Global.sendOrders();
-    Global.GAMECONTEXT.sendCurrentOrders();
-    refresh();
+    if (Global.GAMECONTEXT.currentGameChanged().isRealTime()) {
+      update();
+    } else {
+      Global.GAMECONTEXT.sendCurrentOrders();
+      refresh();
+    }
     return;
   };
 
@@ -88,7 +92,7 @@ public class GalaxyMainInterface extends JMainInterface {
    */
   private void canvasCallback() {
     if (Global.AUTOTURNLOAD.get()) {
-      if ((System.currentTimeMillis()-Global.LASTTURNCHECK)>1000) {
+      if ((System.currentTimeMillis()-Global.LASTTURNCHECK)>100) {
         try {
           IGameContext context = Global.GAMECONTEXT;
           context.loadGameInfo();
@@ -111,6 +115,16 @@ public class GalaxyMainInterface extends JMainInterface {
       }
     }
     return;
+  }
+
+  protected FleetInfoController loadControlFleetUI() {
+    try { // **** FleetInfo
+      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/FleetInfo.fxml", null);
+      return (FleetInfoController)FXMLLoad.controller(contents);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   @Override
@@ -236,14 +250,12 @@ public class GalaxyMainInterface extends JMainInterface {
       e.printStackTrace();
     }
 
-    try { // **** FleetInfo
-      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/FleetInfo.fxml", null);
-      mFleetInfoController = (FleetInfoController)FXMLLoad.controller(contents);
-      mFleetTab.setContent(mFleetInfoController.rootPane());
-      S_Pane.setAnchors( mFleetInfoController.rootPane(), 0.0, 0.0, 0.0, 0.0);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    // **** FleetInfo
+    mFleetInfoController = loadControlFleetUI();
+//      var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/FleetInfo.fxml", null);
+//      mFleetInfoController = (FleetInfoController)FXMLLoad.controller(contents);
+    mFleetTab.setContent(mFleetInfoController.rootPane());
+    S_Pane.setAnchors( mFleetInfoController.rootPane(), 0.0, 0.0, 0.0, 0.0);
 
     try { // **** BattleReport
       var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/BattleReport.fxml", null);
@@ -625,9 +637,18 @@ public class GalaxyMainInterface extends JMainInterface {
     return;
   }
 
+  private void update() {
+    mTurnInfoController.refresh();
+    mPlanetInfoController.update();
+    addRenderItems( Global.GAMECONTEXT.currentFactionChanged() );
+    return;
+  }
+
   private void refresh() {
+    mTurnInfoController.refresh();
     mContentTreeController.refresh();
     mPlanetInfoController.refresh();
+    mGroupInfoController.refresh();
     addRenderItems( Global.GAMECONTEXT.currentFactionChanged() );
     return;
   }

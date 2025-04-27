@@ -52,34 +52,32 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
 
     mRootPane.setBackground(new Background(
       new BackgroundFill(Effects.createBackground(Colors.planetUIColor().darker(),false), new CornerRadii(10.0,false), null )));
-    mProduce.valueProperty().addListener((observable, oldValue, newValue) -> {
+    mProduce.valueProperty().addListener((_, _, newValue) -> {
       if (mInRefresh) return;
-      if (Objects.equals(newValue,EProduceType.PR_CAP.order())) {
-        mPlanet.setProduceType(EProduceType.PR_CAP, null);
-      } else if (Objects.equals(newValue,EProduceType.PR_MAT.order())) {
-        mPlanet.setProduceType(EProduceType.PR_MAT, null);
-      } else if (Objects.equals(newValue,EProduceType.PR_DRIVE.order())) {
-        mPlanet.setProduceType(EProduceType.PR_DRIVE, null);
-      } else if (Objects.equals(newValue,EProduceType.PR_WEAPONS.order())) {
-        mPlanet.setProduceType(EProduceType.PR_WEAPONS, null);
-      } else if (Objects.equals(newValue,EProduceType.PR_SHIELDS.order())) {
-        mPlanet.setProduceType(EProduceType.PR_SHIELDS, null);
-      } else if (Objects.equals(newValue,EProduceType.PR_CARGO.order())) {
-        mPlanet.setProduceType(EProduceType.PR_CARGO, null);
-      } else {
-        mPlanet.setProduceType(EProduceType.PR_SHIP,newValue);
-      }
-      mFaction.newChange();
+      SOrders.setPlanetProduction(mPlanet,newValue);
+//      if (Objects.equals(newValue,EProduceType.PR_CAP.order())) {
+//        mPlanet.setProduceType(EProduceType.PR_CAP, null);
+//      } else if (Objects.equals(newValue,EProduceType.PR_MAT.order())) {
+//        mPlanet.setProduceType(EProduceType.PR_MAT, null);
+//      } else if (Objects.equals(newValue,EProduceType.PR_DRIVE.order())) {
+//        mPlanet.setProduceType(EProduceType.PR_DRIVE, null);
+//      } else if (Objects.equals(newValue,EProduceType.PR_WEAPONS.order())) {
+//        mPlanet.setProduceType(EProduceType.PR_WEAPONS, null);
+//      } else if (Objects.equals(newValue,EProduceType.PR_SHIELDS.order())) {
+//        mPlanet.setProduceType(EProduceType.PR_SHIELDS, null);
+//      } else if (Objects.equals(newValue,EProduceType.PR_CARGO.order())) {
+//        mPlanet.setProduceType(EProduceType.PR_CARGO, null);
+//      } else {
+//        mPlanet.setProduceType(EProduceType.PR_SHIP,newValue);
+//      }
+//      mFaction.newChange();
     });
     mGroupsInOrbit.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     mGroupsInOrbit.getSelectionModel().getSelectedItems().addListener( (ListChangeListener)c -> {
       Global.getSelectedGroups().clear();
       Global.getSelectedGroups().addAll(mGroupsInOrbit.getSelectionModel().getSelectedItems());
     });
-    mPlanetName.setOnAction( e -> {
-      mPlanet.setName(mPlanetName.getText());
-      mFaction.newChange();
-    });
+    mPlanetName.setOnAction( e -> SOrders.renamePlanet( mPlanet, mPlanetName.getText() ));
 
     mOtherGroupsInOrbit.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     mOtherGroupsInOrbit.getSelectionModel().getSelectedItems().addListener( (ListChangeListener)c -> {
@@ -99,29 +97,72 @@ public class PlanetInfoController extends JUnitPanelInterface implements Initial
     return mRootPane;
   }
 
+  @Override
+  public void update() {
+    if (mPlanet==null) {
+      mPopulation.setText("");
+      mCol.setText("");
+      mCap.setText("");
+      mMat.setText("");
+      mInd.setText("");
+    } else {
+      Effects.setValueDouble02(mPopulation, mPlanet.population());
+      Effects.setValueDouble02(mCol, mPlanet.cols());
+      Effects.setValueDouble02(mCap, mPlanet.capitals());
+      Effects.setValueDouble02(mMat, mPlanet.materials());
+      Effects.setValueDouble02(mInd, mPlanet.industry());
+
+//      if (mPlanet.produceUnitDesign() == null) {
+//        if (mPlanet.produceType() == null) {
+//        } else {
+//          mProduce.setValue(mPlanet.produceType().order());
+//        }
+//        mProduceProgress.setText("");
+//      } else {
+//        if (mFaction!=null) {
+//          IJG_UnitDesign design = mFaction.getUnitDesignById(mPlanet.produceUnitDesign());
+//          if (design==null) {
+//            if (mPlanet.produceType()==null) {
+//              mProduce.setValue(null);
+//              mProduceProgress.setText("-%");
+//            } else {
+//              mProduce.setValue(mPlanet.produceType().order());
+//            }
+//          } else {
+//            mProduce.setValue(design.name());
+//            mProduceProgress.setText("" + GEN_Math.round02(mPlanet.inProgress() / (design.mass() / Global.INDPERSHIP)) + "%");
+//          }
+//        }
+//      }
+
+    }
+    return;
+  }
+
   /**
    * refresh
    */
   public void refresh() {
     try {
       mInRefresh = true;
+      update();
       if (mPlanet == null) {
         mPlanetName.setText("");
         mSize.setText("");
-        mPopulation.setText("");
-        mCol.setText("");
-        mCap.setText("");
-        mMat.setText("");
-        mInd.setText("");
+//        mPopulation.setText("");
+//        mCol.setText("");
+//        mCap.setText("");
+//        mMat.setText("");
+//        mInd.setText("");
       } else {
         mPlanetName.setText(mPlanet.name());
         Effects.setValueDouble02(mSize,mPlanet.size());
         Effects.setValueDouble02(mResource, mPlanet.resources());
-        Effects.setValueDouble02(mPopulation,mPlanet.population());
-        Effects.setValueDouble02(mCol,mPlanet.cols());
-        Effects.setValueDouble02(mCap,mPlanet.capitals());
-        Effects.setValueDouble02(mMat,mPlanet.materials());
-        Effects.setValueDouble02(mInd,mPlanet.industry());
+//        Effects.setValueDouble02(mPopulation,mPlanet.population());
+//        Effects.setValueDouble02(mCol,mPlanet.cols());
+//        Effects.setValueDouble02(mCap,mPlanet.capitals());
+//        Effects.setValueDouble02(mMat,mPlanet.materials());
+//        Effects.setValueDouble02(mInd,mPlanet.industry());
         mProduce.getItems().clear();
 
         mGroupsInOrbit.getItems().clear();

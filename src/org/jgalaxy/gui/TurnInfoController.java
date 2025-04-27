@@ -7,7 +7,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import org.javelinfx.buttons.SButtons;
 import org.javelinfx.engine.JUnitPanelInterface;
+import org.javelinfx.time.TIM_Time;
 import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.engine.IJG_Game;
 import org.jgalaxy.engine.IJG_GameInfo;
@@ -35,6 +37,8 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
   @FXML private Button            mPlusTurn;
   @FXML private Button            mSendOrders;
   @FXML private Button            mNextTurn;
+  @FXML private Button            mSave;
+  @FXML private Label             mTime;
 
   @FXML private CheckBox          mAILoadTurn;
 
@@ -53,6 +57,11 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
     Global.GAMECONTEXT.turnNumberProperty().addListener((observable, oldValue, newValue) -> {
       mTurnNumber.setText(newValue.toString());
     });
+
+    SButtons.initButton( mSave, _ -> {
+      Global.GAMECONTEXT.currentGameChanged().storeObject(Global.GAMECONTEXT.currentGameInfo().getGameDir(),null,null,"");
+    });
+
     mMinTurn.setOnAction(e -> {
       Global.GAMECONTEXT.previousTurnNumber();
 //      Global.CURRENTTURNNUMBER.setValue(Global.CURRENTTURNNUMBER.get()-1);
@@ -134,8 +143,13 @@ public class TurnInfoController extends JUnitPanelInterface implements Initializ
 
   public void refresh() {
 //    Global.CURRENTTURNNUMBER.setValue(Global.CURRENTGAMEINFO.get().currentTurnNumber());
+    update();
     return;
   }
 
-
+  @Override
+  public void update() {
+    mTime.setText(TIM_Time.of(Global.GAMECONTEXT.currentGameChanged().UTCTime()).toISO8601());
+    return;
+  }
 }

@@ -97,6 +97,8 @@ public class Colors {
 
 //  String factionid = Global.CURRENTFACTION_CHANGED.get().id();
 
+  static final public Color LABEL_VALUE_VALUE = SColors.MISTED_MARIGOLD;
+
   static final public Color MAPBG           = Color.web( "#333333" );
   static final public Color MAPLINE         = Color.web( "#999999" );
 

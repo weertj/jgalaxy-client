@@ -69,6 +69,7 @@ public class FleetInfoController extends JUnitPanelInterface implements Initiali
       mGeneralPane.setVisible(false);
       return;
     }
+    mGeneralPane.setVisible(true);
 
     if (mFaction!=null) {
       mHoverPlanet = mFaction.planets().findPlanetByPosition(mFleet.position());

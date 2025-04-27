@@ -89,8 +89,11 @@ public class UnitRenderItem extends JavelinUIElement {
       }
       if (pCanvas.getPixelZoom()>0.1) {
         gc.setFill(mainCol);
-        gc.setStroke(mainCol);
         renderText(gc, "MapUnitDataFont", outline.getX() + outline.getWidth(), outline.getY() + outline.getHeight(), group.name());
+      }
+      if (pCanvas.getPixelZoom()>2) {
+        gc.setFill(Colors.LABEL_VALUE_VALUE);
+        renderText(gc, "MapUnitDataFont", outline.getX() + outline.getWidth(), outline.getY(), group.getNumberOf() + "x");
       }
     }
     return;

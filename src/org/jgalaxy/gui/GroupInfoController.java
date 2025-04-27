@@ -152,7 +152,8 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
     });
 
     SButtons.initButton(mUnloadButton,  _ -> {
-      SJG_LoadOrder.unloadOrder( Global.GAMECONTEXT.currentGameChanged(), mGroup, mHoverPlanet, 999999.0 );
+//      SJG_LoadOrder.unloadOrder( Global.GAMECONTEXT.currentGameChanged(), mGroup, mHoverPlanet, 999999.0 );
+      SOrders.unloadOrder( Global.GAMECONTEXT.currentGameChanged(), mGroup, mHoverPlanet, 999999.0 );
       mFaction.newChange();
       refresh();
       return;
