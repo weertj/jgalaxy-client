@@ -92,7 +92,7 @@ public class GalaxyMainInterface extends JMainInterface {
    */
   private void canvasCallback() {
     if (Global.AUTOTURNLOAD.get()) {
-      if ((System.currentTimeMillis()-Global.LASTTURNCHECK)>100) {
+      if ((System.currentTimeMillis()-Global.LASTTURNCHECK)>10000) {
         try {
           IGameContext context = Global.GAMECONTEXT;
           context.loadGameInfo();
