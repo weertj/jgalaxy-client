@@ -3,12 +3,14 @@ package org.jgalaxy.gui;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Side;
+import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.IJavelinUIElement;
 import org.javelinfx.engine.JMainInterface;
@@ -18,6 +20,7 @@ import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.player.JL_PlayerContext;
 import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.spatial.SP_Position;
+import org.javelinfx.system.JavelinSystem;
 import org.javelinfx.window.S_Pane;
 import org.jgalaxy.GameContext;
 import org.jgalaxy.IEntity;
@@ -143,18 +146,6 @@ public class GalaxyMainInterface extends JMainInterface {
     );
     IGameContext context = Global.GAMECONTEXT;
 
-    context.loadGameInfo();
-    context.loadBanners();
-
-//    Global.CURRENTUSERNAME.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("username", ""));
-//    Global.CURRENTPASSWORD.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("password", ""));
-//    Global.CURRENTSERVER.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("server", ""));
-//    Global.CURRENTGAMEID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("game", ""));
-//    Global.CURRENTPLAYERID.setValue(startJavelin.PARAMETERS.getNamed().getOrDefault("player", ""));
-
-//    loadGameInfo(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get());
-//    loadBanners(Global.CURRENTSERVER.get(), Global.CURRENTGAMEID.get());
-
     mCanvas = GalaxyCanvas.of();
     mCanvas.addCanvasRunnable( () -> canvasCallback() );
     add( mCanvas );
@@ -170,11 +161,6 @@ public class GalaxyMainInterface extends JMainInterface {
     mainPane().getChildren().add( mCanvas.canvas() );
 
     mTabControlPane = new TabPane();
-//    mTabControlPane.getSelectionModel().selectedItemProperty().addListener((_,_, newValue) -> {
-//      if (newValue==mPlanetTab) {
-//        refresh();
-//      }
-//    });
     mTabControlPane.setSide(Side.TOP);
     mainPane().getChildren().add(mTabControlPane);
     mTabControlPane.setPrefWidth(220);
@@ -304,124 +290,46 @@ public class GalaxyMainInterface extends JMainInterface {
     });
 
 //    Global.CURRENTTURNNUMBER.setValue(Global.GAMECONTEXT.currentGameInfo().currentTurnNumber());
-    context.setTurnNumber( "" + context.currentGameInfo().currentTurnNumber());
+//    context.loadGameInfo();
+//    context.loadBanners();
+//    context.setTurnNumber( "" + context.currentGameInfo().currentTurnNumber());
+//    setUIFaction(context.currentFactionChanged());
 
-    setUIFaction(Global.GAMECONTEXT.currentFactionChanged());
+    if (context.gameName().isBlank()) {
+      try { // **** Load game
+        var contents = FXMLLoad.of().load(getClass().getClassLoader(), "/org/jgalaxy/gui/SelectGame.fxml", null);
+        SelectGameController controller = (SelectGameController)FXMLLoad.controller(contents);
+        Stage stage = new Stage();
+        stage.setTitle("Select Game");
+        Scene scene = new Scene(controller.rootPane());
+        scene.getStylesheets().add(JavelinSystem.stylesheet().file().toURI().toString());
+        stage.setScene(scene);
+        stage.setAlwaysOnTop(true);
+        controller.setThisStage(stage);
+        controller.setSelectGameRunnable( () -> {
+          loadNewGame();
+        });
+        stage.show();
+        controller.refresh();
+      } catch (Throwable t) {
+        t.printStackTrace();
+      }
+
+    } else {
+      loadNewGame();
+    }
 
     return;
   }
 
-//  private void loadBanners(String pURL, String pGameName) {
-//    Global.BANNERS.clear();
-//    for( String faction : Global.CURRENTGAMEINFO.get().factions()) {
-//      Image banner = loadBanner(pURL, pGameName, faction);
-//      if (banner!=null) {
-//        Global.BANNERS.put(faction, banner);
-//      }
-//    }
-//    return;
-//  }
-//
-//  private Image loadBanner(String pURL, String pGameName, String pFaction) {
-//    String url = pURL;
-//    url += "/" + pGameName + "/banners/" + pFaction + ".png";
-//    HttpRequest request = HttpRequest.newBuilder(URI.create(url))
-//      .GET()
-//      .build();
-//    try {
-//      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofByteArray() );
-//      if (response.statusCode()==200) {
-//        var bais = new ByteArrayInputStream((byte[]) response.body());
-//        return new Image(bais);
-//      }
-//    } catch (Throwable e) {
-//      e.printStackTrace();
-//    }
-//    return null;
-//  }
-
-//  private IJG_GameInfo loadGameInfo(String pURL, String pGameName) {
-//    IJG_GameInfo gameinfo = null;
-//    String url = pURL;
-//    url += "/" + pGameName;
-//    HttpRequest request = HttpRequest.newBuilder(URI.create(url+ "?alt=xml"))
-//      .GET()
-//      .build();
-//    Node root;
-//    try {
-//      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
-//      String result = response.body().toString();
-//      root = XML_Utils.rootNodeBy(result);
-//      gameinfo = JG_GameInfo.of( XML_Utils.childNodeByPath(root,"game").get());
-//      Global.CURRENTGAMEINFO.set( gameinfo );
-//    } catch (Throwable e) {
-//      e.printStackTrace();
-//    }
-//    return gameinfo;
-//  }
-
-//  private IJG_Faction loadPlayer( String pURL, String pGameName, String pPlayerName, int pTurnNumber ) {
-////    IJG_GameInfo gameinfo = null;
-//    String url = pURL;
-//    url += "/" + pGameName;
-//    if (Global.CURRENTGAMECHANGED.get()!=null && Global.CURRENTGAMECHANGED.get().isRealTime()) {
-//      url += "/current";
-//    } else {
-//      url += "/" + pTurnNumber;
-//    }
-//
-//    HttpRequest request = HttpRequest.newBuilder(URI.create(url + "?alt=xml"))
-//      .GET()
-//      .build();
-//    Node root = null;
-//    IJG_Game game = null;
-//    IJG_Game gamechanged = null;
-//    try {
-//      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
-//      String result = response.body().toString();
-//      root = XML_Utils.rootNodeBy(result);
-//      game = JG_Game.of( null, root, pTurnNumber);
-//      Global.CURRENTGAME.set( game );
-//      gamechanged = JG_Game.of( null, root, pTurnNumber);
-//      Global.CURRENTGAMECHANGED.set( gamechanged );
-//    } catch (Throwable e) {
-//      e.printStackTrace();
-//    }
-//
-//    IJG_Player player = game.getPlayerByID(pPlayerName);
-//    Global.CURRENTPLAYER.set( player );
-//    IJG_Player playerchanged = gamechanged.getPlayerByID(pPlayerName);
-//    Global.CURRENTPLAYERCHANGED.set( playerchanged );
-//
-//    url += "/" + player.id() + "/" + player.factions().getFirst().id();
-//
-//    request = HttpRequest.newBuilder(URI.create(url + "?alt=xml"))
-//      .GET()
-//      .build();
-//    root = null;
-//    try {
-//      HttpResponse response = SimpleClient.createClient(Global.CURRENTUSERNAME.get(), Global.CURRENTPASSWORD.get()).send(request, HttpResponse.BodyHandlers.ofString() );
-//      String result = response.body().toString();
-//      root = XML_Utils.rootNodeBy(result);
-//    } catch (Throwable e) {
-//      e.printStackTrace();
-//    }
-//    IJG_Faction faction = JG_Faction.of(game,XML_Utils.childNodeByPath(root,"faction").orElse(null));
-//    if (Global.CURRENTFACTION.get() != null) {
-//      Global.CURRENTFACTION.get().close();
-//    }
-//    Global.CURRENTFACTION.set( faction );
-//    IJG_Faction factionchanged = JG_Faction.of(gamechanged,XML_Utils.childNodeByPath(root,"faction").orElse(null));
-//    if (Global.CURRENTFACTION_CHANGED.get() != null) {
-//      Global.CURRENTFACTION_CHANGED.get().changeCounterProperty().removeListener(mFactionChanged);
-//      Global.CURRENTFACTION_CHANGED.get().close();
-//    }
-//    Global.CURRENTFACTION_CHANGED.set( factionchanged );
-//
-//    factionchanged.changeCounterProperty().addListener(mFactionChanged);
-//
-//    return factionchanged;
-//  }
+  private void loadNewGame() {
+    IGameContext context = Global.GAMECONTEXT;
+    context.loadGameInfo();
+    context.loadBanners();
+    context.setTurnNumber( "" + context.currentGameInfo().currentTurnNumber());
+    setUIFaction(context.currentFactionChanged());
+    return;
+  }
 
   private void setUIFaction(IJG_Faction pFaction) {
     mPlanetInfoController.setFaction(pFaction);

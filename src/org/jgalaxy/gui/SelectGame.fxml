@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane fx:id="mRootPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.SelectGameController">
+   <children>
+      <TableView fx:id="mGameList" layoutX="32.0" layoutY="46.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="64.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="32.0">
+        <columns>
+          <TableColumn fx:id="mGameNameColumn" prefWidth="75.0" text="Name" />
+          <TableColumn fx:id="mGameTurnColumn" prefWidth="75.0" text="Turn" />
+        </columns>
+      </TableView>
+      <Button fx:id="mSelectButton" layoutX="515.0" layoutY="353.0" mnemonicParsing="false" text="SELECT" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="16.0" />
+   </children>
+</AnchorPane>
