@@ -2,9 +2,8 @@ package org.jgalaxy.gui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -31,9 +30,15 @@ public class FleetInfoController extends JUnitPanelInterface implements Initiali
 
   @FXML private AnchorPane  mGeneralPane;
 
+  @FXML private TableView<IJG_Group> mGroupTable;
+  @FXML private TableColumn<IJG_Group,Integer> mNrColumn;
+  @FXML private TableColumn<IJG_Group,String> mGroupNameColumn;
+  @FXML private TableColumn<IJG_Group,String> mDesignColumn;
+
   @FXML private AnchorPane  mNewFleetPane;
   @FXML private TextField   mNewFleetName;
   @FXML private Button      mCreateNewFleet;
+  @FXML private Button      mRemoveFromFleet;
 
   private IJG_Faction mFaction;
   private IJG_Fleet   mFleet;
@@ -42,16 +47,29 @@ public class FleetInfoController extends JUnitPanelInterface implements Initiali
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+
+    mNrColumn.setCellValueFactory( new PropertyValueFactory<>("numberOf"));
+    mGroupNameColumn.setCellValueFactory( new PropertyValueFactory<>("name"));
+    mDesignColumn.setCellValueFactory( new PropertyValueFactory<>("unitDesign"));
+
+    mGroupTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
     mRootPane.setBackground(new Background(
       new BackgroundFill(Effects.createBackground(Colors.fleetUIColor().darker(),false), new CornerRadii(10.0,false), null )));
 
     mCreateNewFleet.disableProperty().bind(mNewFleetName.textProperty().isEmpty());
     SButtons.initButton(mCreateNewFleet, event -> {
-      mFaction.groups().addFleet( mNewFleetName.getText(), mNewFleetName.getText() );
-      mFaction.newChange();
+      Global.GAMECONTEXT.currentFactionChanged().groups().addFleet( mNewFleetName.getText(), mNewFleetName.getText() );
+      Global.GAMECONTEXT.currentFactionChanged().newChange();
       return;
     });
-
+    mRemoveFromFleet.disableProperty().bind(mGroupTable.getSelectionModel().selectedItemProperty().isNull() );
+    SButtons.initButton(mRemoveFromFleet, event -> {
+      for( IJG_Group group : mGroupTable.getSelectionModel().getSelectedItems()) {
+        group.setFleet(null);
+      }
+      Global.GAMECONTEXT.currentFactionChanged().newChange();
+    });
     return;
   }
 
@@ -83,11 +101,19 @@ public class FleetInfoController extends JUnitPanelInterface implements Initiali
       mInRefresh = false;
     }
 
+    mGroupTable.getItems().clear();
+    mGroupTable.getItems().addAll(mFleet.groups());
+
     return;
   }
 
   public void setFleet(IJG_Fleet pFleet) {
     mFleet = pFleet;
+    if (mFleet==null) {
+      mFaction = null;
+    } else {
+      mFaction = Global.GAMECONTEXT.currentFactionChanged().resolveFactionById( mFleet.faction());
+    }
     refresh();
     return;
   }

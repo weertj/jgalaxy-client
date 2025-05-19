@@ -44,7 +44,7 @@ public class Global {
 
 //  static final public Map<String, Image> BANNERS = new HashMap<String, Image>();
 
-  static final public BooleanProperty AUTOTURNLOAD = new SimpleBooleanProperty(false);
+  static final public BooleanProperty AUTOTURNLOAD = new SimpleBooleanProperty(true);
 
 //  static final public StringProperty CURRENTUSERNAME = new SimpleStringProperty("");
 //  static final public StringProperty CURRENTPASSWORD = new SimpleStringProperty("");

@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="mRootPane" prefHeight="589.0" prefWidth="637.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.ShipDesignerController">
+<AnchorPane fx:id="mRootPane" prefHeight="589.0" prefWidth="637.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.ShipDesignerController">
    <children>
       <AnchorPane layoutX="46.0" prefHeight="392.0" prefWidth="519.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -28,32 +28,34 @@
                   <TextField fx:id="mDrive" alignment="CENTER" layoutX="84.0" layoutY="18.0" prefHeight="26.0" prefWidth="50.0" text="0.0" />
                   <Label layoutX="14.0" layoutY="48.0" styleClass="label-main" text="WEAPONS" />
                   <TextField fx:id="mWeapons" alignment="CENTER" layoutX="84.0" layoutY="44.0" prefHeight="26.0" prefWidth="50.0" text="0.0" />
-                  <Label layoutX="143.0" layoutY="49.0" styleClass="label-main" text="Nr" />
-                  <TextField fx:id="mWeaponsNr" alignment="CENTER" layoutX="167.0" layoutY="45.0" prefHeight="26.0" prefWidth="49.0" text="0" />
+                  <TextField fx:id="mWeaponsNr" alignment="CENTER" layoutX="150.0" layoutY="44.0" prefHeight="26.0" prefWidth="49.0" text="0" />
                   <Label layoutX="16.0" layoutY="74.0" styleClass="label-main" text="SHIELDS" />
                   <TextField fx:id="mShields" alignment="CENTER" layoutX="84.0" layoutY="70.0" prefHeight="26.0" prefWidth="50.0" text="0.0" />
                   <Label layoutX="17.0" layoutY="100.0" styleClass="label-main" text="CARGO" />
                   <TextField fx:id="mCargo" alignment="CENTER" layoutX="84.0" layoutY="96.0" prefHeight="26.0" prefWidth="50.0" text="0.0" />
                   <Button fx:id="mAddDesign" layoutX="75.0" layoutY="130.0" mnemonicParsing="false" text="ADD DESIGN" />
+                  <Label layoutX="138.0" layoutY="49.0" styleClass="label-main" text="x" />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="45.0" layoutY="105.0" prefHeight="157.0" prefWidth="211.0" style="-fx-background-color: #ffffff08;">
                <children>
                   <Label layoutX="8.0" layoutY="8.0" styleClass="label-value" text="Mass:" />
-                  <Label fx:id="mMass" layoutX="60.0" layoutY="8.0" styleClass="label-value-value" text="-" />
+                  <Label fx:id="mMass" layoutX="70.0" layoutY="8.0" styleClass="label-value-value" text="-" />
                   <Label layoutX="8.0" layoutY="24.0" styleClass="label-value" text="Speed:" />
-                  <Label fx:id="mSpeed" layoutX="60.0" layoutY="24.0" styleClass="label-value-value" text="-" />
-                  <Label layoutX="8.0" layoutY="40.0" styleClass="label-value" text="Shields:" />
-                  <Label fx:id="mShieldsValue" layoutX="60.0" layoutY="40.0" styleClass="label-value-value" text="-" />
+                  <Label fx:id="mSpeed" layoutX="70.0" layoutY="24.0" styleClass="label-value-value" text="-" />
+                  <Label layoutX="8.0" layoutY="54.0" styleClass="label-value" text="Shields:" />
+                  <Label fx:id="mShieldsValue" layoutX="70.0" layoutY="54.0" styleClass="label-value-value" text="-" />
                   <Label layoutX="8.0" layoutY="96.0" styleClass="label-value" text="Resistant against:" />
                   <Label fx:id="mResistant" layoutX="113.0" layoutY="96.0" styleClass="label-value-value" text="-" />
                   <Label disable="true" layoutX="8.0" layoutY="126.0" styleClass="label-value" text="Kill chance" />
                   <Label fx:id="mKillChance" disable="true" layoutX="75.0" layoutY="126.0" styleClass="label-value-value" text="-" />
                   <TextField fx:id="mAgainstWeapon" alignment="CENTER" disable="true" layoutX="106.0" layoutY="122.0" prefHeight="26.0" prefWidth="50.0" text="0.0" />
-                  <Label layoutX="8.0" layoutY="56.0" styleClass="label-value" text="Cargo:" />
-                  <Label fx:id="mCargoValue" layoutX="60.0" layoutY="56.0" styleClass="label-value-value" text="-" />
-                  <Label layoutX="93.0" layoutY="24.0" styleClass="label-value" text="Loaded:" />
-                  <Label fx:id="mSpeedLoaded" layoutX="147.0" layoutY="24.0" styleClass="label-value-value" text="-" />
+                  <Label layoutX="8.0" layoutY="70.0" styleClass="label-value" text="Cargo:" />
+                  <Label fx:id="mCargoValue" layoutX="70.0" layoutY="70.0" styleClass="label-value-value" text="-" />
+                  <Label layoutX="117.0" layoutY="24.0" styleClass="label-value" text="Loaded:" />
+                  <Label fx:id="mSpeedLoaded" layoutX="168.0" layoutY="24.0" styleClass="label-value-value" text="-" />
+                  <Label layoutX="8.0" layoutY="39.0" styleClass="label-value" text="Weapons:" />
+                  <Label fx:id="mWeaponsValue" layoutX="70.0" layoutY="42.0" styleClass="label-value-value" text="-" />
                </children>
             </AnchorPane>
             <Button fx:id="mCloseButton" layoutX="563.0" layoutY="550.0" mnemonicParsing="false" text="CLOSE" />

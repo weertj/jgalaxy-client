@@ -26,7 +26,7 @@ public class Colors {
   }
 
   static public Color factionUIColor() {
-    return SColors.DAMSON;
+    return SColors.MOCHA_MOUSSE;
   }
 
   static public Color groupUIColor() {

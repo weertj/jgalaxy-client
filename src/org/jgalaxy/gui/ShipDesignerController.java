@@ -8,6 +8,8 @@ import org.javelinfx.buttons.SButtons;
 import org.javelinfx.convert.DoubleConvert;
 import org.javelinfx.convert.IntegerConvert;
 import org.javelinfx.engine.JPanelInterface;
+import org.javelinfx.textfield.SNumberField;
+import org.javelinfx.textfield.STextField;
 import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.units.IJG_UnitDesign;
 import org.jgalaxy.units.JG_UnitDesign;
@@ -35,6 +37,7 @@ public class ShipDesignerController extends JPanelInterface implements Initializ
   @FXML private Label mMass;
   @FXML private Label mSpeed;
   @FXML private Label mSpeedLoaded;
+  @FXML private Label mWeaponsValue;
   @FXML private Label mShieldsValue;
   @FXML private Label mCargoValue;
   @FXML private Label mResistant;
@@ -61,33 +64,21 @@ public class ShipDesignerController extends JPanelInterface implements Initializ
    */
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    UnaryOperator<TextFormatter.Change> doubleFilter = change -> {
-      String newText = change.getControlNewText();
-      if (newText.matches("\\d*(\\.\\d*)?")) {
-        return change;
-      }
-      return null;
-    };
-    UnaryOperator<TextFormatter.Change> integerFilter = change -> {
-      String newText = change.getControlNewText();
-      if (newText.matches("\\d*")) {
-        return change;
-      }
-      return null;
-    };
-    mDrive.setTextFormatter(new TextFormatter<>(doubleFilter));
-    mDrive.setOnKeyTyped( _ -> refreshUnitDesign());
-    mWeapons.setTextFormatter(new TextFormatter<>(doubleFilter));
-    mWeapons.setOnKeyTyped( _ -> refreshUnitDesign());
-    mWeaponsNr.setTextFormatter(new TextFormatter<>(integerFilter));
-    mWeaponsNr.setOnKeyTyped( _ -> refreshUnitDesign());
-    mShields.setTextFormatter(new TextFormatter<>(doubleFilter));
-    mShields.setOnKeyTyped( _ -> refreshUnitDesign());
-    mCargo.setTextFormatter(new TextFormatter<>(doubleFilter));
-    mCargo.setOnKeyTyped( _ -> refreshUnitDesign());
 
-    mAgainstWeapon.setTextFormatter(new TextFormatter<>(doubleFilter));
-    mAgainstWeapon.setOnKeyTyped( _ -> refreshUnitDesign());
+    STextField.initTextField(mDesignName, this::update );
+    SNumberField.makeTextfieldPositiveDoubleOnly(mDrive);
+    STextField.initTextField(mDrive, this::update );
+    SNumberField.makeTextfieldPositiveDoubleOnly(mWeapons);
+    STextField.initTextField(mWeapons, this::update );
+    SNumberField.makeTextfieldPositiveIntegerOnly(mWeaponsNr);
+    STextField.initTextField(mWeaponsNr, this::update );
+    SNumberField.makeTextfieldPositiveDoubleOnly(mShields);
+    STextField.initTextField(mShields, this::update );
+    SNumberField.makeTextfieldPositiveDoubleOnly(mCargo);
+    STextField.initTextField(mCargo, this::update );
+
+    SNumberField.makeTextfieldPositiveDoubleOnly(mAgainstWeapon);
+    STextField.initTextField(mAgainstWeapon, this::update );
 
     mOurDesigns.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> {
       setDesign(newValue);
@@ -119,12 +110,15 @@ public class ShipDesignerController extends JPanelInterface implements Initializ
   }
 
   private void setDesign( IJG_UnitDesign pDesign) {
-    mDesignName.setText(pDesign.name());
-    Effects.setValueDouble02(mDrive,pDesign.drive());
-    Effects.setValueDouble02(mWeapons,pDesign.weapons());
-    Effects.setValueInteger(mWeaponsNr, pDesign.nrweapons());
-    Effects.setValueDouble02(mShields,pDesign.shields());
-    Effects.setValueDouble02(mCargo,pDesign.cargo());
+    if (pDesign!=null) {
+      mDesignName.setText(pDesign.name());
+      Effects.setValueDouble02(mDrive, pDesign.drive());
+      Effects.setValueDouble02(mWeapons, pDesign.weapons());
+      Effects.setValueInteger(mWeaponsNr, pDesign.nrweapons());
+      Effects.setValueDouble02(mShields, pDesign.shields());
+      Effects.setValueDouble02(mCargo, pDesign.cargo());
+    }
+    update();
     return;
   }
 
@@ -145,10 +139,40 @@ public class ShipDesignerController extends JPanelInterface implements Initializ
     Effects.setValue(mMass, unitDesign.mass());
     Effects.setValue(mSpeed, unitDesign.speed(mFaction.tech(),0));
     Effects.setValue(mSpeedLoaded, unitDesign.speed(mFaction.tech(),unitDesign.canCarry(mFaction.tech())));
+    Effects.setValue(mWeaponsValue, unitDesign.effectiveWeapon(mFaction.tech()));
     Effects.setValue(mShieldsValue, unitDesign.effectiveShield(mFaction.tech()));
     Effects.setValue(mCargoValue, unitDesign.canCarry(mFaction.tech()));
 
     Effects.setValue( mKillChance, JG_UnitDesign.killChance( Double.parseDouble(mAgainstWeapon.getText()), unitDesign.effectiveShield(mFaction.tech()) ) );
+
+    return;
+  }
+
+  public void update() {
+    refreshUnitDesign();
+
+    String designName = mDesignName.getText();
+    if (designName.isBlank()) {
+      mAddDesign.setDisable(true);
+    } else {
+      if (mFaction.getUnitDesignById(designName)==null) {
+        mAddDesign.setDisable(false);
+      } else {
+        mAddDesign.setDisable(true);
+      }
+    }
+
+    // **** Weapons check
+    if (getDesign().weapons()>0 && getDesign().nrweapons()==0) {
+      mWeaponsNr.setText("1");
+      update();
+    }
+    if (getDesign().weapons()==0 && getDesign().nrweapons()!=0) {
+      mWeaponsNr.setText("0");
+      update();
+    }
+
+    Effects.setValue(mResistant, JG_UnitDesign.shieldsImmuneForWeapons(getDesign().effectiveShield(mFaction.tech())));
 
     return;
   }
@@ -165,6 +189,7 @@ public class ShipDesignerController extends JPanelInterface implements Initializ
         mOtherDesigns.getItems().add(ud);
       }
     }
+    update();
     return;
   }
 

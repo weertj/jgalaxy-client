@@ -25,6 +25,10 @@
                   <TableColumn fx:id="mOtherLeftColumn" prefWidth="50.0" text="Left" />
                </columns>
             </TableView>
+            <Label layoutX="8.0" layoutY="393.0" styleClass="label-value" text="Friendly mass loss" AnchorPane.leftAnchor="8.0" />
+            <Label fx:id="mOwnMassLoss" layoutX="120.0" layoutY="393.0" styleClass="label-value-value" text="-" />
+            <Label layoutX="8.0" layoutY="410.0" styleClass="label-value" text="Enemy mass loss" />
+            <Label fx:id="mEnemyMassLoss" layoutX="120.0" layoutY="410.0" styleClass="label-value-value" text="-" />
             <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <content>
                   <TableView fx:id="mBattleDetail" prefHeight="200.0" prefWidth="200.0">

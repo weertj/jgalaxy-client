@@ -2,6 +2,7 @@ package org.jgalaxy.gui;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 import org.javelinfx.canvas.CanvasUtils;
 import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.JavelinUIElement;
@@ -11,11 +12,16 @@ import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.spatial.SP_Line;
 import org.jgalaxy.IEntity;
+import org.jgalaxy.ai.AI_Defaults;
+import org.jgalaxy.ai.NNetwork;
+import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.units.IJG_Fleet;
 import org.jgalaxy.units.IJG_Group;
 import org.jgalaxy.units.IJG_UnitDesign;
 
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,16 +48,18 @@ public class UnitRenderItem extends JavelinUIElement {
           if (element() instanceof IJG_Group group) {
             var faction = Global.GAMECONTEXT.resolveFaction(group.faction());
             // **** Draw range circle
+            double xcenter = pCanvas.toPixelX(group.calcCurrentPosition().x(), Global.DISTANCEUNIT );
+            double ycenter = pCanvas.toPixelY(group.calcCurrentPosition().y(), Global.DISTANCEUNIT );
 //        IJG_UnitDesign design = faction.getUnitDesignById(group.unitDesign());
 //        if (design.drive() > 0) {
             double range1turn = group.maxSpeed(Global.GAMECONTEXT.currentGameChanged(), faction);
             double radius = Math.abs(pCanvas.toPixelX(range1turn, Global.DISTANCEUNIT) - pCanvas.toPixelX(0, Global.DISTANCEUNIT));
             gc.setFill(Colors.TRAVELRANGE_FILL);
-            gc.fillOval(outline.getCenterX() - radius, outline.getCenterY() - radius, radius * 2, radius * 2);
+            gc.fillOval(xcenter-radius, ycenter-radius, radius * 2, radius * 2);
             gc.setStroke(Colors.TRAVELRANGE_STROKE);
             gc.setLineDashes(8, 8);
             gc.setLineWidth(0.5);
-            gc.strokeOval(outline.getCenterX() - radius, outline.getCenterY() - radius, radius * 2, radius * 2);
+            gc.strokeOval(xcenter-radius, ycenter-radius, radius * 2, radius * 2);
             gc.setLineDashes(0);
             gc.setLineWidth(1);
 //        }
@@ -60,6 +68,20 @@ public class UnitRenderItem extends JavelinUIElement {
       }
     }
     return;
+  }
+
+  public static List<Pair<String,Double>> getSortedOutputLabels(double[] outputs) {
+    String[] OUTPUT_LABELS = {"RECON", "SG", "TRANSPORT"};
+
+    List<Pair<String,Double>> results = new ArrayList<>();
+
+    for (int i = 0; i < outputs.length; i++) {
+      String label = (i < OUTPUT_LABELS.length) ? OUTPUT_LABELS[i] : "CLASS_" + i;
+      results.add(new Pair(label, outputs[i]));
+    }
+
+    results.sort(Comparator.comparingDouble( value -> (Double)((Pair)value).getValue() ).reversed());
+    return results;
   }
 
   protected void drawUnit(IJavelinCanvas pCanvas ) {
@@ -74,15 +96,18 @@ public class UnitRenderItem extends JavelinUIElement {
         gc.strokeRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
       } else {
         gc.fillRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
-        if ("COL".equals(group.loadType())) {
-          gc.setFill(Colors.COLS);
-          gc.fillOval(outline.getMaxX()+outline.getWidth()/5, outline.getMinY(), outline.getWidth()/3, outline.getHeight()/3);
-        } else if ("CAP".equals(group.loadType())) {
-          gc.setFill(Colors.CAPS);
-          gc.fillOval(outline.getMaxX()+outline.getWidth()/5, outline.getMinY(), outline.getWidth()/3, outline.getHeight()/3);
-        } else if ("MAT".equals(group.loadType())) {
-          gc.setFill(Colors.MATS);
-          gc.fillOval(outline.getMaxX()+outline.getWidth()/5, outline.getMinY(), outline.getWidth()/3, outline.getHeight()/3);
+        String loadType = group.loadType();
+        if (loadType!=null) {
+          if (loadType.equals("COL")) {
+            gc.setFill(Colors.COLS);
+            gc.fillOval(outline.getMaxX() + outline.getWidth() / 5, outline.getMinY(), outline.getWidth() / 3, outline.getHeight() / 3);
+          } else if (loadType.equals("CAP")) {
+            gc.setFill(Colors.CAPS);
+            gc.fillOval(outline.getMaxX() + outline.getWidth() / 5, outline.getMinY(), outline.getWidth() / 3, outline.getHeight() / 3);
+          } else if (loadType.equals("MAT")) {
+            gc.setFill(Colors.MATS);
+            gc.fillOval(outline.getMaxX() + outline.getWidth() / 5, outline.getMinY(), outline.getWidth() / 3, outline.getHeight() / 3);
+          }
         }
         gc.setStroke(Color.BLACK);
         gc.strokeRect(outline.getX(), outline.getY(), outline.getWidth(), outline.getHeight());
@@ -95,6 +120,27 @@ public class UnitRenderItem extends JavelinUIElement {
         gc.setFill(Colors.LABEL_VALUE_VALUE);
         renderText(gc, "MapUnitDataFont", outline.getX() + outline.getWidth(), outline.getY(), group.getNumberOf() + "x");
       }
+
+//      IJG_Faction faction = Global.GAMECONTEXT.retrieveFactionByID(group.faction() );
+//      var ud = faction.getUnitDesignById(group.unitDesign());
+//      if (ud!=null) {
+//        double[] input = new double[5];
+//        input[0] = ud.drive()/100.0;
+//        input[1] = ud.weapons()/100.0;
+//        input[2] = ud.nrweapons()/100.0;
+//        input[3] = ud.shields()/100.0;
+//        input[4] = ud.cargo()/100.0;
+//        var outputs = AI_Defaults.SHIPCLASSNN.forward(input);
+//        var result = getSortedOutputLabels(outputs);
+//        if ("TRANSPORT".equals(result.getFirst().getKey())) {
+//          gc.setFill(Color.BLACK);
+//          double w = outline.getWidth();
+//          double h = outline.getHeight();
+//          gc.fillRect(outline.getX()+w*0.2, outline.getY()+h*0.2, w-w*0.4, h-h*0.4);
+//        }
+//      }
+//
+
     }
     return;
   }

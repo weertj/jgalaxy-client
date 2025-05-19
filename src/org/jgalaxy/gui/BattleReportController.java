@@ -57,6 +57,8 @@ public class BattleReportController extends JUnitPanelInterface implements Initi
   @FXML private AnchorPane  mGeneralPane;
 
   @FXML private Label mBattleTitle;
+  @FXML private Label mOwnMassLoss;
+  @FXML private Label mEnemyMassLoss;
 
   @FXML private TableView<GroupLeftEntry>  mOwnResultTableView;
   @FXML private TableColumn<GroupLeftEntry,String> mGroupNameColumn;
@@ -125,6 +127,22 @@ public class BattleReportController extends JUnitPanelInterface implements Initi
     } else {
       Effects.setText(mBattleTitle, "Battle at " + planet.name());
     }
+
+    // **** Mass loss calculation
+    double loss = 0.0;
+    double otherLoss = 0.0;
+    for(IJG_Group group : mBattleReport.groups()) {
+      int nr = mBattleReport.calcNumberOfBeforeBattle(group);
+      if (mFaction.id().equals(group.faction())) {
+        var design = mFaction.getUnitDesignById(group.unitDesign());
+        loss += (nr-group.getNumberOf()) * design.mass();
+      } else {
+        var design = Global.GAMECONTEXT.resolveFaction(group.faction()).getUnitDesignById(group.unitDesign());
+        otherLoss += (nr-group.getNumberOf()) * design.mass();
+      }
+    }
+    Effects.setValueDouble02(mOwnMassLoss,loss);
+    Effects.setValueDouble02(mEnemyMassLoss,otherLoss);
 
     mOwnResultTableView.getItems().clear();
     mOthersResultTableView.getItems().clear();

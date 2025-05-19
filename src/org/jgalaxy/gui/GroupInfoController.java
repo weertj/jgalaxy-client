@@ -21,6 +21,7 @@ import org.jgalaxy.engine.IJG_Faction;
 import org.jgalaxy.orders.SJG_LoadOrder;
 import org.jgalaxy.planets.EProduceType;
 import org.jgalaxy.planets.IJG_Planet;
+import org.jgalaxy.tech.IJG_Tech;
 import org.jgalaxy.units.IJG_Fleet;
 import org.jgalaxy.units.IJG_Group;
 import org.jgalaxy.units.IJG_UnitDesign;
@@ -67,9 +68,13 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
 
   @FXML private Label      mDesignName;
   @FXML private Label      mDesignDrive;
+  @FXML private Label      mTechDrive;
   @FXML private Label      mDesignWeapons;
+  @FXML private Label      mTechWeapons;
   @FXML private Label      mDesignShields;
+  @FXML private Label      mTechShields;
   @FXML private Label      mDesignCargo;
+  @FXML private Label      mTechCargo;
   @FXML private Label      mCurrentSpeed;
 
   @FXML private Button     mUnloadButton;
@@ -170,15 +175,20 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
   private void refreshDesign() {
     IJG_UnitDesign design = mFaction.getUnitDesignById(mGroup.unitDesign());
     if (design!=null) {
+      IJG_Tech tech = mGroup.tech();
       Effects.setText(mDesignName,design.name());
-      Effects.setValueDouble02(mDesignDrive, design.drive());
+      Effects.setValueDouble02(mDesignDrive, design.drive() );
+      Effects.setValueDouble02(mTechDrive, tech.drive() );
       if (design.nrweapons() > 0) {
         Effects.setText(mDesignWeapons, design.nrweapons() + "x " + design.weapons());
+        Effects.setValueDouble02(mTechWeapons, tech.weapons() );
       } else {
         Effects.setText(mDesignWeapons, "");
       }
       Effects.setValueDouble02(mDesignShields, design.shields());
+      Effects.setValueDouble02(mTechShields, tech.shields() );
       Effects.setValueDouble02(mDesignCargo, design.cargo());
+      Effects.setValueDouble02(mTechCargo, tech.cargo() );
       Effects.setValueDouble02( mCurrentSpeed, mGroup.maxSpeed(Global.GAMECONTEXT.currentGameChanged(),mFaction));
     }
     return;
@@ -221,7 +231,7 @@ public class GroupInfoController extends JUnitPanelInterface implements Initiali
       } else {
         mFleetPane.setVisible(true);
         mFleets.getItems().clear();
-        mFleets.getItems().add(JG_Fleet.of("<no fleet>","<no fleet>", List.of()));
+//        mFleets.getItems().add(JG_Fleet.of("<no fleet>","<no fleet>", List.of()));
         for( var fleet : mFaction.groups().fleets()) {
           if (fleet.position()==null) {
             mFleets.getItems().add(fleet);

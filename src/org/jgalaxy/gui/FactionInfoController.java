@@ -46,11 +46,11 @@ public class FactionInfoController extends JUnitPanelInterface implements Initia
     });
     SButtons.initButton(mDeclareWar, _ -> {
       Global.GAMECONTEXT.currentFactionChanged().addWarWith(mFaction.id());
-      mFaction.newChange();
+      Global.GAMECONTEXT.currentFactionChanged().newChange();
     });
     SButtons.initButton(mDeclarePeace, _ -> {
       Global.GAMECONTEXT.currentFactionChanged().removeWarWith(mFaction.id());
-      mFaction.newChange();
+      Global.GAMECONTEXT.currentFactionChanged().newChange();
     });
     return;
   }

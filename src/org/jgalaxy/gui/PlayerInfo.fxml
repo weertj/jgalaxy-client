@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mRootPane" prefHeight="32.0" prefWidth="965.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.PlayerInfoController">
+<AnchorPane fx:id="mRootPane" prefHeight="35.0" prefWidth="1362.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jgalaxy.gui.PlayerInfoController">
    <children>
-      <AnchorPane layoutX="-141.0" layoutY="23.0" prefHeight="32.0" prefWidth="866.0" style="-fx-background-color: #111111;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="-141.0" layoutY="23.0" prefHeight="35.0" prefWidth="1266.0" style="-fx-background-color: #111111;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <ImageView fx:id="mBanner" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <Label fx:id="mFactionName" layoutX="52.0" layoutY="8.0" styleClass="subheader" text="Label" />
@@ -38,12 +38,29 @@
                         <Font size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="mCargoTech" layoutX="296.0" layoutY="8.0" styleClass="label-value-value" text="..." AnchorPane.topAnchor="8.0" />
+                  <Label fx:id="mCargoTech" layoutX="296.0" layoutY="8.0" styleClass="label-value-value" text="..." AnchorPane.topAnchor="9.0" />
                </children>
             </AnchorPane>
-            <Button fx:id="mShipDesignerButton" layoutX="506.0" layoutY="3.0" mnemonicParsing="false" text="SHIP DESIGNER" AnchorPane.topAnchor="3.0" />
-            <TextField fx:id="mRightMouseSendNumber" layoutX="706.0" layoutY="4.0" prefWidth="64.0" AnchorPane.topAnchor="3.0" />
-            <Button fx:id="mUserButton" layoutX="659.0" layoutY="6.0" mnemonicParsing="false" prefWidth="100.0" text="{user}" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="3.0">
+            <Button fx:id="mShipDesignerButton" layoutX="512.0" layoutY="3.0" mnemonicParsing="false" text="SHIP DESIGNER" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <AnchorPane prefHeight="32.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="620.0" AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <AnchorPane prefHeight="32.0" prefWidth="300.0" style="-fx-background-color: #444411;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label layoutY="10.0" styleClass="smalllabel-value" text="LEFT MOUSE" textFill="WHITE" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="2.0" />
+                        <Label layoutX="38.0" layoutY="16.0" styleClass="smalllabel-value" text="Click to select a group, fleet or planet" textFill="WHITE" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="32.0" prefWidth="300.0" style="-fx-background-color: #441144;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label styleClass="smalllabel-value" text="RIGHT MOUSE" textFill="WHITE" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="2.0" />
+                        <TextField fx:id="mRightMouseSendNumber" layoutX="157.0" layoutY="5.0" prefHeight="25.0" prefWidth="40.0" AnchorPane.topAnchor="5.0" />
+                        <Label layoutX="18.0" layoutY="16.0" styleClass="smalllabel-value" text="Click on a planet to send" textFill="WHITE" />
+                        <Label layoutX="199.0" layoutY="-1.0" prefHeight="35.0" prefWidth="108.0" styleClass="smalllabel-value" text="Number to send, if empty then send all" textFill="WHITE" wrapText="true" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+            <Button fx:id="mUserButton" layoutX="659.0" layoutY="6.0" mnemonicParsing="false" prefWidth="100.0" text="{user}" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <graphic>
                   <ImageView fx:id="mUserIcon" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                </graphic></Button>

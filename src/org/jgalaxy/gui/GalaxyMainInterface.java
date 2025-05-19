@@ -4,21 +4,20 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.javelinfx.canvas.IJavelinCanvas;
 import org.javelinfx.canvas.IJavelinUIElement;
+import org.javelinfx.common.IC_Taglist;
+import org.javelinfx.controllers.FX_LoginFXMLController;
 import org.javelinfx.engine.JMainInterface;
 import org.javelinfx.engine.startJavelin;
 import org.javelinfx.fxml.FXMLLoad;
 import org.javelinfx.player.IJL_PlayerContext;
 import org.javelinfx.player.JL_PlayerContext;
-import org.javelinfx.spatial.ISP_Position;
 import org.javelinfx.spatial.SP_Position;
 import org.javelinfx.system.JavelinSystem;
 import org.javelinfx.window.S_Pane;
@@ -31,23 +30,25 @@ import org.jgalaxy.engine.*;
 import org.jgalaxy.map.IMAP_Map;
 import org.jgalaxy.planets.IJG_Planet;
 import org.jgalaxy.server.SimpleClient;
-import org.jgalaxy.server.SimpleServer;
 import org.jgalaxy.units.IJG_Bombing;
 import org.jgalaxy.units.IJG_Fleet;
 import org.jgalaxy.units.IJG_Group;
 import org.jgalaxy.units.IJG_Incoming;
-import org.jgalaxy.utils.XML_Utils;
 import org.w3c.dom.Node;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.net.URI;
-import java.net.http.HttpClient;
+import java.net.URL;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 
 public class GalaxyMainInterface extends JMainInterface {
 
+
+  static public final String VERSION = "v1";
 //  private IJavelinCanvas mCanvas = new SimpleCanvas();
 
   private TurnInfoController      mTurnInfoController;
@@ -134,17 +135,65 @@ public class GalaxyMainInterface extends JMainInterface {
   public void init() {
     super.init();
 
+    org.jgalaxy.Global.init();
+
 //    mainPane().getStylesheets().add(getClass().getResource("/org/jgalaxy/gui/jgalaxy.css").toExternalForm());
+
+    String player   = startJavelin.PARAMETERS.getNamed().getOrDefault("player", "");
+    String username = startJavelin.PARAMETERS.getNamed().getOrDefault("username", "");
+    String password = startJavelin.PARAMETERS.getNamed().getOrDefault("password", "");
+
+    if ("".equals(username)) {
+      IC_Taglist result = FX_LoginFXMLController.start("", "");
+      if (result.isEmpty()) {
+        stop();
+      } else {
+        player   = result.value("Username").toString();
+        username = result.value("Username").toString();
+        password = result.value("Password").toString();
+      }
+    }
 
     Global.GAMECONTEXT = GameContext.of(
       startJavelin.PARAMETERS.getNamed().getOrDefault("directory", null),
       startJavelin.PARAMETERS.getNamed().getOrDefault("server", ""),
       startJavelin.PARAMETERS.getNamed().getOrDefault("game", ""),
-      startJavelin.PARAMETERS.getNamed().getOrDefault("player", ""),
-      startJavelin.PARAMETERS.getNamed().getOrDefault("username", ""),
-      startJavelin.PARAMETERS.getNamed().getOrDefault("password", "")
+      player,
+      username,
+      password
     );
     IGameContext context = Global.GAMECONTEXT;
+
+    try {
+      // **** Check for update
+      String url = startJavelin.PARAMETERS.getNamed().getOrDefault("server", "") + "/updates/" + VERSION;
+      HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+        .GET()
+        .build();
+      try {
+        HttpResponse response = SimpleClient.createClient(username, password).send(request, HttpResponse.BodyHandlers.ofByteArray() );
+        if (response.statusCode()==200) {
+          File jarFile = new File("GalaxyReloaded.jar");
+          try (FileOutputStream out = new FileOutputStream(jarFile)) {
+            var bais = new ByteArrayInputStream((byte[]) response.body());
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = bais.read(buffer)) != -1) {
+              out.write(buffer, 0, bytesRead);
+            }
+          }
+          Alert alert = new Alert(Alert.AlertType.INFORMATION);
+          alert.setTitle("Updated");
+          alert.setHeaderText("Galaxy Reloaded is updated, please restart");
+          alert.showAndWait();
+          System.exit(0);
+        }
+      } catch (Throwable e) {
+      }
+
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
 
     mCanvas = GalaxyCanvas.of();
     mCanvas.addCanvasRunnable( () -> canvasCallback() );
